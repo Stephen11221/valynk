@@ -1,0 +1,54 @@
+/* Section spacing overrides for the About page. */
+.about-hero,
+.story,
+.purpose {
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.about-hero {
+    padding-block: 28px 20px;
+}
+
+.about-copy {
+    padding-block: 12px;
+}
+
+.about-copy .button {
+    margin-top: 12px;
+}
+
+.story {
+    margin-top: 20px;
+}
+
+.story-copy {
+    padding-block: 24px;
+}
+
+.purpose {
+    padding-block: 28px 24px;
+}
+
+.value {
+    padding-block: 10px;
+}
+
+.value h3 {
+    margin: 5px 0 7px;
+}
+
+@media (max-width: 620px) {
+    .about-hero {
+        padding-block: 30px 12px;
+    }
+
+    .story-copy {
+        padding: 20px;
+    }
+
+    .purpose {
+        padding: 25px 10px;
+    }
+}

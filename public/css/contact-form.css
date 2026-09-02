@@ -1,0 +1,13 @@
+.form-fields select {
+    min-width: 0;
+    padding: 8px 10px !important;
+    border: 1px solid #dce3ed !important;
+    border-radius: 4px;
+    background: #fff !important;
+    color: #061633 !important;
+    font: 10px 'DM Sans', sans-serif;
+}
+
+.form-fields select:invalid {
+    color: #7b8798 !important;
+}
