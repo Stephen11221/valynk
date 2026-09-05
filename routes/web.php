@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,3 +22,13 @@ Route::view('/pricing', 'pricing')->name('pricing');
 Route::view('/contact', 'contact')->name('contact');
 
 Route::view('/solutions', 'solutions')->name('solutions');
+
+// Admin Dashboard Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/users', [DashboardController::class, 'users'])->name('users');
+    Route::get('/providers', [DashboardController::class, 'providers'])->name('providers');
+    Route::get('/matches', [DashboardController::class, 'matches'])->name('matches');
+    Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
+    Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+});
