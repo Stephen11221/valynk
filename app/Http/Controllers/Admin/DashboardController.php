@@ -616,6 +616,90 @@ class DashboardController extends Controller
     }
 
     /**
+     * Transaction Management page.
+     */
+    public function transactions(): View
+    {
+        $stats = [
+            ['title' => 'Total Transactions', 'value' => '25,842', 'change' => '+23% from last month', 'positive' => true, 'color' => 'bg-purple-50 text-purple-600', 'icon' => 'fa-arrow-right-arrow-left', 'sparkline' => [10, 22, 18, 30, 24, 42, 36, 52]],
+            ['title' => 'Total Volume', 'value' => 'KES 12,845,300', 'change' => '+28% from last month', 'positive' => true, 'color' => 'bg-emerald-50 text-emerald-600', 'icon' => 'fa-wallet', 'sparkline' => [20, 28, 24, 38, 44, 46, 52, 58]],
+            ['title' => 'Successful Transactions', 'value' => '23,716', 'change' => '+22% from last month', 'positive' => true, 'color' => 'bg-emerald-50 text-emerald-600', 'icon' => 'fa-circle-check', 'sparkline' => [18, 27, 20, 33, 44, 40, 57, 68]],
+            ['title' => 'Failed Transactions', 'value' => '1,142', 'change' => '-4% from last month', 'positive' => false, 'color' => 'bg-rose-50 text-rose-600', 'icon' => 'fa-circle-xmark', 'sparkline' => [70, 62, 60, 48, 45, 40, 35, 30]],
+            ['title' => 'Refunds Issued', 'value' => '482', 'change' => '+16% from last month', 'positive' => true, 'color' => 'bg-sky-50 text-sky-600', 'icon' => 'fa-rotate-left', 'sparkline' => [18, 24, 20, 28, 26, 35, 30, 39]],
+            ['title' => 'Average Transaction Value', 'value' => 'KES 497', 'change' => '+5% from last month', 'positive' => true, 'color' => 'bg-blue-50 text-blue-600', 'icon' => 'fa-chart-simple', 'sparkline' => [21, 26, 25, 22, 30, 35, 38, 41]],
+        ];
+
+        $transactions = collect([
+            ['id' => 'TRX-2025-05270', 'date' => '27 May 2025', 'time' => '10:24 AM', 'user' => 'Mary Wanjiku', 'user_role' => 'Parent', 'provider' => 'MindWell Center', 'provider_tag' => 'Counseling & Therapy', 'type' => 'Service Payment', 'amount' => 'KES 3,500', 'method' => 'M-Pesa', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'MindWell Center'],
+            ['id' => 'TRX-2025-05269', 'date' => '27 May 2025', 'time' => '09:58 AM', 'user' => 'John Kamau', 'user_role' => 'Parent', 'provider' => 'Career Academy', 'provider_tag' => 'Career Coaching', 'type' => 'Service Payment', 'amount' => 'KES 4,200', 'method' => 'Card (Visa)', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Career Academy'],
+            ['id' => 'TRX-2025-05268', 'date' => '27 May 2025', 'time' => '09:31 AM', 'user' => 'Grace Achieng', 'user_role' => 'Parent', 'provider' => 'Bright Future Academy', 'provider_tag' => 'Academic Coaching', 'type' => 'Subscription', 'amount' => 'KES 7,000', 'method' => 'Card (Mastercard)', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Bright Future Academy'],
+            ['id' => 'TRX-2025-05267', 'date' => '27 May 2025', 'time' => '09:12 AM', 'user' => 'David Ochieng', 'user_role' => 'Parent', 'provider' => 'LearnTech Solutions', 'provider_tag' => 'STEM Education', 'type' => 'Service Payment', 'amount' => 'KES 8,200', 'method' => 'M-Pesa', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'LearnTech Solutions'],
+            ['id' => 'TRX-2025-05266', 'date' => '26 May 2025', 'time' => '04:45 PM', 'user' => 'Esther Njeri', 'user_role' => 'Parent', 'provider' => 'Kids Code Academy', 'provider_tag' => 'Coding for Kids', 'type' => 'Service Payment', 'amount' => 'KES 3,000', 'method' => 'Card (Visa)', 'status' => 'Failed', 'status_class' => 'bg-rose-100 text-rose-800', 'institution' => 'Kids Code Academy'],
+            ['id' => 'TRX-2025-05265', 'date' => '26 May 2025', 'time' => '03:20 PM', 'user' => 'Peter Mwangi', 'user_role' => 'Parent', 'provider' => 'Skills & More Institute', 'provider_tag' => 'Skills Development', 'type' => 'Subscription', 'amount' => 'KES 5,500', 'method' => 'M-Pesa', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Skills & More Institute'],
+            ['id' => 'TRX-2025-05264', 'date' => '26 May 2025', 'time' => '02:15 PM', 'user' => 'Amina Hassan', 'user_role' => 'Parent', 'provider' => 'HealthRise Services', 'provider_tag' => 'Nutrition & Wellness', 'type' => 'Service Payment', 'amount' => 'KES 2,200', 'method' => 'Card (Visa)', 'status' => 'Refunded', 'status_class' => 'bg-amber-100 text-amber-800', 'institution' => 'HealthRise Services'],
+            ['id' => 'TRX-2025-05263', 'date' => '26 May 2025', 'time' => '11:05 AM', 'user' => 'Brian Otieno', 'user_role' => 'Parent', 'provider' => 'Future Leaders Hub', 'provider_tag' => 'Leadership Training', 'type' => 'Service Payment', 'amount' => 'KES 3,800', 'method' => 'Card (Mastercard)', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Future Leaders Hub'],
+        ]);
+
+        return view('admin.transactions', compact('stats', 'transactions'));
+    }
+
+    /**
+     * Payment Management page.
+     */
+    public function payments(): View
+    {
+        $stats = [
+            ['title' => 'Total Volume', 'value' => 'KES 12,845,300', 'change' => '+28% from last month', 'positive' => true, 'icon' => 'fa-wallet', 'color' => 'bg-purple-50 text-purple-600', 'sparkline' => [16, 18, 24, 29, 26, 38, 44, 52]],
+            ['title' => 'Successful Payments', 'value' => 'KES 11,928,700', 'change' => '+26% from last month', 'positive' => true, 'icon' => 'fa-circle-check', 'color' => 'bg-emerald-50 text-emerald-600', 'sparkline' => [20, 26, 30, 28, 38, 42, 52, 60]],
+            ['title' => 'Pending Payments', 'value' => 'KES 643,200', 'change' => '+12% from last month', 'positive' => true, 'icon' => 'fa-clock', 'color' => 'bg-amber-50 text-amber-600', 'sparkline' => [15, 18, 22, 19, 27, 31, 27, 35]],
+            ['title' => 'Refunds Processed', 'value' => 'KES 273,400', 'change' => '-8% from last month', 'positive' => false, 'icon' => 'fa-rotate-left', 'color' => 'bg-rose-50 text-rose-600', 'sparkline' => [28, 26, 24, 20, 18, 16, 14, 12]],
+            ['title' => 'Payouts to Providers', 'value' => 'KES 9,856,100', 'change' => '+22% from last month', 'positive' => true, 'icon' => 'fa-paper-plane', 'color' => 'bg-sky-50 text-sky-600', 'sparkline' => [18, 20, 22, 32, 40, 37, 48, 55]],
+            ['title' => 'Average Transaction Value', 'value' => 'KES 497', 'change' => '+5% from last month', 'positive' => true, 'icon' => 'fa-chart-simple', 'color' => 'bg-blue-50 text-blue-600', 'sparkline' => [21, 25, 27, 22, 30, 35, 39, 42]],
+        ];
+
+        $payments = collect([
+            ['id' => 'PAY-2025-05270', 'date' => '27 May 2025', 'time' => '10:24 AM', 'user' => 'Mary Wanjiku', 'user_role' => 'Parent', 'provider' => 'MindWell Center', 'provider_tag' => 'Counseling & Therapy', 'type' => 'Service Payment', 'amount' => 'KES 3,500', 'method' => 'M-Pesa', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'MindWell Center'],
+            ['id' => 'PAY-2025-05269', 'date' => '27 May 2025', 'time' => '09:58 AM', 'user' => 'John Kamau', 'user_role' => 'Parent', 'provider' => 'Career Academy', 'provider_tag' => 'Career Coaching', 'type' => 'Service Payment', 'amount' => 'KES 4,200', 'method' => 'Card (Visa)', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Career Academy'],
+            ['id' => 'PAY-2025-05268', 'date' => '27 May 2025', 'time' => '09:31 AM', 'user' => 'Grace Achieng', 'user_role' => 'Parent', 'provider' => 'Bright Future Academy', 'provider_tag' => 'Academic Coaching', 'type' => 'Subscription', 'amount' => 'KES 7,000', 'method' => 'Card (Mastercard)', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Bright Future Academy'],
+            ['id' => 'PAY-2025-05267', 'date' => '27 May 2025', 'time' => '09:12 AM', 'user' => 'David Ochieng', 'user_role' => 'Parent', 'provider' => 'LearnTech Solutions', 'provider_tag' => 'STEM Education', 'type' => 'Service Payment', 'amount' => 'KES 8,200', 'method' => 'M-Pesa', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'LearnTech Solutions'],
+            ['id' => 'PAY-2025-05266', 'date' => '26 May 2025', 'time' => '04:45 PM', 'user' => 'Esther Njeri', 'user_role' => 'Parent', 'provider' => 'Kids Code Academy', 'provider_tag' => 'Coding for Kids', 'type' => 'Service Payment', 'amount' => 'KES 3,000', 'method' => 'Card (Visa)', 'status' => 'Failed', 'status_class' => 'bg-rose-100 text-rose-800', 'institution' => 'Kids Code Academy'],
+            ['id' => 'PAY-2025-05265', 'date' => '26 May 2025', 'time' => '03:20 PM', 'user' => 'Peter Mwangi', 'user_role' => 'Parent', 'provider' => 'Skills & More Institute', 'provider_tag' => 'Skills Development', 'type' => 'Subscription', 'amount' => 'KES 5,500', 'method' => 'M-Pesa', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Skills & More Institute'],
+            ['id' => 'PAY-2025-05264', 'date' => '26 May 2025', 'time' => '02:15 PM', 'user' => 'Amina Hassan', 'user_role' => 'Parent', 'provider' => 'HealthRise Services', 'provider_tag' => 'Nutrition & Wellness', 'type' => 'Service Payment', 'amount' => 'KES 2,200', 'method' => 'Card (Visa)', 'status' => 'Refunded', 'status_class' => 'bg-amber-100 text-amber-800', 'institution' => 'HealthRise Services'],
+            ['id' => 'PAY-2025-05263', 'date' => '26 May 2025', 'time' => '11:05 AM', 'user' => 'Brian Otieno', 'user_role' => 'Parent', 'provider' => 'Future Leaders Hub', 'provider_tag' => 'Leadership Training', 'type' => 'Service Payment', 'amount' => 'KES 3,800', 'method' => 'Card (Mastercard)', 'status' => 'Completed', 'status_class' => 'bg-emerald-100 text-emerald-800', 'institution' => 'Future Leaders Hub'],
+        ]);
+
+        return view('admin.payments', compact('stats', 'payments'));
+    }
+
+    /**
+     * Subscription Management page.
+     */
+    public function subscriptions(): View
+    {
+        $stats = [
+            ['title' => 'Total Subscriptions', 'value' => '8,642', 'change' => '+15% from last month', 'positive' => true, 'icon' => 'fa-user', 'color' => 'bg-purple-50 text-purple-600', 'sparkline' => [15, 20, 18, 26, 22, 36, 30, 42]],
+            ['title' => 'Active Subscriptions', 'value' => '6,725', 'change' => '+20% from last month', 'positive' => true, 'icon' => 'fa-circle-check', 'color' => 'bg-emerald-50 text-emerald-600', 'sparkline' => [18, 24, 28, 30, 35, 40, 48, 56]],
+            ['title' => 'New Subscriptions', 'value' => '1,254', 'change' => '+15% from last month', 'positive' => true, 'icon' => 'fa-user-plus', 'color' => 'bg-sky-50 text-sky-600', 'sparkline' => [10, 16, 20, 18, 25, 32, 28, 38]],
+            ['title' => 'Expiring Soon', 'value' => '312', 'change' => '+8% from last month', 'positive' => true, 'icon' => 'fa-circle-exclamation', 'color' => 'bg-amber-50 text-amber-600', 'sparkline' => [30, 22, 26, 21, 18, 24, 20, 14]],
+            ['title' => 'Cancelled', 'value' => '351', 'change' => '-5% from last month', 'positive' => false, 'icon' => 'fa-circle-xmark', 'color' => 'bg-rose-50 text-rose-600', 'sparkline' => [42, 36, 29, 22, 18, 16, 12, 9]],
+            ['title' => 'MRR (This Month)', 'value' => 'KES 4,256,800', 'change' => '+2% from last month', 'positive' => true, 'icon' => 'fa-dollar-sign', 'color' => 'bg-green-50 text-green-600', 'sparkline' => [18, 24, 20, 28, 32, 37, 41, 46]],
+        ];
+
+        $subscriptions = collect([
+            ['id' => 'SUB-2025-05264', 'subscriber' => 'Mary Wanjiku', 'email' => 'mary.wanjiku@gmail.com', 'userType' => 'Family', 'plan' => 'Family Premium', 'amount' => 'KES 2,950', 'billing' => 'Monthly', 'startDate' => '01 May 2025', 'nextBilling' => '01 Jun 2025', 'status' => 'Active', 'status_class' => 'bg-emerald-100 text-emerald-800'],
+            ['id' => 'SUB-2025-05263', 'subscriber' => 'John Kamau', 'email' => 'john.kamau@gmail.com', 'userType' => 'Individual', 'plan' => 'Individual Plus', 'amount' => 'KES 1,500', 'billing' => 'Monthly', 'startDate' => '15 Apr 2025', 'nextBilling' => '15 May 2025', 'status' => 'Active', 'status_class' => 'bg-emerald-100 text-emerald-800'],
+            ['id' => 'SUB-2025-05262', 'subscriber' => 'MindWell Center', 'email' => 'info@mindwell.co.ke', 'userType' => 'Provider', 'plan' => 'Provider Growth', 'amount' => 'KES 4,500', 'billing' => 'Monthly', 'startDate' => '10 Apr 2025', 'nextBilling' => '10 May 2025', 'status' => 'Active', 'status_class' => 'bg-emerald-100 text-emerald-800'],
+            ['id' => 'SUB-2025-05261', 'subscriber' => 'Bright Future Academy', 'email' => 'admin@brightfuture.ac.ke', 'userType' => 'Institution', 'plan' => 'Institution Pro', 'amount' => 'KES 7,500', 'billing' => 'Monthly', 'startDate' => '05 Apr 2025', 'nextBilling' => '05 Jun 2025', 'status' => 'Active', 'status_class' => 'bg-emerald-100 text-emerald-800'],
+            ['id' => 'SUB-2025-05260', 'subscriber' => 'Career Academy', 'email' => 'hello@careeracademy.co.ke', 'userType' => 'Provider', 'plan' => 'Provider Starter', 'amount' => 'KES 2,500', 'billing' => 'Monthly', 'startDate' => '28 Apr 2025', 'nextBilling' => '28 May 2025', 'status' => 'Expiring Soon', 'status_class' => 'bg-amber-100 text-amber-800'],
+            ['id' => 'SUB-2025-05259', 'subscriber' => 'Grace Achieng', 'email' => 'grace@gmail.com', 'userType' => 'Individual', 'plan' => 'Individual Basic', 'amount' => 'KES 800', 'billing' => 'Monthly', 'startDate' => '27 Mar 2025', 'nextBilling' => '27 May 2025', 'status' => 'Active', 'status_class' => 'bg-emerald-100 text-emerald-800'],
+            ['id' => 'SUB-2025-05258', 'subscriber' => 'Skills & More Institute', 'email' => 'info@skillsandmore.co.ke', 'userType' => 'Institution', 'plan' => 'Institution Standard', 'amount' => 'KES 4,000', 'billing' => 'Monthly', 'startDate' => '12 Apr 2025', 'nextBilling' => '12 Jun 2025', 'status' => 'Active', 'status_class' => 'bg-emerald-100 text-emerald-800'],
+            ['id' => 'SUB-2025-05257', 'subscriber' => 'Kids Code Academy', 'email' => 'info@kidscode.co.ke', 'userType' => 'Provider', 'plan' => 'Provider Growth', 'amount' => 'KES 4,500', 'billing' => 'Monthly', 'startDate' => '01 May 2025', 'nextBilling' => '01 Jun 2025', 'status' => 'Cancelled', 'status_class' => 'bg-rose-100 text-rose-800'],
+        ]);
+
+        return view('admin.subscriptions', compact('stats', 'subscriptions'));
+    }
+
+    /**
      * Analytics and Reports page.
      */
     public function analytics(): View

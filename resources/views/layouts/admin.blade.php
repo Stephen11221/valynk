@@ -22,18 +22,31 @@
             color: #0F172A;
         }
         .admin-sidebar {
-            background-color: #060919;
+            background: linear-gradient(180deg, #071b22 0%, #0d1d2e 100%);
+            border-right: 1px solid rgba(148, 163, 184, 0.12);
+            box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
         }
         .sidebar-item-active {
-            background: linear-gradient(90deg, #4338CA 0%, #3B82F6 100%);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(99, 102, 241, 0.22) 100%);
             color: #FFFFFF !important;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
+            font-weight: 700;
+            border: 1px solid rgba(96, 165, 250, 0.28);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 8px 20px rgba(59, 130, 246, 0.14);
+        }
+        .sidebar-item-hover {
+            color: rgba(226, 232, 240, 0.92);
         }
         .sidebar-item-hover:hover {
-            background-color: rgba(255, 255, 255, 0.08);
+            background: rgba(148, 163, 184, 0.08);
             color: #FFFFFF;
         }
+        #adminSidebar nav {
+            scrollbar-width: none;
+        }
+        #adminSidebar nav::-webkit-scrollbar {
+            display: none;
+        }
+
     </style>
 </head>
 <body class="h-full antialiased overflow-x-hidden bg-slate-100">
@@ -41,7 +54,7 @@
         <div id="adminSidebarBackdrop" class="fixed inset-0 z-30 bg-slate-950/40 opacity-0 pointer-events-none transition-opacity duration-200 lg:hidden"></div>
 
         <!-- Sidebar -->
-        <aside id="adminSidebar" class="admin-sidebar fixed inset-y-0 left-0 z-40 w-72 -translate-x-full transition-transform duration-200 ease-out lg:static lg:w-64 lg:translate-x-0 lg:min-h-screen text-slate-300">
+        <aside id="adminSidebar" class="admin-sidebar fixed inset-y-0 left-0 z-40 w-72 -translate-x-full transition-transform duration-200 ease-out lg:static lg:w-64 lg:translate-x-0 lg:min-h-screen lg:transition-none text-slate-300">
             <div>
                 <!-- Brand Header -->
                 <div class="px-6 py-5 border-b border-slate-800/80">
@@ -246,12 +259,31 @@
                 return;
             }
 
+            if (window.innerWidth >= 1024) {
+                adminSidebar.classList.remove('-translate-x-full');
+                adminSidebar.classList.add('translate-x-0');
+                adminSidebarBackdrop.classList.add('opacity-0');
+                adminSidebarBackdrop.classList.add('pointer-events-none');
+                adminSidebarBackdrop.classList.remove('opacity-100');
+                document.body.classList.remove('overflow-hidden');
+                return;
+            }
+
             adminSidebar.classList.toggle('-translate-x-full', !isOpen);
             adminSidebar.classList.toggle('translate-x-0', isOpen);
             adminSidebarBackdrop.classList.toggle('opacity-0', !isOpen);
             adminSidebarBackdrop.classList.toggle('pointer-events-none', !isOpen);
             adminSidebarBackdrop.classList.toggle('opacity-100', isOpen);
             document.body.classList.toggle('overflow-hidden', isOpen);
+        }
+
+        if (window.innerWidth >= 1024) {
+            adminSidebar?.classList.remove('-translate-x-full');
+            adminSidebar?.classList.add('translate-x-0');
+            adminSidebarBackdrop?.classList.add('opacity-0');
+            adminSidebarBackdrop?.classList.add('pointer-events-none');
+            adminSidebarBackdrop?.classList.remove('opacity-100');
+            document.body.classList.remove('overflow-hidden');
         }
 
         openMobileSidebar?.addEventListener('click', () => setSidebarOpen(true));

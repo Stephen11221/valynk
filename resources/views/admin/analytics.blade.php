@@ -50,7 +50,7 @@
                             <span class="text-slate-900 font-bold">{{ $sector['percentage'] }}%</span>
                         </div>
                         <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full {{ $sector['color'] }} rounded-full transition-all duration-500" style="width: {{ $sector['percentage'] }}%;"></div>
+                            <div class="h-full rounded-full transition-all duration-500 {{ $sector['color'] }}" style="width: <?php echo $sector['percentage']; ?>%;"></div>
                         </div>
                     </div>
                 @endforeach

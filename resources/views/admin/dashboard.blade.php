@@ -268,7 +268,7 @@
                             $h = round(($m['val'] / 10) * 100);
                         @endphp
                         <div class="flex-1 flex flex-col items-center gap-1 group">
-                            <div class="w-full bg-purple-600 rounded-t transition-all group-hover:bg-purple-500" style="height: {{ $h }}%;"></div>
+                            <div class="w-full bg-purple-600 rounded-t transition-all" style="height: <?php echo $h; ?>%;"></div>
                             <span class="text-[10px] text-slate-400 font-medium">{{ $m['name'] }}</span>
                         </div>
                     @endforeach

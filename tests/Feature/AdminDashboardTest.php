@@ -80,4 +80,40 @@ class AdminDashboardTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Platform Configuration & Algorithm Weights');
     }
+
+    /**
+     * Test transaction management page loads correctly.
+     */
+    public function test_admin_transactions_page_loads(): void
+    {
+        $response = $this->get(route('admin.transactions'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Transaction Management');
+        $response->assertSee('All Transactions');
+    }
+
+    /**
+     * Test payments page loads correctly.
+     */
+    public function test_admin_payments_page_loads(): void
+    {
+        $response = $this->get(route('admin.payments'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Payment Management');
+        $response->assertSee('All Transactions');
+    }
+
+    /**
+     * Test subscriptions page loads correctly.
+     */
+    public function test_admin_subscriptions_page_loads(): void
+    {
+        $response = $this->get(route('admin.subscriptions'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Subscriptions Management');
+        $response->assertSee('All Subscriptions');
+    }
 }

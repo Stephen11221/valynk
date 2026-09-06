@@ -29,6 +29,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [DashboardController::class, 'users'])->name('users');
     Route::get('/providers', [DashboardController::class, 'providers'])->name('providers');
     Route::get('/matches', [DashboardController::class, 'matches'])->name('matches');
+    Route::get('/transactions', [DashboardController::class, 'transactions'])->name('transactions');
+    Route::get('/payments', [DashboardController::class, 'payments'])->name('payments');
+    Route::get('/subscriptions', [DashboardController::class, 'subscriptions'])->name('subscriptions');
     Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
 });
