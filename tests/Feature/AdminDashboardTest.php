@@ -154,4 +154,17 @@ class AdminDashboardTest extends TestCase
         $response->assertSee('Communications Management');
         $response->assertSee('Recent Communications');
     }
+
+    /**
+     * Test audit logs page loads correctly.
+     */
+    public function test_admin_audit_logs_page_loads(): void
+    {
+        $response = $this->get(route('admin.audit-logs'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Audit Logs');
+        $response->assertSee('Audit Log Entries');
+        $response->assertSee('Updated content item');
+    }
 }

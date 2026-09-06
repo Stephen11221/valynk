@@ -37,4 +37,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/communications', [DashboardController::class, 'communications'])->name('communications');
     Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+    Route::get('/audit-logs', [DashboardController::class, 'auditLogs'])->name('audit-logs');
 });

@@ -809,4 +809,25 @@ class DashboardController extends Controller
     {
         return view('admin.settings');
     }
+
+    /**
+     * Audit Logs page.
+     */
+    public function auditLogs(): View
+    {
+        $auditLogs = collect([
+            ['time' => '27 May 2025 11:45:23 AM', 'user' => 'Kevin Ogola', 'role' => 'Admin', 'action' => 'UPDATE', 'action_class' => 'bg-sky-100 text-sky-700', 'description' => 'Updated content item', 'resource' => 'Homepage Banner', 'resource_type' => 'Content', 'ip' => '41.89.23.156', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-pen'],
+            ['time' => '27 May 2025 11:32:10 AM', 'user' => 'Alice M.', 'role' => 'Family Manager', 'action' => 'CREATE', 'action_class' => 'bg-emerald-100 text-emerald-700', 'description' => 'Created family account', 'resource' => 'Family Account', 'resource_type' => 'User', 'ip' => '102.88.15.32', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-plus'],
+            ['time' => '27 May 2025 11:05:47 AM', 'user' => 'Yusuf A.', 'role' => 'Provider Manager', 'action' => 'APPROVE', 'action_class' => 'bg-violet-100 text-violet-700', 'description' => 'Approved provider', 'resource' => 'BrightMind Center', 'resource_type' => 'Provider', 'ip' => '197.248.12.67', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-check'],
+            ['time' => '27 May 2025 10:58:31 AM', 'user' => 'Milkah N.', 'role' => 'NGO Manager', 'action' => 'LOGIN', 'action_class' => 'bg-indigo-100 text-indigo-700', 'description' => 'User login', 'resource' => 'Admin Portal', 'resource_type' => 'System', 'ip' => '102.88.15.32', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-right-to-bracket'],
+            ['time' => '27 May 2025 10:42:19 AM', 'user' => 'System', 'role' => 'Automated', 'action' => 'BACKUP', 'action_class' => 'bg-sky-100 text-sky-700', 'description' => 'Database backup completed', 'resource' => 'Database', 'resource_type' => 'System', 'ip' => '-', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-database'],
+            ['time' => '27 May 2025 10:27:05 AM', 'user' => 'Beth N.', 'role' => 'Content Manager', 'action' => 'DELETE', 'action_class' => 'bg-rose-100 text-rose-700', 'description' => 'Deleted blog post', 'resource' => 'Blog Post ID: 287', 'resource_type' => 'Content', 'ip' => '41.89.23.156', 'status' => 'Failed', 'status_class' => 'text-rose-600', 'icon' => 'fa-trash'],
+            ['time' => '27 May 2025 10:05:48 AM', 'user' => 'Maureen N.', 'role' => 'Institution Manager', 'action' => 'UPDATE', 'action_class' => 'bg-sky-100 text-sky-700', 'description' => 'Updated institution profile', 'resource' => 'Nairobi Academy', 'resource_type' => 'Institution', 'ip' => '197.248.12.67', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-pen'],
+            ['time' => '27 May 2025 09:55:33 AM', 'user' => 'Admin User', 'role' => 'Super Administrator', 'action' => 'LOGIN', 'action_class' => 'bg-indigo-100 text-indigo-700', 'description' => 'User login', 'resource' => 'Admin Portal', 'resource_type' => 'System', 'ip' => '41.89.23.156', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-right-to-bracket'],
+            ['time' => '27 May 2025 09:42:08 AM', 'user' => 'Kevin Ogola', 'role' => 'Admin', 'action' => 'SECURITY', 'action_class' => 'bg-amber-100 text-amber-700', 'description' => 'Failed login attempt', 'resource' => 'Admin Portal', 'resource_type' => 'System', 'ip' => '203.0.113.45', 'status' => 'Failed', 'status_class' => 'text-rose-600', 'icon' => 'fa-shield-halved'],
+            ['time' => '27 May 2025 09:15:26 AM', 'user' => 'System', 'role' => 'Automated', 'action' => 'SYNC', 'action_class' => 'bg-indigo-100 text-indigo-700', 'description' => 'Payment gateway sync', 'resource' => 'Payments', 'resource_type' => 'System', 'ip' => '-', 'status' => 'Success', 'status_class' => 'text-emerald-600', 'icon' => 'fa-arrows-rotate'],
+        ]);
+
+        return view('admin.audit-logs', compact('auditLogs'));
+    }
 }

@@ -154,8 +154,8 @@
                         <span>System Settings</span>
                     </a>
 
-                    <a href="{{ route('admin.analytics') }}#audit" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
+                          <a href="{{ route('admin.audit-logs') }}" 
+                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.audit-logs') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                         <i class="fa-solid fa-file-lines w-4 text-center text-sm"></i>
                         <span>Audit Logs</span>
                     </a>
