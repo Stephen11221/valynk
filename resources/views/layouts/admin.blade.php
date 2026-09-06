@@ -54,7 +54,7 @@
         <div id="adminSidebarBackdrop" class="fixed inset-0 z-30 bg-slate-950/40 opacity-0 pointer-events-none transition-opacity duration-200 lg:hidden"></div>
 
         <!-- Sidebar -->
-        <aside id="adminSidebar" class="admin-sidebar fixed inset-y-0 left-0 z-40 w-72 -translate-x-full transition-transform duration-200 ease-out lg:static lg:w-64 lg:translate-x-0 lg:min-h-screen lg:transition-none text-slate-300">
+        <aside id="adminSidebar" class="admin-sidebar fixed inset-y-0 left-0 z-40 w-72 -translate-x-full transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:h-screen lg:self-start lg:w-64 lg:translate-x-0 lg:transition-none text-slate-300">
             <div>
                 <!-- Brand Header -->
                 <div class="px-6 py-5 border-b border-slate-800/80">
