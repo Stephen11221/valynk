@@ -32,6 +32,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/transactions', [DashboardController::class, 'transactions'])->name('transactions');
     Route::get('/payments', [DashboardController::class, 'payments'])->name('payments');
     Route::get('/subscriptions', [DashboardController::class, 'subscriptions'])->name('subscriptions');
+    Route::get('/content', [DashboardController::class, 'content'])->name('content');
+    Route::get('/reports', [DashboardController::class, 'reports'])->name('reports');
+    Route::get('/communications', [DashboardController::class, 'communications'])->name('communications');
     Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
 });

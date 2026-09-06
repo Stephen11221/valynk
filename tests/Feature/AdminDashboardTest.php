@@ -78,7 +78,9 @@ class AdminDashboardTest extends TestCase
         $response = $this->get(route('admin.settings'));
 
         $response->assertStatus(200);
-        $response->assertSee('Platform Configuration & Algorithm Weights');
+        $response->assertSee('System Settings');
+        $response->assertSee('General Settings');
+        $response->assertSee('System Status');
     }
 
     /**
@@ -115,5 +117,41 @@ class AdminDashboardTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Subscriptions Management');
         $response->assertSee('All Subscriptions');
+    }
+
+    /**
+     * Test content management page loads correctly.
+     */
+    public function test_admin_content_page_loads(): void
+    {
+        $response = $this->get(route('admin.content'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Content Management');
+        $response->assertSee('All Content');
+    }
+
+    /**
+     * Test reports and analytics page loads correctly.
+     */
+    public function test_admin_reports_page_loads(): void
+    {
+        $response = $this->get(route('admin.reports'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Reports & Analytics');
+        $response->assertSee('Platform Overview');
+    }
+
+    /**
+     * Test communications page loads correctly.
+     */
+    public function test_admin_communications_page_loads(): void
+    {
+        $response = $this->get(route('admin.communications'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Communications Management');
+        $response->assertSee('Recent Communications');
     }
 }

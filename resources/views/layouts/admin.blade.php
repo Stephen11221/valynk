@@ -106,38 +106,38 @@
                         <span>Matches</span>
                     </a>
 
-                    <a href="{{ route('admin.analytics') }}#transactions" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
+                    <a href="{{ route('admin.transactions') }}" 
+                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.transactions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                         <i class="fa-solid fa-receipt w-4 text-center text-sm"></i>
                         <span>Transactions</span>
                     </a>
 
-                    <a href="{{ route('admin.analytics') }}#payments" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
+                    <a href="{{ route('admin.payments') }}" 
+                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.payments') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                         <i class="fa-solid fa-credit-card w-4 text-center text-sm"></i>
                         <span>Payments</span>
                     </a>
 
-                    <a href="{{ route('admin.settings') }}#subscriptions" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
+                    <a href="{{ route('admin.subscriptions') }}" 
+                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.subscriptions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                         <i class="fa-solid fa-tag w-4 text-center text-sm"></i>
                         <span>Subscriptions</span>
                     </a>
 
-                    <a href="{{ route('admin.settings') }}#content" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
+                          <a href="{{ route('admin.content') }}" 
+                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.content') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                         <i class="fa-solid fa-file-pen w-4 text-center text-sm"></i>
                         <span>Content Management</span>
                     </a>
 
-                    <a href="{{ route('admin.analytics') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.analytics') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                          <a href="{{ route('admin.reports') }}" 
+                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.reports') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                         <i class="fa-solid fa-chart-column w-4 text-center text-sm"></i>
                         <span>Reports & Analytics</span>
                     </a>
 
-                    <a href="{{ route('admin.settings') }}#communications" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
+                          <a href="{{ route('admin.communications') }}" 
+                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.communications') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                         <i class="fa-solid fa-comments w-4 text-center text-sm"></i>
                         <span>Communications</span>
                     </a>

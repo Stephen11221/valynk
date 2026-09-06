@@ -700,6 +700,88 @@ class DashboardController extends Controller
     }
 
     /**
+     * Content Management page.
+     */
+    public function content(): View
+    {
+        $content = collect([
+            ['title' => 'Homepage Hero Banner', 'type' => 'Banner', 'section' => 'Homepage', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '26 May 2025', 'updated_by' => 'Admin User'],
+            ['title' => 'Our Story', 'type' => 'Page', 'section' => 'About Us', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '25 May 2025', 'updated_by' => 'Admin User'],
+            ['title' => 'How It Works', 'type' => 'Page', 'section' => 'How It Works', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '25 May 2025', 'updated_by' => 'Kevin O.'],
+            ['title' => 'For Families', 'type' => 'Page', 'section' => 'For Families', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '23 May 2025', 'updated_by' => 'Alice M.'],
+            ['title' => 'For Providers', 'type' => 'Page', 'section' => 'For Providers', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '23 May 2025', 'updated_by' => 'Yusuf A.'],
+            ['title' => 'For Institutions', 'type' => 'Page', 'section' => 'For Institutions', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '22 May 2025', 'updated_by' => 'Kevin O.'],
+            ['title' => 'Solutions Overview', 'type' => 'Page', 'section' => 'Solutions', 'status' => 'Draft', 'status_class' => 'bg-amber-100 text-amber-800', 'language' => 'English', 'updated' => '21 May 2025', 'updated_by' => 'Beth N.'],
+            ['title' => 'Pricing Plans', 'type' => 'Page', 'section' => 'Pricing', 'status' => 'Scheduled', 'status_class' => 'bg-sky-100 text-sky-800', 'language' => 'English', 'updated' => '20 May 2025', 'updated_by' => 'Admin User'],
+            ['title' => 'Contact Us', 'type' => 'Page', 'section' => 'Contact', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '20 May 2025', 'updated_by' => 'Admin User'],
+            ['title' => 'Blog: Building Strong Families', 'type' => 'Blog Post', 'section' => 'Resources / Blog', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '19 May 2025', 'updated_by' => 'Maureen N.'],
+        ]);
+
+        $stats = [
+            ['title' => 'Total Content Items', 'value' => '1,248', 'change' => '+18% from last month', 'positive' => true, 'icon' => 'fa-newspaper', 'color' => 'bg-purple-50 text-purple-600', 'sparkline' => [12, 18, 16, 22, 24, 28, 32, 38]],
+            ['title' => 'Published Items', 'value' => '986', 'change' => '+20% from last month', 'positive' => true, 'icon' => 'fa-earth-africa', 'color' => 'bg-emerald-50 text-emerald-600', 'sparkline' => [16, 20, 19, 25, 27, 34, 31, 43]],
+            ['title' => 'Draft Items', 'value' => '142', 'change' => '+8% from last month', 'positive' => true, 'icon' => 'fa-pen-to-square', 'color' => 'bg-amber-50 text-amber-600', 'sparkline' => [20, 18, 15, 19, 21, 22, 18, 24]],
+            ['title' => 'Scheduled Items', 'value' => '68', 'change' => '-5% from last month', 'positive' => false, 'icon' => 'fa-calendar', 'color' => 'bg-sky-50 text-sky-600', 'sparkline' => [22, 18, 16, 14, 13, 12, 11, 10]],
+            ['title' => 'Archived Items', 'value' => '52', 'change' => '+10% from last month', 'positive' => true, 'icon' => 'fa-box-archive', 'color' => 'bg-rose-50 text-rose-600', 'sparkline' => [12, 16, 15, 18, 17, 20, 19, 24]],
+            ['title' => 'Total Page Views', 'value' => '245,680', 'change' => '+22% from last month', 'positive' => true, 'icon' => 'fa-eye', 'color' => 'bg-green-50 text-green-600', 'sparkline' => [20, 26, 22, 28, 30, 35, 40, 46]],
+        ];
+
+        return view('admin.content', compact('stats', 'content'));
+    }
+
+    /**
+     * Reports & Analytics page.
+     */
+    public function reports(): View
+    {
+        $stats = [
+            ['title' => 'Total Users', 'value' => '23,856', 'change' => '+15% from last month', 'positive' => true, 'icon' => 'fa-users', 'color' => 'bg-purple-50 text-purple-600', 'sparkline' => [18, 20, 22, 26, 28, 30, 32, 38]],
+            ['title' => 'Active Matches', 'value' => '2,856', 'change' => '+22% from last month', 'positive' => true, 'icon' => 'fa-link', 'color' => 'bg-emerald-50 text-emerald-600', 'sparkline' => [15, 18, 24, 28, 32, 34, 39, 45]],
+            ['title' => 'Total Transactions', 'value' => '25,842', 'change' => '+23% from last month', 'positive' => true, 'icon' => 'fa-credit-card', 'color' => 'bg-sky-50 text-sky-600', 'sparkline' => [12, 20, 18, 26, 30, 32, 36, 42]],
+            ['title' => 'Total Revenue (KES)', 'value' => '12,845,300', 'change' => '+28% from last month', 'positive' => true, 'icon' => 'fa-wallet', 'color' => 'bg-amber-50 text-amber-600', 'sparkline' => [15, 20, 18, 28, 24, 32, 39, 48]],
+            ['title' => 'Conversion Rate', 'value' => '11.2%', 'change' => '+4% from last month', 'positive' => true, 'icon' => 'fa-chart-line', 'color' => 'bg-rose-50 text-rose-600', 'sparkline' => [10, 15, 14, 17, 20, 23, 27, 31]],
+            ['title' => 'Customer Satisfaction', 'value' => '4.7 / 5', 'change' => '+6% from last month', 'positive' => true, 'icon' => 'fa-star', 'color' => 'bg-green-50 text-green-600', 'sparkline' => [18, 20, 17, 22, 26, 32, 35, 38]],
+        ];
+
+        $performance = [
+            ['segment' => 'Families', 'users' => 12458, 'matches' => 1842, 'transactions' => 84542, 'revenue' => 2568000],
+            ['segment' => 'Providers', 'users' => 6324, 'matches' => 756, 'transactions' => 1642, 'revenue' => 3856200],
+            ['segment' => 'Institutions', 'users' => 3256, 'matches' => 186, 'transactions' => 2856, 'revenue' => 2145600],
+            ['segment' => 'Individual Users', 'users' => 1818, 'matches' => 72, 'transactions' => 1542, 'revenue' => 586700],
+        ];
+
+        return view('admin.reports', compact('stats', 'performance'));
+    }
+
+    /**
+     * Communication Management page.
+     */
+    public function communications(): View
+    {
+        $stats = [
+            ['title' => 'Message Sent', 'value' => '12,845', 'change' => '+26% from last month', 'positive' => true, 'icon' => 'fa-envelope', 'color' => 'bg-purple-50 text-purple-600', 'sparkline' => [14, 18, 22, 20, 28, 30, 35, 41]],
+            ['title' => 'Delivery Rate', 'value' => '98.6%', 'change' => '+2.4% from last month', 'positive' => true, 'icon' => 'fa-paper-plane', 'color' => 'bg-emerald-50 text-emerald-600', 'sparkline' => [20, 24, 22, 27, 29, 32, 35, 39]],
+            ['title' => 'Open Rate', 'value' => '42.7%', 'change' => '+6.8% from last month', 'positive' => true, 'icon' => 'fa-envelope-open', 'color' => 'bg-sky-50 text-sky-600', 'sparkline' => [12, 16, 18, 15, 20, 23, 28, 31]],
+            ['title' => 'Click Rate', 'value' => '8.3%', 'change' => '+1.9% from last month', 'positive' => true, 'icon' => 'fa-mouse-pointer', 'color' => 'bg-amber-50 text-amber-600', 'sparkline' => [8, 9, 10, 11, 13, 15, 16, 18]],
+            ['title' => 'Unsubscribes', 'value' => '186', 'change' => '+5% from last month', 'positive' => false, 'icon' => 'fa-user-slash', 'color' => 'bg-rose-50 text-rose-600', 'sparkline' => [50, 42, 36, 28, 24, 18, 14, 10]],
+            ['title' => 'Engagement Score', 'value' => '4.6 / 5', 'change' => '+8% from last month', 'positive' => true, 'icon' => 'fa-star', 'color' => 'bg-green-50 text-green-600', 'sparkline' => [16, 18, 19, 22, 25, 29, 33, 34]],
+        ];
+
+        $communications = collect([
+            ['id' => 'MSG-2025-05270', 'subject' => 'Welcome to VALYNK', 'type' => 'Welcome', 'audience' => 'Families', 'channel' => 'Email', 'sentOn' => '27 May 2025 10:30 AM', 'status' => 'Sent', 'status_class' => 'bg-emerald-100 text-emerald-800', 'performance' => 'Open 42.7%', 'openRate' => '42.7%'],
+            ['id' => 'MSG-2025-05269', 'subject' => 'New Matching Available', 'type' => 'Alert', 'audience' => 'Families', 'channel' => 'Email', 'sentOn' => '27 May 2025 09:15 AM', 'status' => 'Sent', 'status_class' => 'bg-emerald-100 text-emerald-800', 'performance' => 'Open 41.3%', 'openRate' => '41.3%'],
+            ['id' => 'MSG-2025-05268', 'subject' => 'Provider Spotlight', 'type' => 'Newsletter', 'audience' => 'All Users', 'channel' => 'Email', 'sentOn' => '26 May 2025 04:20 PM', 'status' => 'Sent', 'status_class' => 'bg-emerald-100 text-emerald-800', 'performance' => 'Open 39.3%', 'openRate' => '39.3%'],
+            ['id' => 'MSG-2025-05267', 'subject' => 'Payment Receipt', 'type' => 'Transactional', 'audience' => 'Customers', 'channel' => 'Email', 'sentOn' => '26 May 2025 02:10 PM', 'status' => 'Sent', 'status_class' => 'bg-emerald-100 text-emerald-800', 'performance' => 'Open 86.6%', 'openRate' => '86.6%'],
+            ['id' => 'MSG-2025-05266', 'subject' => 'Upcoming Webinar', 'type' => 'Campaign', 'audience' => 'Parents', 'channel' => 'Email', 'sentOn' => '25 May 2025 11:10 AM', 'status' => 'Sent', 'status_class' => 'bg-emerald-100 text-emerald-800', 'performance' => 'Open 45.9%', 'openRate' => '45.9%'],
+            ['id' => 'MSG-2025-05265', 'subject' => 'System Maintenance Notice', 'type' => 'System', 'audience' => 'All Users', 'channel' => 'Email', 'sentOn' => '25 May 2025 06:30 PM', 'status' => 'Delivered', 'status_class' => 'bg-sky-100 text-sky-800', 'performance' => 'Open 98.7%', 'openRate' => '98.7%'],
+            ['id' => 'MSG-2025-05264', 'subject' => 'Account Security Check', 'type' => 'Security', 'audience' => 'All Users', 'channel' => 'Email', 'sentOn' => '24 May 2025 02:30 PM', 'status' => 'Sent', 'status_class' => 'bg-emerald-100 text-emerald-800', 'performance' => 'Open 41.1%', 'openRate' => '41.1%'],
+            ['id' => 'MSG-2025-05263', 'subject' => 'Feedback Request', 'type' => 'Survey', 'audience' => 'All Users', 'channel' => 'Email', 'sentOn' => '23 May 2025 03:45 PM', 'status' => 'Draft', 'status_class' => 'bg-amber-100 text-amber-800', 'performance' => 'Open 0%', 'openRate' => '0%'],
+        ]);
+
+        return view('admin.communications', compact('stats', 'communications'));
+    }
+
+    /**
      * Analytics and Reports page.
      */
     public function analytics(): View
