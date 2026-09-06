@@ -36,17 +36,16 @@ class ExampleTest extends TestCase
     }
 
     /**
-     * Invalid login submissions return to the login form with an error.
+     * Demo login redirects to the dashboard without database authentication.
      */
-    public function test_invalid_login_submission_is_handled(): void
+    public function test_login_submission_redirects_to_dashboard(): void
     {
         $response = $this->post(route('login'), [
-            'email' => 'unknown@example.com',
-            'password' => 'incorrect-password',
+            'email' => 'demo@example.com',
+            'password' => 'demo-password',
         ]);
 
-        $response->assertRedirect(route('login'));
-        $response->assertSessionHasErrors('email');
+        $response->assertRedirect(route('admin.dashboard'));
     }
 
     /**

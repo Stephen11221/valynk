@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
@@ -29,23 +28,8 @@ Route::view('/solutions', 'solutions')->name('solutions');
 
 Route::view('/login', 'login')->name('login');
 
-Route::post('/login', function (Request $request) {
-    $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required', 'string'],
-    ]);
-
-    if (Auth::attempt($credentials, $request->boolean('remember'))) {
-        $request->session()->regenerate();
-
-        return redirect()->intended(route('admin.dashboard'));
-    }
-
-    return redirect()->route('login')
-        ->withErrors([
-            'email' => 'These credentials do not match our records.',
-        ])
-        ->withInput($request->only('email'));
+Route::post('/login', function () {
+    return redirect()->route('admin.dashboard');
 })->name('login.authenticate');
 
 Route::view('/register', 'register')->name('register');
