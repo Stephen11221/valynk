@@ -27,8 +27,8 @@
             <button class="search" aria-label="Search">
                 <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
             </button>
-            <a class="login" href="{{ route('admin.dashboard') }}" style="display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-user-shield" style="font-size: 13px;"></i> Admin</a>
-            <a class="button" href="#get-started">Get Started →</a>
+            <a class="login" href="{{ route('login') }}">Login</a>
+            <a class="button" href="{{ route('register') }}">Get Started →</a>
             <label class="menu" for="nav-toggle" aria-label="Open menu">
                 <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </label>
