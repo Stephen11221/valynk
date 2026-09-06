@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -62,5 +63,29 @@ class ExampleTest extends TestCase
         $response->assertSee('Institution');
         $response->assertSee('Partner / Other');
         $response->assertSee('Create Account');
+    }
+
+    /**
+     * A valid registration creates an account and returns to login.
+     */
+    public function test_registration_submission_creates_account(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'name' => 'Jane Doe',
+            'email' => 'jane@example.com',
+            'phone' => '712345678',
+            'account_type' => 'Individual / Family',
+            'password' => 'secure-password',
+            'password_confirmation' => 'secure-password',
+            'location' => 'Nairobi',
+            'terms' => '1',
+        ]);
+
+        $response->assertRedirect(route('login'));
+        $this->assertDatabaseHas('users', [
+            'email' => 'jane@example.com',
+            'account_type' => 'Individual / Family',
+        ]);
+        $this->assertInstanceOf(User::class, User::where('email', 'jane@example.com')->first());
     }
 }
