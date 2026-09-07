@@ -351,26 +351,50 @@
         padding: 0;
     }
     .register-promo {
-        min-height: 390px;
-        padding: 28px 20px;
+        min-height: 330px;
+        padding: 24px 16px;
     }
     .register-promo h1 {
-        font-size: 30px !important;
+        font-size: 27px !important;
+    }
+    .register-promo-copy {
+        max-width: 240px;
+        font-size: 11px;
     }
     .register-orbit {
-        transform: scale(0.74);
+        transform: scale(0.58);
         transform-origin: top center;
-        margin-bottom: -52px;
+        margin-top: 0;
+        margin-bottom: -88px;
     }
     .register-types,
     .register-fields {
         grid-template-columns: 1fr 1fr;
     }
     .register-form-panel {
-        padding: 28px 17px;
+        padding: 24px 14px;
+    }
+    .register-form-wrap h2 {
+        font-size: 21px !important;
+    }
+    .register-form-subtitle {
+        margin-bottom: 12px;
+        font-size: 10px;
     }
     .register-type {
-        min-height: 115px;
+        min-height: 105px;
+        padding: 8px 6px 6px;
+    }
+    .register-type i {
+        margin-bottom: 3px;
+        font-size: 21px;
+    }
+    .register-type strong {
+        font-size: 9px;
+    }
+    .register-type span {
+        margin-top: 3px;
+        font-size: 8px;
     }
     .register-page footer {
         display: none;
@@ -382,14 +406,30 @@
         grid-template-columns: 1fr;
     }
     .register-type {
-        min-height: 90px;
+        min-height: 78px;
+        flex-direction: row;
+        gap: 6px;
+        justify-content: flex-start;
+        padding: 7px 9px;
+        text-align: left;
     }
     .register-type i {
-        display: inline-block;
-        margin: 0 6px 0 0;
-        vertical-align: middle;
+        width: 25px;
+        margin: 0;
+        flex: 0 0 auto;
+        text-align: center;
     }
-    .register-type span {
-        display: inline;
+    .register-type strong {
+        min-width: 100px;
+    }
+    .register-type > span:not(.register-type-check) {
+        flex: 1;
+        margin: 0;
+    }
+    .register-type-check {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        flex: 0 0 auto;
     }
 }

@@ -9,7 +9,7 @@
 
     <!-- Filter Bar -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div class="flex items-center gap-1">
+        <div class="flex flex-wrap items-center gap-1">
             <a href="{{ route('admin.matches', ['status' => 'all']) }}" 
                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors {{ $currentStatus === 'all' ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
                 All Matches
@@ -28,7 +28,7 @@
             </a>
         </div>
 
-        <button class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg transition-colors">
+        <button class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-3 py-1.5 text-xs font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg transition-colors">
             <i class="fa-solid fa-arrows-rotate"></i> Re-run Matching Algorithm
         </button>
     </div>
