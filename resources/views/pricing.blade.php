@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Simple, transparent VALYNK pricing for individuals, families, providers, and institutions."><title>Pricing | VALYNK</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Simple, transparent VALYNK pricing for individuals, families, providers, and institutions.') }}"><title>{{ data_get($page, 'title', 'Pricing | VALYNK') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" referrerpolicy="no-referrer">
@@ -13,12 +13,12 @@
 @include('partials.navbar')
 <main id="top">
 
-        <section class="pricing-layout">
+        <section class="pricing-layout container-fluid">
             <div class="pricing-main">
-                <p class="eyebrow">Pricing</p>
-                <h1>Simple, Transparent Pricing.<br>Real Value.</h1>
+                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'Pricing') }}</p>
+                <h1>{!! nl2br(e(data_get($page, 'content.heading', "Simple, Transparent Pricing.\nReal Value."))) !!}</h1>
                 <div class="rule"></div>
-                <p class="pricing-intro">Choose the plan that fits your needs. Whether you're an individual, a family, a Provider or an Institution, there's a VALYNK plan for you.</p>
+                <p class="pricing-intro">{{ data_get($page, 'content.intro', "Choose the plan that fits your needs. Whether you're an individual, a family, a Provider or an Institution, there's a VALYNK plan for you.") }}</p>
 
                 <div class="price-grid">
                     <article>
@@ -97,7 +97,7 @@
             </div>
         </section>
 
-        <section class="pricing-assurances">
+        <section class="pricing-assurances container-fluid">
             <article>
                 <i class="fa-solid fa-shield-halved"></i>
                 <div>
@@ -135,6 +135,6 @@
             </article>
         </section>
 
-    </main></main>
+    </main>
 @include('partials.footer')
 </body></html>

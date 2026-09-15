@@ -16,13 +16,25 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate(
+        $password = env('ADMIN_PASSWORD');
+
+        if (! $password) {
+            return;
+        }
+
+        if (strlen($password) < 10) {
+            throw new \RuntimeException('ADMIN_PASSWORD must contain at least 10 characters.');
+        }
+
+        $admin = User::updateOrCreate(
             ['email' => env('ADMIN_EMAIL', 'admin@valynk.co.ke')],
             [
                 'name' => env('ADMIN_NAME', 'Admin User'),
                 'email_verified_at' => now(),
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
+                'password' => Hash::make($password),
             ],
         );
+
+        $admin->forceFill(['is_admin' => true])->save();
     }
 }

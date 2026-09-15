@@ -1,136 +1,73 @@
 @extends('layouts.admin')
 
-@section('title', 'User Management')
-@section('header_title', 'User & Entity Management')
-@section('header_subtitle', 'Manage registered Families, Providers, Institutions, and system permissions')
+@section('title', 'Account Management')
+@section('header_title', 'Accounts')
+@section('header_subtitle', 'Manage all Individual, Family, Provider, Institution, and Partner accounts')
 
 @section('content')
 <div class="space-y-6">
+    @if(session('status'))
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+            <i class="fa-solid fa-circle-check mr-2"></i>{{ session('status') }}
+        </div>
+    @endif
 
-    <!-- Header Actions & Filters -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        
-        <!-- Filter Tabs -->
+    <div class="flex items-center justify-between gap-3">
+        <p class="text-sm text-slate-500">Create and manage registered accounts.</p>
+        <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700"><i class="fa-solid fa-user-plus"></i> Add user</a>
+    </div>
+
+    <div class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
-            <a href="{{ route('admin.users', ['role' => 'all', 'search' => $search]) }}" 
-               class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors {{ $currentRole === 'all' ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
-                All Users (8)
-            </a>
-            <a href="{{ route('admin.users', ['role' => 'family', 'search' => $search]) }}" 
-               class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors {{ $currentRole === 'family' ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
-                Families
-            </a>
-            <a href="{{ route('admin.users', ['role' => 'provider', 'search' => $search]) }}" 
-               class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors {{ $currentRole === 'provider' ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
-                Providers
-            </a>
-            <a href="{{ route('admin.users', ['role' => 'institution', 'search' => $search]) }}" 
-               class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors {{ $currentRole === 'institution' ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
-                Institutions
-            </a>
+            @foreach(['all' => 'All users', 'individual' => 'Individuals', 'family' => 'Families', 'provider' => 'Providers', 'institution' => 'Institutions'] as $role => $label)
+                <a href="{{ route('admin.users', ['role' => $role, 'search' => $search]) }}"
+                   class="whitespace-nowrap rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors {{ $currentRole === $role ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
+                    {{ $label }}@if($role !== 'all') ({{ $accountCounts[ucfirst($role)] ?? 0 }})@endif
+                </a>
+            @endforeach
         </div>
 
-        <!-- Search Form -->
         <form method="GET" action="{{ route('admin.users') }}" class="flex items-center gap-2">
             <input type="hidden" name="role" value="{{ $currentRole }}">
-            <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input type="text" name="search" value="{{ $search }}" placeholder="Search by name or email..." class="pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 w-48 sm:w-64">
-            </div>
-            <button type="submit" class="px-3 py-1.5 text-xs font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg transition-colors">
-                Filter
-            </button>
-            @if($search)
-                <a href="{{ route('admin.users', ['role' => $currentRole]) }}" class="text-xs text-slate-500 hover:text-slate-700">Clear</a>
-            @endif
+            <label class="relative">
+                <span class="sr-only">Search users</span>
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
+                <input type="search" name="search" value="{{ $search }}" placeholder="Search name, email, or phone..." class="w-52 rounded-lg border border-slate-300 bg-slate-50 py-1.5 pl-8 pr-3 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 sm:w-64">
+            </label>
+            <button type="submit" class="rounded-lg bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-slate-900">Filter</button>
         </form>
     </div>
 
-    <!-- Users Table -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+                <thead class="border-b border-slate-200 bg-slate-50 font-semibold text-slate-500">
                     <tr>
-                        <th class="py-3 px-4">User / Entity Name</th>
-                        <th class="py-3 px-4">Role</th>
-                        <th class="py-3 px-4">Category / Specialty</th>
-                        <th class="py-3 px-4">Verification Status</th>
-                        <th class="py-3 px-4 text-center">Active Matches</th>
-                        <th class="py-3 px-4 text-center">Rating</th>
-                        <th class="py-3 px-4">Joined Date</th>
-                        <th class="py-3 px-4 text-right">Actions</th>
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">Account type</th>
+                        <th class="px-4 py-3">Contact details</th>
+                        <th class="px-4 py-3">Location</th>
+                        <th class="px-4 py-3">Joined</th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-700">
                     @forelse($users as $user)
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-3.5 px-4">
-                                <div class="font-bold text-slate-900 text-sm">{{ $user['name'] }}</div>
-                                <div class="text-[11px] text-slate-400 font-mono">{{ $user['email'] }}</div>
-                            </td>
-                            <td class="py-3.5 px-4">
-                                @if($user['role'] === 'Provider')
-                                    <span class="px-2 py-0.5 rounded-full font-bold text-[11px] bg-indigo-50 text-indigo-700 border border-indigo-200">
-                                        <i class="fa-solid fa-user-doctor"></i> Provider
-                                    </span>
-                                @elseif($user['role'] === 'Family')
-                                    <span class="px-2 py-0.5 rounded-full font-bold text-[11px] bg-sky-50 text-sky-700 border border-sky-200">
-                                        <i class="fa-solid fa-house-chimney-user"></i> Family
-                                    </span>
-                                @else
-                                    <span class="px-2 py-0.5 rounded-full font-bold text-[11px] bg-purple-50 text-purple-700 border border-purple-200">
-                                        <i class="fa-solid fa-building-columns"></i> Institution
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="py-3.5 px-4 font-medium text-slate-600">{{ $user['category'] }}</td>
-                            <td class="py-3.5 px-4">
-                                @if(str_contains(strtolower($user['status']), 'verified'))
-                                    <span class="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full text-[11px] font-bold">
-                                        <i class="fa-solid fa-circle-check"></i> {{ $user['status'] }}
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full text-[11px] font-bold">
-                                        <i class="fa-solid fa-clock"></i> {{ $user['status'] }}
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="py-3.5 px-4 text-center font-bold text-slate-800">{{ $user['matches_count'] }}</td>
-                            <td class="py-3.5 px-4 text-center">
-                                <span class="inline-flex items-center gap-1 text-amber-600 font-bold">
-                                    <i class="fa-solid fa-star text-xs"></i> {{ $user['rating'] }}
-                                </span>
-                            </td>
-                            <td class="py-3.5 px-4 text-slate-500 font-mono">{{ $user['joined'] }}</td>
-                            <td class="py-3.5 px-4 text-right space-x-1">
-                                <button class="p-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded transition-colors" title="View Profile">
-                                    <i class="fa-solid fa-eye text-sm"></i>
-                                </button>
-                                <button class="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Edit Permissions">
-                                    <i class="fa-solid fa-pen text-sm"></i>
-                                </button>
-                                <button class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors" title="Suspend User">
-                                    <i class="fa-solid fa-ban text-sm"></i>
-                                </button>
-                            </td>
+                        <tr class="transition-colors hover:bg-slate-50/80">
+                            <td class="px-4 py-3.5"><div class="text-sm font-bold text-slate-900">{{ $user->name }}</div><div class="font-mono text-[11px] text-slate-400">{{ $user->email }}</div></td>
+                            <td class="px-4 py-3.5"><span class="inline-flex rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-[11px] font-bold text-sky-700">{{ $user->account_type }}</span></td>
+                            <td class="px-4 py-3.5 text-slate-600">{{ $user->phone ?: '—' }}</td>
+                            <td class="px-4 py-3.5 text-slate-600">{{ $user->location ?: '—' }}</td>
+                            <td class="px-4 py-3.5 font-mono text-slate-500">{{ $user->created_at?->format('d M Y') ?? '—' }}</td>
+                            <td class="px-4 py-3.5 text-right"><a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center gap-1 rounded-lg bg-indigo-50 px-2.5 py-1.5 font-semibold text-indigo-700 transition-colors hover:bg-indigo-100"><i class="fa-solid fa-pen"></i> Edit user</a></td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="8" class="py-8 text-center text-slate-400">
-                                <i class="fa-solid fa-user-slash text-2xl mb-2 block"></i>
-                                No users found matching your search criteria.
-                            </td>
-                        </tr>
+                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-400"><i class="fa-solid fa-user-slash mb-2 block text-2xl"></i>No registered users match this filter.</td></tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
-            <span>Showing {{ $users->count() }} records</span>
-            <span class="font-medium text-slate-600">Verification Engine Standard v2.4</span>
-        </div>
+        <div class="flex items-center justify-between border-t border-slate-200 bg-slate-50 p-4 text-xs text-slate-500"><span>Showing {{ $users->count() }} registered accounts</span><span class="font-medium text-slate-600">Changes are saved immediately</span></div>
     </div>
-
 </div>
 @endsection

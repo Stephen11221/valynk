@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Grow your practice and impact with VALYNK.">
-    <title>For Providers | VALYNK</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Grow your practice and impact with VALYNK.') }}">
+    <title>{{ data_get($page, 'title', 'For Providers | VALYNK') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +21,10 @@
     <main id="top">
         <section class="provider-layout">
             <div class="provider-main">
-                <p class="eyebrow">For providers</p>
-                <h1>Grow Your Impact. Expand Your Reach.</h1>
+                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'For providers') }}</p>
+                <h1>{{ data_get($page, 'content.heading', 'Grow Your Impact. Expand Your Reach.') }}</h1>
                 <div class="rule"></div>
-                <p class="provider-intro">VALYNK connects you with the right people and organisations that need your expertise. Join a trusted network of verified Providers and grow your impact.</p>
+                <p class="provider-intro">{{ data_get($page, 'content.intro', 'VALYNK connects you with the right people and organisations that need your expertise. Join a trusted network of verified Providers and grow your impact.') }}</p>
                 <div class="provider-benefits">
                     <article><i class="fa-solid fa-people-group"></i><h3>Increase Visibility</h3><p>Get discovered by Institutions and individuals looking for your services.</p></article>
                     <article><i class="fa-solid fa-handshake"></i><h3>Quality Connections</h3><p>We match you with the right opportunities based on verified evidence.</p></article>

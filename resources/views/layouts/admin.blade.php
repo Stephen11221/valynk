@@ -40,11 +40,16 @@
             background: rgba(148, 163, 184, 0.08);
             color: #FFFFFF;
         }
-        #adminSidebar nav {
-            scrollbar-width: none;
+        #adminSidebar .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
         }
-        #adminSidebar nav::-webkit-scrollbar {
-            display: none;
+        #adminSidebar .sidebar-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        #adminSidebar .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.35);
+            border-radius: 999px;
         }
 
     </style>
@@ -54,10 +59,10 @@
         <div id="adminSidebarBackdrop" class="fixed inset-0 z-30 bg-slate-950/40 opacity-0 pointer-events-none transition-opacity duration-200 lg:hidden"></div>
 
         <!-- Sidebar -->
-        <aside id="adminSidebar" class="admin-sidebar fixed inset-y-0 left-0 z-40 w-72 -translate-x-full transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:h-screen lg:self-start lg:w-64 lg:translate-x-0 lg:transition-none text-slate-300">
-            <div>
+        <aside id="adminSidebar" class="admin-sidebar fixed inset-y-0 left-0 z-40 flex w-72 -translate-x-full flex-col overflow-hidden transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:h-screen lg:self-start lg:w-64 lg:translate-x-0 lg:transition-none text-slate-300">
+            <div class="flex min-h-0 flex-1 flex-col">
                 <!-- Brand Header -->
-                <div class="px-6 py-5 border-b border-slate-800/80">
+                <div class="shrink-0 border-b border-slate-800/80 px-6 py-5">
                     <div class="flex items-center justify-between gap-3">
                         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
                             <div class="bg-white p-1 rounded-md shadow-sm">
@@ -75,125 +80,130 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <nav class="mt-4 px-3 space-y-1 text-xs">
-                    <a href="{{ route('admin.dashboard') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.dashboard') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-300' }}">
-                        <i class="fa-solid fa-house w-4 text-center text-sm"></i>
-                        <span>Overview</span>
-                    </a>
+                <div class="sidebar-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4">
+                    <nav aria-label="Admin navigation" class="space-y-1 text-xs">
+                        <a href="{{ route('admin.dashboard') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.dashboard') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-300' }}">
+                            <i class="fa-solid fa-house w-4 text-center text-sm"></i>
+                            <span>Overview</span>
+                        </a>
 
-                    <a href="{{ route('admin.users', ['role' => 'family']) }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->fullUrlIs('*role=family*') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-users w-4 text-center text-sm"></i>
-                        <span>Families</span>
-                    </a>
+                        <a href="{{ route('admin.users') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.users*') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-users w-4 text-center text-sm"></i>
+                            <span>Accounts</span>
+                        </a>
 
-                    <a href="{{ route('admin.providers') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.providers') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-user-doctor w-4 text-center text-sm"></i>
-                        <span>Providers</span>
-                    </a>
+                        <a href="{{ route('admin.providers') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.providers') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-user-doctor w-4 text-center text-sm"></i>
+                            <span>Providers</span>
+                        </a>
 
-                    <a href="{{ route('admin.users', ['role' => 'institution']) }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->fullUrlIs('*role=institution*') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-building-columns w-4 text-center text-sm"></i>
-                        <span>Institutions</span>
-                    </a>
+                        <a href="{{ route('admin.users', ['role' => 'institution']) }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->fullUrlIs('*role=institution*') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-building-columns w-4 text-center text-sm"></i>
+                            <span>Institutions</span>
+                        </a>
 
-                    <a href="{{ route('admin.matches') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.matches') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-link w-4 text-center text-sm"></i>
-                        <span>Matches</span>
-                    </a>
+                        <a href="{{ route('admin.matches') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.matches') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-link w-4 text-center text-sm"></i>
+                            <span>Matches</span>
+                        </a>
 
-                    <a href="{{ route('admin.transactions') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.transactions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-receipt w-4 text-center text-sm"></i>
-                        <span>Transactions</span>
-                    </a>
+                        <a href="{{ route('admin.transactions') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.transactions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-receipt w-4 text-center text-sm"></i>
+                            <span>Transactions</span>
+                        </a>
 
-                    <a href="{{ route('admin.payments') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.payments') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-credit-card w-4 text-center text-sm"></i>
-                        <span>Payments</span>
-                    </a>
+                        <a href="{{ route('admin.payments') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.payments') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-credit-card w-4 text-center text-sm"></i>
+                            <span>Payments</span>
+                        </a>
 
-                    <a href="{{ route('admin.subscriptions') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.subscriptions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-tag w-4 text-center text-sm"></i>
-                        <span>Subscriptions</span>
-                    </a>
+                        <a href="{{ route('admin.subscriptions') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.subscriptions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-tag w-4 text-center text-sm"></i>
+                            <span>Subscriptions</span>
+                        </a>
 
-                          <a href="{{ route('admin.content') }}" 
-                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.content') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-file-pen w-4 text-center text-sm"></i>
-                        <span>Content Management</span>
-                    </a>
+                              <a href="{{ route('admin.content') }}"
+                                  class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.content') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-file-pen w-4 text-center text-sm"></i>
+                            <span>Content Management</span>
+                        </a>
 
-                          <a href="{{ route('admin.reports') }}" 
-                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.reports') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-chart-column w-4 text-center text-sm"></i>
-                        <span>Reports & Analytics</span>
-                    </a>
+                              <a href="{{ route('admin.reports') }}"
+                                  class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.reports') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-chart-column w-4 text-center text-sm"></i>
+                            <span>Reports & Analytics</span>
+                        </a>
 
-                          <a href="{{ route('admin.communications') }}" 
-                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.communications') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-comments w-4 text-center text-sm"></i>
-                        <span>Communications</span>
-                    </a>
+                              <a href="{{ route('admin.communications') }}"
+                                  class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.communications') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-comments w-4 text-center text-sm"></i>
+                            <span>Communications</span>
+                        </a>
 
-                    <a href="{{ route('admin.settings') }}#disputes" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
-                        <i class="fa-solid fa-circle-question w-4 text-center text-sm"></i>
-                        <span>Disputes & Support</span>
-                    </a>
+                        <a href="{{ route('admin.settings') }}#disputes"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
+                            <i class="fa-solid fa-circle-question w-4 text-center text-sm"></i>
+                            <span>Disputes & Support</span>
+                        </a>
 
-                    <a href="{{ route('admin.settings') }}" 
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.settings') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-gear w-4 text-center text-sm"></i>
-                        <span>System Settings</span>
-                    </a>
+                        <a href="{{ route('admin.settings') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.settings') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-gear w-4 text-center text-sm"></i>
+                            <span>System Settings</span>
+                        </a>
 
-                          <a href="{{ route('admin.audit-logs') }}" 
-                              class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.audit-logs') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                        <i class="fa-solid fa-file-lines w-4 text-center text-sm"></i>
-                        <span>Audit Logs</span>
-                    </a>
-                </nav>
+                        <a href="{{ route('admin.audit-logs') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.audit-logs') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-file-lines w-4 text-center text-sm"></i>
+                            <span>Audit Logs</span>
+                        </a>
+                    </nav>
+
+                    <div class="mt-5 rounded-xl border border-indigo-800/40 bg-indigo-950/60 p-3.5">
+                        <div class="flex items-start gap-3">
+                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-600/30 text-indigo-400">
+                                <i class="fa-solid fa-headset text-sm" aria-hidden="true"></i>
+                            </div>
+                            <div class="min-w-0 text-[11px]">
+                                <p class="font-bold text-white">Need Help?</p>
+                                <p class="text-[10px] font-medium text-slate-400">Admin Support</p>
+                                <p class="mt-1 break-all font-mono text-[10px] text-indigo-300">adminsupport@valynk.co.ke</p>
+                                <p class="font-mono text-[10px] text-indigo-300">+254 700 123 456</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Sidebar Bottom Support & Profile -->
-            <div class="p-4 space-y-4">
-                <!-- Need Help Card -->
-                <div class="bg-indigo-950/60 border border-indigo-800/40 rounded-xl p-3.5 relative overflow-hidden">
-                    <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-full bg-indigo-600/30 text-indigo-400 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-headset text-sm"></i>
-                        </div>
-                        <div class="text-[11px]">
-                            <p class="font-bold text-white">Need Help?</p>
-                            <p class="text-slate-400 font-medium text-[10px]">Admin Support</p>
-                            <p class="text-indigo-300 font-mono mt-1 text-[10px]">adminsupport@valynk.co.ke</p>
-                            <p class="text-indigo-300 font-mono text-[10px]">+254 700 123 456</p>
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Sidebar Profile & Logout -->
+            <div class="shrink-0 border-t border-slate-800/80 bg-[#0d1d2e] p-4">
                 <!-- Admin Profile -->
-                <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
-                    <div class="flex items-center gap-2.5">
+                <div class="flex items-center gap-2.5">
+                    <div class="flex min-w-0 items-center gap-2.5">
                         <div class="w-9 h-9 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-md">
-                            AD
+                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                         </div>
-                        <div class="text-xs">
-                            <p class="font-bold text-white leading-tight">Admin User</p>
-                            <p class="text-[10px] text-slate-400">Super Administrator</p>
+                        <div class="min-w-0 text-xs">
+                            <p class="truncate font-bold leading-tight text-white">{{ auth()->user()->name }}</p>
+                            <p class="text-[10px] text-slate-400">Administrator</p>
                         </div>
                     </div>
-                    <a href="{{ url('/') }}" class="text-slate-400 hover:text-white text-xs" title="Return to Website">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    </a>
                 </div>
+                <form method="POST" action="{{ route('logout') }}" class="mt-3">
+                    @csrf
+                    <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400">
+                        <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                        <span>Log out</span>
+                    </button>
+                </form>
             </div>
         </aside>
 
@@ -213,30 +223,9 @@
                         </div>
                     </div>
 
-                    <!-- Right Controls (Search, Badges, Date Filter) -->
-                    <div class="hidden sm:flex sm:items-center sm:gap-4 sm:flex-wrap">
-                        <div class="relative w-60">
-                            <input type="text" placeholder="Search anything..." class="w-full pl-3.5 pr-8 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-700">
-                            <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        </div>
-
-                        <div class="flex items-center gap-3">
-                            <button class="relative p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors">
-                                <i class="fa-regular fa-bell text-base"></i>
-                                <span class="absolute -top-1 -right-1 bg-indigo-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full border-2 border-white">12</span>
-                            </button>
-
-                            <button class="relative p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors">
-                                <i class="fa-regular fa-envelope text-base"></i>
-                                <span class="absolute -top-1 -right-1 bg-indigo-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full border-2 border-white">8</span>
-                            </button>
-                        </div>
-
-                        <div class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg shadow-2xs hover:bg-slate-50 cursor-pointer">
-                            <i class="fa-regular fa-calendar text-slate-400"></i>
-                            <span class="whitespace-nowrap">This Month: 1 – 27 May 2025</span>
-                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
-                        </div>
+                    <div class="hidden items-center gap-2 text-xs font-semibold text-slate-500 sm:flex">
+                        <i class="fa-regular fa-calendar"></i>
+                        <time datetime="{{ now()->toDateString() }}">{{ now()->format('d M Y') }}</time>
                     </div>
                 </div>
             </header>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Find trusted child development support with VALYNK.">
-    <title>For Families | VALYNK</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Find trusted child development support with VALYNK.') }}">
+    <title>{{ data_get($page, 'title', 'For Families | VALYNK') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,10 +23,9 @@
             <div class="family-copy">
                 <p class="family-badge">Supporting children aged 5-18</p>
                 <h1>
-                    The right support.<br>
-                    The right time. <span>The right impact.</span>
+                    {!! nl2br(e(data_get($page, 'content.heading', "The right support.\nThe right time. The right impact."))) !!}
                 </h1>
-                <p>VALYNK helps families find the right specialist support for your child, at every stage of growth and development.</p>
+                <p>{{ data_get($page, 'content.intro', 'VALYNK helps families find the right specialist support for your child, at every stage of growth and development.') }}</p>
                 <div class="family-actions">
                     <a class="button" href="#family-solutions">Find Support for My Child <i class="fa-solid fa-arrow-right"></i></a>
                     <a class="family-guide" href="#quick-guide">Not Sure Where to Start?<strong>Take the Guide <i class="fa-solid fa-arrow-right"></i></strong></a>
@@ -34,7 +33,7 @@
             </div>
             <div class="family-hero-image" role="img" aria-label="Family looking at a tablet together"></div>
         </section>
-    <section class="family-layout">
+    <section class="family-layout container-fluid">
             <div class="family-main">
                 <div class="journey-heading">
                     <div>
@@ -121,6 +120,6 @@
             </div>
         </section>
 
-    </main></main>
+    </main>
 @include('partials.footer')
 </body></html>

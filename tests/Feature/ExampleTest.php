@@ -36,13 +36,16 @@ class ExampleTest extends TestCase
     }
 
     /**
-     * Demo login redirects to the dashboard without database authentication.
+     * An administrator with a valid password reaches the dashboard.
      */
     public function test_login_submission_redirects_to_dashboard(): void
     {
-        $response = $this->post(route('login'), [
-            'email' => 'demo@example.com',
-            'password' => 'demo-password',
+        $admin = User::factory()->create(['password' => 'secure-password']);
+        $admin->forceFill(['is_admin' => true])->save();
+
+        $response = $this->post(route('login.authenticate'), [
+            'email' => $admin->email,
+            'password' => 'secure-password',
         ]);
 
         $response->assertRedirect(route('admin.dashboard'));
@@ -57,7 +60,8 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Create Your VALYNK Account');
-        $response->assertSee('Individual / Family');
+        $response->assertSee('Individual');
+        $response->assertSee('Family');
         $response->assertSee('Provider');
         $response->assertSee('Institution');
         $response->assertSee('Partner / Other');
@@ -73,18 +77,20 @@ class ExampleTest extends TestCase
             'name' => 'Jane Doe',
             'email' => 'jane@example.com',
             'phone' => '712345678',
-            'account_type' => 'Individual / Family',
+            'account_type' => 'Individual',
             'password' => 'secure-password',
             'password_confirmation' => 'secure-password',
             'location' => 'Nairobi',
             'terms' => '1',
+            'is_admin' => '1',
         ]);
 
         $response->assertRedirect(route('login'));
         $this->assertDatabaseHas('users', [
             'email' => 'jane@example.com',
-            'account_type' => 'Individual / Family',
+            'account_type' => 'Individual',
         ]);
         $this->assertInstanceOf(User::class, User::where('email', 'jane@example.com')->first());
+        $this->assertFalse((bool) User::where('email', 'jane@example.com')->first()->is_admin);
     }
 }

@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Learn about VALYNK and the evidence-backed connections we create.">
-    <title>About VALYNK | The link that delivers</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Learn about VALYNK and the evidence-backed connections we create.') }}">
+    <title>{{ data_get($page, 'title', 'About VALYNK | The link that delivers') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,10 +22,10 @@
     <main>
         <section class="shell about-hero">
             <div class="about-copy">
-                <p class="eyebrow">About VALYNK</p>
-                <h1>The Link That Delivers</h1>
+                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'About VALYNK') }}</p>
+                <h1>{{ data_get($page, 'content.heading', 'The Link That Delivers') }}</h1>
                 <div class="rule"></div>
-                <p>VALYNK was founded with a simple belief: every connection should create opportunity, drive impact, and deliver better outcomes.</p>
+                <p>{{ data_get($page, 'content.intro', 'VALYNK was founded with a simple belief: every connection should create opportunity, drive impact, and deliver better outcomes.') }}</p>
                 <p>We saw too many families struggling to find the right support for their children, too many providers working in silos, and too many institutions lacking the tools to make confident, data-informed decisions. VALYNK was built to change that by connecting the right people, at the right time, with the right expertise.</p>
                 <a class="button" href="#our-story">Our Story</a>
             </div>

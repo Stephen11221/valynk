@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
+    private const ACCOUNT_TYPES = ['Individual', 'Family', 'Provider', 'Institution', 'Partner / Other'];
+
     /**
      * Display the main admin dashboard overview.
      */
@@ -156,393 +161,90 @@ class DashboardController extends Controller
     }
 
     /**
-     * Manage Users (Families, Providers, Institutions).
+     * Manage all registered user accounts.
      */
     public function users(Request $request): View
     {
         $role = $request->query('role', 'all');
         $search = $request->query('search', '');
 
-        $allUsers = collect([
-            [
-                'id' => 101,
-                'name' => 'Dr. Elena Rostova',
-                'email' => 'elena.rostova@valynk-providers.org',
-                'role' => 'Provider',
-                'category' => 'Pediatrics Specialist',
-                'status' => 'Verified',
-                'matches_count' => 48,
-                'rating' => 4.9,
-                'joined' => '2025-03-12',
-            ],
-            [
-                'id' => 102,
-                'name' => 'Sarah & James Miller',
-                'email' => 's.miller@gmail.com',
-                'role' => 'Family',
-                'category' => 'Child & Family Care',
-                'status' => 'Active',
-                'matches_count' => 3,
-                'rating' => 5.0,
-                'joined' => '2025-11-04',
-            ],
-            [
-                'id' => 103,
-                'name' => 'St. Jude Children Hospital',
-                'email' => 'admin@stjude-partner.org',
-                'role' => 'Institution',
-                'category' => 'Hospital Network',
-                'status' => 'Verified Partner',
-                'matches_count' => 312,
-                'rating' => 4.8,
-                'joined' => '2024-08-15',
-            ],
-            [
-                'id' => 104,
-                'name' => 'Marcus Vance',
-                'email' => 'm.vance@behavioralhealth.com',
-                'role' => 'Provider',
-                'category' => 'Behavioral Health',
-                'status' => 'Verified',
-                'matches_count' => 29,
-                'rating' => 4.7,
-                'joined' => '2025-06-20',
-            ],
-            [
-                'id' => 105,
-                'name' => 'Oakridge Academy District',
-                'email' => 'partnerships@oakridge.edu',
-                'role' => 'Institution',
-                'category' => 'Educational Institution',
-                'status' => 'Pending Verification',
-                'matches_count' => 84,
-                'rating' => 4.9,
-                'joined' => '2026-01-10',
-            ],
-            [
-                'id' => 106,
-                'name' => 'David & Linda Chen',
-                'email' => 'dlchen@outlook.com',
-                'role' => 'Family',
-                'category' => 'Eldercare Support',
-                'status' => 'Active',
-                'matches_count' => 2,
-                'rating' => 4.9,
-                'joined' => '2026-02-18',
-            ],
-            [
-                'id' => 107,
-                'name' => 'Aura Elderly Care Services',
-                'email' => 'contact@auracare.com',
-                'role' => 'Provider',
-                'category' => 'Geriatric Care Provider',
-                'status' => 'Verified',
-                'matches_count' => 64,
-                'rating' => 4.8,
-                'joined' => '2025-01-29',
-            ],
-            [
-                'id' => 108,
-                'name' => 'Apex Tech Solutions',
-                'email' => 'hr@apextech.com',
-                'role' => 'Institution',
-                'category' => 'Corporate Partner',
-                'status' => 'Verified Partner',
-                'matches_count' => 120,
-                'rating' => 4.6,
-                'joined' => '2025-09-01',
-            ],
-        ]);
+        $accountTypes = self::ACCOUNT_TYPES;
 
-        if ($role !== 'all') {
-            $allUsers = $allUsers->filter(fn ($u) => strtolower($u['role']) === strtolower($role));
-        }
+        abort_unless($role === 'all' || in_array(ucfirst($role), $accountTypes, true), 404);
 
-        if (! empty($search)) {
-            $allUsers = $allUsers->filter(fn ($u) => str_contains(strtolower($u['name']), strtolower($search)) || str_contains(strtolower($u['email']), strtolower($search)));
-        }
+        $users = User::query()
+            ->when($role !== 'all', fn ($query) => $query->where('account_type', ucfirst($role)))
+            ->when($search !== '', fn ($query) => $query->where(function ($query) use ($search): void {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
+            }))
+            ->latest()
+            ->get();
 
         return view('admin.users', [
-            'users' => $allUsers,
+            'users' => $users,
             'currentRole' => $role,
             'search' => $search,
+            'accountTypes' => $accountTypes,
+            'accountCounts' => User::query()
+                ->selectRaw('account_type, count(*) as total')
+                ->groupBy('account_type')
+                ->pluck('total', 'account_type'),
         ]);
     }
 
-    /**
-     * Display Provider Management page.
-     */
-    public function providers(Request $request): View
+    public function editUser(User $user): View
     {
-        $kpis = [
-            [
-                'title' => 'Total Providers',
-                'value' => '4,156',
-                'growth' => '22% from last month',
-                'icon' => 'fa-users',
-                'bg' => 'bg-purple-50 text-purple-600',
-                'chart_color' => '#8B5CF6',
-                'sparkline' => [20, 35, 25, 45, 30, 55, 40, 60],
-            ],
-            [
-                'title' => 'Approved Providers',
-                'value' => '2,856',
-                'growth' => '18% from last month',
-                'icon' => 'fa-circle-check',
-                'bg' => 'bg-emerald-50 text-emerald-600',
-                'chart_color' => '#10B981',
-                'sparkline' => [15, 25, 20, 38, 32, 45, 39, 52],
-            ],
-            [
-                'title' => 'Pending Review',
-                'value' => '842',
-                'growth' => '12% from last month',
-                'icon' => 'fa-clock',
-                'bg' => 'bg-amber-50 text-amber-600',
-                'chart_color' => '#F59E0B',
-                'sparkline' => [10, 18, 28, 22, 35, 30, 48, 42],
-            ],
-            [
-                'title' => 'Rejected Providers',
-                'value' => '458',
-                'growth' => '5% from last month',
-                'growth_is_down' => true,
-                'icon' => 'fa-circle-xmark',
-                'bg' => 'bg-rose-50 text-rose-600',
-                'chart_color' => '#EF4444',
-                'sparkline' => [30, 25, 20, 18, 15, 12, 10, 8],
-            ],
-            [
-                'title' => 'Verified Providers',
-                'value' => '2,156',
-                'growth' => '19% from last month',
-                'icon' => 'fa-shield-halved',
-                'bg' => 'bg-sky-50 text-sky-600',
-                'chart_color' => '#0EA5E9',
-                'sparkline' => [22, 30, 28, 42, 36, 50, 48, 62],
-            ],
-            [
-                'title' => 'Total Payouts',
-                'value' => 'KES 3,842,500',
-                'growth' => '24% from last month',
-                'icon' => 'fa-wallet',
-                'bg' => 'bg-emerald-50 text-emerald-600',
-                'chart_color' => '#10B981',
-                'sparkline' => [18, 26, 34, 40, 38, 52, 46, 58],
-            ],
-        ];
+        return view('admin.users-edit', [
+            'user' => $user,
+            'accountTypes' => self::ACCOUNT_TYPES,
+        ]);
+    }
 
-        $providersList = collect([
-            [
-                'id' => 1,
-                'initials' => 'MW',
-                'avatar_bg' => 'bg-teal-700 text-white',
-                'name' => 'MindWell Center',
-                'email' => 'info@mindwell.co.ke',
-                'service' => 'Counseling & Therapy',
-                'category' => 'Wellness & Counseling',
-                'category_bg' => 'bg-purple-100 text-purple-700',
-                'status' => 'Approved',
-                'status_bg' => 'bg-emerald-100 text-emerald-800',
-                'verification' => 'Verified',
-                'verification_icon' => 'fa-circle-check text-emerald-500',
-                'verification_color' => 'text-emerald-700',
-                'rating' => '4.8',
-                'stars' => 5,
-                'joined' => '18 Jan 2025',
-            ],
-            [
-                'id' => 2,
-                'initials' => 'CA',
-                'avatar_bg' => 'bg-blue-600 text-white',
-                'name' => 'Career Academy',
-                'email' => 'hello@careeracademy.co.ke',
-                'service' => 'Career Coaching',
-                'category' => 'Career Guidance',
-                'category_bg' => 'bg-amber-100 text-amber-800',
-                'status' => 'Pending',
-                'status_bg' => 'bg-amber-100 text-amber-800',
-                'verification' => 'Under Review',
-                'verification_icon' => 'fa-clock text-amber-500',
-                'verification_color' => 'text-amber-700',
-                'rating' => '4.6',
-                'stars' => 4,
-                'joined' => '25 May 2025',
-            ],
-            [
-                'id' => 3,
-                'initials' => 'LT',
-                'avatar_bg' => 'bg-slate-800 text-white',
-                'name' => 'LearnTech Solutions',
-                'email' => 'contact@learntech.co.ke',
-                'service' => 'STEM Education',
-                'category' => 'Academic Support',
-                'category_bg' => 'bg-sky-100 text-sky-700',
-                'status' => 'Approved',
-                'status_bg' => 'bg-emerald-100 text-emerald-800',
-                'verification' => 'Verified',
-                'verification_icon' => 'fa-circle-check text-emerald-500',
-                'verification_color' => 'text-emerald-700',
-                'rating' => '4.7',
-                'stars' => 4,
-                'joined' => '10 Feb 2025',
-            ],
-            [
-                'id' => 4,
-                'initials' => 'FL',
-                'avatar_bg' => 'bg-amber-600 text-white',
-                'name' => 'Future Leaders Hub',
-                'email' => 'admin@futureleaders.co.ke',
-                'service' => 'Leadership Training',
-                'category' => 'Skills Development',
-                'category_bg' => 'bg-purple-100 text-purple-700',
-                'status' => 'Rejected',
-                'status_bg' => 'bg-rose-100 text-rose-800',
-                'verification' => 'Not Verified',
-                'verification_icon' => 'fa-circle-xmark text-rose-500',
-                'verification_color' => 'text-rose-700',
-                'rating' => '—',
-                'stars' => 0,
-                'joined' => '12 May 2025',
-            ],
-            [
-                'id' => 5,
-                'initials' => 'BE',
-                'avatar_bg' => 'bg-emerald-600 text-white',
-                'name' => 'Bright Energy Studio',
-                'email' => 'hello@brightenergy.co.ke',
-                'service' => 'Life Coaching',
-                'category' => 'Wellness & Counseling',
-                'category_bg' => 'bg-purple-100 text-purple-700',
-                'status' => 'Approved',
-                'status_bg' => 'bg-emerald-100 text-emerald-800',
-                'verification' => 'Verified',
-                'verification_icon' => 'fa-circle-check text-emerald-500',
-                'verification_color' => 'text-emerald-700',
-                'rating' => '4.9',
-                'stars' => 5,
-                'joined' => '05 Jan 2025',
-            ],
-            [
-                'id' => 6,
-                'initials' => 'KC',
-                'avatar_bg' => 'bg-sky-600 text-white',
-                'name' => 'Kids Code Academy',
-                'email' => 'info@kidscode.co.ke',
-                'service' => 'Coding for Kids',
-                'category' => 'Academic Support',
-                'category_bg' => 'bg-sky-100 text-sky-700',
-                'status' => 'Pending',
-                'status_bg' => 'bg-amber-100 text-amber-800',
-                'verification' => 'Under Review',
-                'verification_icon' => 'fa-clock text-amber-500',
-                'verification_color' => 'text-amber-700',
-                'rating' => '4.5',
-                'stars' => 4,
-                'joined' => '27 May 2025',
-            ],
-            [
-                'id' => 7,
-                'initials' => 'HR',
-                'avatar_bg' => 'bg-rose-600 text-white',
-                'name' => 'HealthRise Services',
-                'email' => 'contact@healthrise.co.ke',
-                'service' => 'Nutrition & Wellness',
-                'category' => 'Wellness & Counseling',
-                'category_bg' => 'bg-purple-100 text-purple-700',
-                'status' => 'Approved',
-                'status_bg' => 'bg-emerald-100 text-emerald-800',
-                'verification' => 'Verified',
-                'verification_icon' => 'fa-circle-check text-emerald-500',
-                'verification_color' => 'text-emerald-700',
-                'rating' => '4.6',
-                'stars' => 4,
-                'joined' => '03 Mar 2025',
-            ],
-            [
-                'id' => 8,
-                'initials' => 'AI',
-                'avatar_bg' => 'bg-purple-600 text-white',
-                'name' => 'Art Inspire Studio',
-                'email' => 'studio@artinspire.co.ke',
-                'service' => 'Creative Arts',
-                'category' => 'Skills Development',
-                'category_bg' => 'bg-purple-100 text-purple-700',
-                'status' => 'Rejected',
-                'status_bg' => 'bg-rose-100 text-rose-800',
-                'verification' => 'Not Verified',
-                'verification_icon' => 'fa-circle-xmark text-rose-500',
-                'verification_color' => 'text-rose-700',
-                'rating' => '—',
-                'stars' => 0,
-                'joined' => '22 May 2025',
-            ],
+    public function createUser(): View
+    {
+        return view('admin.users-create', ['accountTypes' => self::ACCOUNT_TYPES]);
+    }
+
+    public function storeUser(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'account_type' => ['required', Rule::in(self::ACCOUNT_TYPES)],
+            'location' => ['nullable', 'string', 'max:100'],
+            'password' => ['required', 'string', 'min:12', 'confirmed'],
         ]);
 
-        $statusDonut = [
-            'total' => '4,156',
-            'approved' => ['count' => '2,856', 'percent' => '68.7%'],
-            'pending' => ['count' => '842', 'percent' => '20.3%'],
-            'rejected' => ['count' => '458', 'percent' => '11.0%'],
-        ];
+        $user = User::create($validated);
 
-        $verificationDonut = [
-            'total' => '4,156',
-            'verified' => ['count' => '2,156', 'percent' => '51.9%'],
-            'under_review' => ['count' => '1,184', 'percent' => '28.5%'],
-            'not_verified' => ['count' => '816', 'percent' => '19.6%'],
-        ];
+        return redirect()
+            ->route('admin.users')
+            ->with('status', "{$user->name}'s account was created.");
+    }
 
-        $recentRegistrations = [
-            [
-                'initials' => 'CA',
-                'avatar_bg' => 'bg-blue-600 text-white',
-                'name' => 'Career Academy',
-                'service' => 'Career Coaching',
-                'date' => '27 May 2025',
-                'time' => '11:20 AM',
-            ],
-            [
-                'initials' => 'KC',
-                'avatar_bg' => 'bg-sky-600 text-white',
-                'name' => 'Kids Code Academy',
-                'service' => 'Coding for Kids',
-                'date' => '27 May 2025',
-                'time' => '10:05 AM',
-            ],
-            [
-                'initials' => 'MW',
-                'avatar_bg' => 'bg-teal-700 text-white',
-                'name' => 'MindWell Center',
-                'service' => 'Counseling & Therapy',
-                'date' => '27 May 2025',
-                'time' => '09:15 AM',
-            ],
-            [
-                'initials' => 'BE',
-                'avatar_bg' => 'bg-emerald-600 text-white',
-                'name' => 'Bright Energy Studio',
-                'service' => 'Life Coaching',
-                'date' => '26 May 2025',
-                'time' => '04:45 PM',
-            ],
-            [
-                'initials' => 'HR',
-                'avatar_bg' => 'bg-rose-600 text-white',
-                'name' => 'HealthRise Services',
-                'service' => 'Nutrition & Wellness',
-                'date' => '26 May 2025',
-                'time' => '02:30 PM',
-            ],
-        ];
+    public function updateUser(Request $request, User $user): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user)],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'account_type' => ['required', Rule::in(self::ACCOUNT_TYPES)],
+            'location' => ['nullable', 'string', 'max:100'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
 
-        return view('admin.providers', compact(
-            'kpis',
-            'providersList',
-            'statusDonut',
-            'verificationDonut',
-            'recentRegistrations'
-        ));
+        if (blank($validated['password'] ?? null)) {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return redirect()
+            ->route('admin.users')
+            ->with('status', "{$user->name}'s account was updated.");
     }
 
     /**
@@ -697,36 +399,6 @@ class DashboardController extends Controller
         ]);
 
         return view('admin.subscriptions', compact('stats', 'subscriptions'));
-    }
-
-    /**
-     * Content Management page.
-     */
-    public function content(): View
-    {
-        $content = collect([
-            ['title' => 'Homepage Hero Banner', 'type' => 'Banner', 'section' => 'Homepage', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '26 May 2025', 'updated_by' => 'Admin User'],
-            ['title' => 'Our Story', 'type' => 'Page', 'section' => 'About Us', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '25 May 2025', 'updated_by' => 'Admin User'],
-            ['title' => 'How It Works', 'type' => 'Page', 'section' => 'How It Works', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '25 May 2025', 'updated_by' => 'Kevin O.'],
-            ['title' => 'For Families', 'type' => 'Page', 'section' => 'For Families', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '23 May 2025', 'updated_by' => 'Alice M.'],
-            ['title' => 'For Providers', 'type' => 'Page', 'section' => 'For Providers', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '23 May 2025', 'updated_by' => 'Yusuf A.'],
-            ['title' => 'For Institutions', 'type' => 'Page', 'section' => 'For Institutions', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '22 May 2025', 'updated_by' => 'Kevin O.'],
-            ['title' => 'Solutions Overview', 'type' => 'Page', 'section' => 'Solutions', 'status' => 'Draft', 'status_class' => 'bg-amber-100 text-amber-800', 'language' => 'English', 'updated' => '21 May 2025', 'updated_by' => 'Beth N.'],
-            ['title' => 'Pricing Plans', 'type' => 'Page', 'section' => 'Pricing', 'status' => 'Scheduled', 'status_class' => 'bg-sky-100 text-sky-800', 'language' => 'English', 'updated' => '20 May 2025', 'updated_by' => 'Admin User'],
-            ['title' => 'Contact Us', 'type' => 'Page', 'section' => 'Contact', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '20 May 2025', 'updated_by' => 'Admin User'],
-            ['title' => 'Blog: Building Strong Families', 'type' => 'Blog Post', 'section' => 'Resources / Blog', 'status' => 'Published', 'status_class' => 'bg-emerald-100 text-emerald-800', 'language' => 'English', 'updated' => '19 May 2025', 'updated_by' => 'Maureen N.'],
-        ]);
-
-        $stats = [
-            ['title' => 'Total Content Items', 'value' => '1,248', 'change' => '+18% from last month', 'positive' => true, 'icon' => 'fa-newspaper', 'color' => 'bg-purple-50 text-purple-600', 'sparkline' => [12, 18, 16, 22, 24, 28, 32, 38]],
-            ['title' => 'Published Items', 'value' => '986', 'change' => '+20% from last month', 'positive' => true, 'icon' => 'fa-earth-africa', 'color' => 'bg-emerald-50 text-emerald-600', 'sparkline' => [16, 20, 19, 25, 27, 34, 31, 43]],
-            ['title' => 'Draft Items', 'value' => '142', 'change' => '+8% from last month', 'positive' => true, 'icon' => 'fa-pen-to-square', 'color' => 'bg-amber-50 text-amber-600', 'sparkline' => [20, 18, 15, 19, 21, 22, 18, 24]],
-            ['title' => 'Scheduled Items', 'value' => '68', 'change' => '-5% from last month', 'positive' => false, 'icon' => 'fa-calendar', 'color' => 'bg-sky-50 text-sky-600', 'sparkline' => [22, 18, 16, 14, 13, 12, 11, 10]],
-            ['title' => 'Archived Items', 'value' => '52', 'change' => '+10% from last month', 'positive' => true, 'icon' => 'fa-box-archive', 'color' => 'bg-rose-50 text-rose-600', 'sparkline' => [12, 16, 15, 18, 17, 20, 19, 24]],
-            ['title' => 'Total Page Views', 'value' => '245,680', 'change' => '+22% from last month', 'positive' => true, 'icon' => 'fa-eye', 'color' => 'bg-green-50 text-green-600', 'sparkline' => [20, 26, 22, 28, 30, 35, 40, 46]],
-        ];
-
-        return view('admin.content', compact('stats', 'content'));
     }
 
     /**

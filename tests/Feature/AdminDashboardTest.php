@@ -2,10 +2,24 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class AdminDashboardTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $admin = User::factory()->create();
+        $admin->forceFill(['is_admin' => true])->save();
+        $this->actingAs($admin);
+    }
+
     /**
      * Test admin overview dashboard renders successfully.
      */
@@ -25,11 +39,100 @@ class AdminDashboardTest extends TestCase
      */
     public function test_admin_users_page_loads(): void
     {
+        $user = User::factory()->create([
+            'account_type' => 'Family',
+            'phone' => '0700000000',
+            'location' => 'Nairobi',
+        ]);
+        $provider = User::factory()->create(['account_type' => 'Provider']);
+
         $response = $this->get(route('admin.users'));
 
         $response->assertStatus(200);
-        $response->assertSee('User & Entity Management');
-        $response->assertSee('Dr. Elena Rostova');
+        $response->assertSee('Accounts');
+        $response->assertSee('Families');
+        $response->assertSee($user->name);
+        $response->assertSee($provider->name);
+        $response->assertSee('Family');
+        $response->assertSee(route('admin.users.create'));
+        $response->assertSee('href="'.route('admin.users').'"', false);
+    }
+
+    public function test_admin_can_add_a_user_with_a_selected_account_type(): void
+    {
+        $this->get(route('admin.users.create'))
+            ->assertOk()
+            ->assertSee('Select account type')
+            ->assertSee('Individual')
+            ->assertSee('Family')
+            ->assertSee('Provider')
+            ->assertSee('Institution')
+            ->assertSee('Partner / Other');
+
+        $this->post(route('admin.users.store'), [
+            'name' => 'New Provider',
+            'email' => 'new-provider@example.com',
+            'phone' => '0712345678',
+            'account_type' => 'Provider',
+            'location' => 'Nairobi',
+            'password' => 'a-secure-password',
+            'password_confirmation' => 'a-secure-password',
+            'is_admin' => '1',
+        ])->assertRedirect(route('admin.users'));
+
+        $user = User::query()->where('email', 'new-provider@example.com')->firstOrFail();
+        $this->assertSame('New Provider', $user->name);
+        $this->assertSame('Provider', $user->account_type);
+        $this->assertSame('Nairobi', $user->location);
+        $this->assertFalse($user->is_admin);
+        $this->assertTrue(Hash::check('a-secure-password', $user->password));
+        $this->get(route('admin.users', ['role' => 'provider']))->assertSee('New Provider');
+    }
+
+    public function test_add_user_rejects_duplicate_email_and_unknown_type(): void
+    {
+        User::factory()->create(['email' => 'existing@example.com']);
+
+        $this->post(route('admin.users.store'), [
+            'name' => 'Invalid User',
+            'email' => 'existing@example.com',
+            'account_type' => 'Admin',
+            'password' => 'a-secure-password',
+            'password_confirmation' => 'a-secure-password',
+        ])->assertSessionHasErrors(['email', 'account_type']);
+
+        $this->assertSame(1, User::query()->where('email', 'existing@example.com')->count());
+    }
+
+    /**
+     * Test that an administrator can update every editable user field.
+     */
+    public function test_admin_can_edit_a_user_account(): void
+    {
+        $user = User::factory()->create([
+            'account_type' => 'Individual',
+            'phone' => '0711111111',
+            'location' => 'Nairobi',
+        ]);
+
+        $response = $this->put(route('admin.users.update', $user), [
+            'name' => 'Updated Institution',
+            'email' => 'institution@example.com',
+            'phone' => '0722222222',
+            'account_type' => 'Institution',
+            'location' => 'Mombasa',
+            'password' => 'new-secure-password',
+            'password_confirmation' => 'new-secure-password',
+        ]);
+
+        $response->assertRedirect(route('admin.users'));
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'Updated Institution',
+            'email' => 'institution@example.com',
+            'account_type' => 'Institution',
+            'location' => 'Mombasa',
+        ]);
     }
 
     /**
@@ -61,11 +164,18 @@ class AdminDashboardTest extends TestCase
      */
     public function test_admin_providers_page_loads(): void
     {
+        $provider = User::factory()->create(['name' => 'Real Provider', 'account_type' => 'Provider']);
+        $provider->providerProfile()->create([
+            'service' => 'Tutoring', 'category' => 'Academic Support',
+            'status' => 'Approved', 'verification' => 'Verified',
+        ]);
+
         $response = $this->get(route('admin.providers'));
 
         $response->assertStatus(200);
         $response->assertSee('Provider Management');
-        $response->assertSee('MindWell Center');
+        $response->assertSee('Real Provider');
+        $response->assertSee('Academic Support');
         $response->assertSee('Providers by Status');
         $response->assertSee('Verification Overview');
     }

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
 *,
 *::before,
 *::after {
@@ -28,6 +30,14 @@ video {
     margin: 0;
     box-sizing: border-box;
     padding-inline: clamp(10px, 2vw, 20px);
+}
+
+/* Full-width content wrapper with responsive gutters for page sections. */
+.container-fluid {
+    width: 100%;
+    max-width: none;
+    margin-inline: auto;
+    padding-inline: clamp(16px, 2.25vw, 44px);
 }
 
 main,
@@ -212,4 +222,136 @@ main {
 
 .price-button.featured {
     color: #00141B !important;
+}
+
+/* Public-site visual system: readable type, a consistent header, and calm section backgrounds. */
+:root {
+    --font-body: 'DM Sans', sans-serif;
+    --font-heading: 'Manrope', sans-serif;
+    --font-ui: 'Space Grotesk', sans-serif;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    background: #f7fafb;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-heading);
+}
+
+.links,
+.button,
+.login,
+.eyebrow,
+.section-label,
+.step-number,
+.step-count,
+.footer-column h3 {
+    font-family: var(--font-ui);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.site-header {
+    background: rgba(0, 20, 27, 0.97);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 18px rgba(0, 20, 27, 0.14);
+}
+
+.process {
+    position: relative;
+    margin-top: 22px;
+    padding: 30px clamp(18px, 4vw, 52px);
+    border: 1px solid #e3eaed;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 6% 10%, rgba(245, 138, 7, 0.14), transparent 25%),
+        linear-gradient(135deg, #ffffff 0%, #f2f8f8 100%);
+}
+
+.steps {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.step {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    text-align: center;
+}
+
+.home-step-icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    margin: 0 auto;
+    border-radius: 16px;
+    color: #00141b;
+    font-size: 22px;
+}
+
+.step-number {
+    position: absolute;
+    right: -7px;
+    bottom: -7px;
+    display: grid;
+    place-items: center;
+    width: 23px;
+    height: 23px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #00141b;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.step:nth-child(1) .home-step-icon,
+.matching-step:nth-child(1) .step-icon { background: #e5f3f1; color: #087166; }
+.step:nth-child(2) .home-step-icon,
+.matching-step:nth-child(2) .step-icon { background: #fff0dc; color: #b45309; }
+.step:nth-child(3) .home-step-icon,
+.matching-step:nth-child(3) .step-icon { background: #e8edff; color: #4355b9; }
+.step:nth-child(4) .home-step-icon,
+.matching-step:nth-child(4) .step-icon { background: #f6e9f4; color: #9e3c87; }
+.step:nth-child(5) .home-step-icon,
+.matching-step:nth-child(5) .step-icon { background: #e6f2ff; color: #2563a9; }
+.step:nth-child(6) .home-step-icon,
+.matching-step:nth-child(6) .step-icon { background: #ebf6df; color: #4d7c0f; }
+
+.step strong {
+    font-family: var(--font-ui);
+    font-size: 12px;
+}
+
+.step p {
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+    .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+    .process { margin: 14px 10px 0; padding: 28px 18px; }
+    .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

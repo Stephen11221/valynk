@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Dashboard') | VALYNK</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+    <header class="border-b border-slate-200 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4">
+            <a href="{{ route('dashboard') }}" aria-label="VALYNK dashboard"><img src="{{ asset('logo/logo.jpeg') }}" alt="VALYNK" class="h-10 w-auto"></a>
+            <nav class="flex flex-wrap items-center gap-3 text-sm font-semibold" aria-label="Account navigation">
+                <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'text-indigo-700' : 'text-slate-600' }} hover:text-indigo-700">Dashboard</a>
+                <a href="{{ route('account.profile.edit') }}" class="{{ request()->routeIs('account.profile.*') ? 'text-indigo-700' : 'text-slate-600' }} hover:text-indigo-700">My profile</a>
+                <a href="{{ route('home') }}" class="text-slate-600 hover:text-indigo-700">Website</a>
+                <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-50">Log out</button></form>
+            </nav>
+        </div>
+    </header>
+    <main class="mx-auto max-w-6xl px-5 py-8 sm:py-10">
+        @yield('content')
+    </main>
+</body>
+</html>

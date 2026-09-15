@@ -53,24 +53,20 @@
                             <span class="login-tab active">Email Login</span>
                         </div>
 
-                        <form id="email-panel" class="login-form" method="POST" action="#">
+                        @if(session('status')) <p role="status">{{ session('status') }}</p> @endif
+                        @if($errors->any()) <p role="alert">{{ $errors->first() }}</p> @endif
+                        <form id="email-panel" class="login-form" method="POST" action="{{ route('login.authenticate') }}">
                             @csrf
                             <label for="email">Email Address</label>
-                            <div class="login-field"><input id="email" name="email" type="email" placeholder="Enter your email address" autocomplete="email"><i class="fa-regular fa-envelope"></i></div>
+                            <div class="login-field"><input id="email" name="email" type="email" value="{{ old('email') }}" placeholder="Enter your email address" autocomplete="email" required><i class="fa-regular fa-envelope"></i></div>
 
                             <label for="password">Password</label>
-                            <div class="login-field"><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password"><button class="login-password-toggle" type="button" aria-label="Show password"><i class="fa-regular fa-eye"></i></button></div>
+                            <div class="login-field"><input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required><button class="login-password-toggle" type="button" aria-label="Show password"><i class="fa-regular fa-eye"></i></button></div>
 
-                            <div class="login-form-options"><label><input type="checkbox" name="remember"> Remember me</label><a class="login-forgot" href="#forgot-password">Forgot Password?</a></div>
+                            <div class="login-form-options"><label><input type="checkbox" name="remember" value="1" {{ old('remember') ? 'checked' : '' }}> Remember me</label><a class="login-forgot" href="{{ route('password.request') }}">Forgot Password?</a></div>
                             <button class="login-submit" type="submit">Log In</button>
                         </form>
 
-                        <div class="login-divider">or continue with</div>
-                        <div class="login-socials">
-                            <button class="login-social google" type="button"><i class="fa-brands fa-google"></i> Google</button>
-                            <button class="login-social apple" type="button"><i class="fa-brands fa-apple"></i> Apple</button>
-                            <button class="login-social microsoft" type="button"><i class="fa-brands fa-microsoft"></i> Microsoft</button>
-                        </div>
                         <p class="login-signup">Don't have an account? <a href="{{ route('register') }}">Sign up</a></p>
                         <div class="login-security"><i class="fa-solid fa-shield-halved"></i><div><strong>Secure &amp; Protected</strong><span>Your information is safe with us.<br>We use industry-standard security to protect your data.</span></div></div>
                     </div>

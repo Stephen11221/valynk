@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Explore VALYNK solutions for individuals, institutions, providers, foundations and corporations.">
-    <title>Solutions | VALYNK</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Explore VALYNK solutions for individuals, institutions, providers, foundations and corporations.') }}">
+    <title>{{ data_get($page, 'title', 'Solutions | VALYNK') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +21,10 @@
     <main id="top">
         <section class="solutions-hero">
             <div class="solutions-copy">
-                <p class="eyebrow">Our solutions</p>
-                <h1>Different Needs.<br>One Powerful Approach.</h1>
+                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'Our solutions') }}</p>
+                <h1>{!! nl2br(e(data_get($page, 'content.heading', "Different Needs.\nOne Powerful Approach."))) !!}</h1>
                 <div class="rule"></div>
-                <p>VALYNK offers a range of solutions designed to help individuals, institutions and organisations unlock potential, build capability and achieve lasting results.</p>
+                <p>{{ data_get($page, 'content.intro', 'VALYNK offers a range of solutions designed to help individuals, institutions and organisations unlock potential, build capability and achieve lasting results.') }}</p>
             </div>
             <div class="solutions-image" role="img" aria-label="Professionals collaborating around a laptop"></div>
         </section>

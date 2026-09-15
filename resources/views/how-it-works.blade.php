@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Discover VALYNK's evidence-backed six-step matching process.">
-    <title>How It Works | VALYNK</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', "Discover VALYNK's evidence-backed six-step matching process.") }}">
+    <title>{{ data_get($page, 'title', 'How It Works | VALYNK') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +21,10 @@
     <main id="top">
         <section class="how-hero">
             <div class="how-copy">
-                <p class="eyebrow">How it works</p>
-                <h1>Simple. Smart. Seamless.</h1>
+                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'How it works') }}</p>
+                <h1>{{ data_get($page, 'content.heading', 'Simple. Smart. Seamless.') }}</h1>
                 <div class="rule"></div>
-                <p>VALYNK makes it easy to find the right support. Our evidence-backed matching process connects you with trusted experts and organisations so you can focus on what matters most.</p>
+                <p>{{ data_get($page, 'content.intro', 'VALYNK makes it easy to find the right support. Our evidence-backed matching process connects you with trusted experts and organisations so you can focus on what matters most.') }}</p>
                 <div class="promises">
                     <div class="promise"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><div><strong>Evidence-Backed</strong>Verified data and trusted practices</div></div>
                     <div class="promise"><i class="fa-solid fa-lock" aria-hidden="true"></i><div><strong>Safe &amp; Confidential</strong>Your privacy and data security are protected</div></div>

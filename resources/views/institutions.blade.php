@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Build stronger partnerships and better outcomes with VALYNK.">
-    <title>For Institutions | VALYNK</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Build stronger partnerships and better outcomes with VALYNK.') }}">
+    <title>{{ data_get($page, 'title', 'For Institutions | VALYNK') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +21,10 @@
     <main id="top">
         <section class="institution-layout">
             <div class="institution-main">
-                <p class="eyebrow">For institutions</p>
-                <h1>Stronger Partnerships. Better Outcomes.</h1>
+                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'For institutions') }}</p>
+                <h1>{{ data_get($page, 'content.heading', 'Stronger Partnerships. Better Outcomes.') }}</h1>
                 <div class="rule"></div>
-                <p class="institution-intro">VALYNK connects you with verified experts and providers who help you deliver high-impact support to the children, students and communities you serve.</p>
+                <p class="institution-intro">{{ data_get($page, 'content.intro', 'VALYNK connects you with verified experts and providers who help you deliver high-impact support to the children, students and communities you serve.') }}</p>
                 <div class="institution-benefits">
                     <article><i class="fa-solid fa-people-group"></i><h3>Trusted Network</h3><p>Access a curated network of verified Providers and specialists.</p></article>
                     <article><i class="fa-solid fa-handshake"></i><h3>Quality Assurance</h3><p>Every Provider is vetted for expertise, credibility and reliability.</p></article>

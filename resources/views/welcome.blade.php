@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Evidence-backed matching that delivers.">
-    <title>VALYNK | The link that delivers</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Evidence-backed matching that delivers.') }}">
+    <title>{{ data_get($page, 'title', 'VALYNK | The link that delivers') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,15 +21,13 @@
         <section class="hero">
             <div class="shell hero-grid">
                 <div class="hero-copy">
-                    <p class="eyebrow">Evidence-backed matching that delivers</p>
+                    <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'Evidence-backed matching that delivers') }}</p>
                     <h1>
-                        The Right Connection.<br>
-                        Measurable <span class="accent">Impact.</span>
+                        {!! nl2br(e(data_get($page, 'content.heading', "The Right Connection.\nMeasurable Impact."))) !!}
                     </h1>
                     <div class="rule"></div>
                     <p>
-                        VALYNK connects people and organisations to the right expertise and opportunities
-                        through evidence-based matching, so every connection creates meaningful outcomes.
+                        {{ data_get($page, 'content.intro', 'VALYNK connects people and organisations to the right expertise and opportunities through evidence-based matching, so every connection creates meaningful outcomes.') }}
                     </p>
                     <div class="hero-buttons">
                         <a class="button" href="#get-started">
@@ -144,12 +142,12 @@
         <section class="shell process" id="how-it-works">
             <div>
                 <p class="section-label">How it works</p>
-                <h2>Simple. Smart. Seamless.</h2>
+                <h2>Our 6-Step<br>Matching Process</h2>
             </div>
 
             <div class="steps">
                 <div class="step">
-                    <span class="step-number">1</span>
+                    <div class="home-step-icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i><span class="step-number">1</span></div>
                     <div>
                         <strong>Tell Us Your Need</strong>
                         <p>Share your requirements in a few simple steps.</p>
@@ -157,26 +155,42 @@
                 </div>
 
                 <div class="step">
-                    <span class="step-number">2</span>
+                    <div class="home-step-icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="step-number">2</span></div>
                     <div>
-                        <strong>We Match</strong>
-                        <p>Our system matches you with the most suitable options.</p>
+                        <strong>We Search &amp; Match</strong>
+                        <p>We search our verified network for the best fit.</p>
                     </div>
                 </div>
 
                 <div class="step">
-                    <span class="step-number">3</span>
+                    <div class="home-step-icon"><i class="fa-solid fa-people-group" aria-hidden="true"></i><span class="step-number">3</span></div>
                     <div>
-                        <strong>Review &amp; Connect</strong>
-                        <p>Review match evidence and connect with confidence.</p>
+                        <strong>Review Matches</strong>
+                        <p>Compare curated matches with confidence.</p>
                     </div>
                 </div>
 
                 <div class="step">
-                    <span class="step-number">4</span>
+                    <div class="home-step-icon"><i class="fa-solid fa-handshake" aria-hidden="true"></i><span class="step-number">4</span></div>
                     <div>
-                        <strong>Deliver Impact</strong>
-                        <p>Build partnerships that achieve your goals.</p>
+                        <strong>Connect &amp; Engage</strong>
+                        <p>Start with your chosen expert or organisation.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="home-step-icon"><i class="fa-regular fa-comments" aria-hidden="true"></i><span class="step-number">5</span></div>
+                    <div>
+                        <strong>Receive Support</strong>
+                        <p>Get the right support when it matters most.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="home-step-icon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span class="step-number">6</span></div>
+                    <div>
+                        <strong>Achieve Outcomes</strong>
+                        <p>Measure progress and create lasting change.</p>
                     </div>
                 </div>
             </div>

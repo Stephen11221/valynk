@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Contact VALYNK for support, partnerships, and enquiries.">
-    <title>Contact Us | VALYNK</title>
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Contact VALYNK for support, partnerships, and enquiries.') }}">
+    <title>{{ data_get($page, 'title', 'Contact Us | VALYNK') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,10 +22,10 @@
     <main id="top">
         <section class="contact-hero">
             <div>
-                <p class="eyebrow">Contact us</p>
-                <h1>We're Here to Help.<br>Let's Connect.</h1>
+                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'Contact us') }}</p>
+                <h1>{!! nl2br(e(data_get($page, 'content.heading', "We're Here to Help.\nLet's Connect."))) !!}</h1>
                 <div class="rule"></div>
-                <p>Have a question, need support, or want to explore a partnership?<br>Reach out to us, we'd love to hear from you.</p>
+                <p>{!! nl2br(e(data_get($page, 'content.intro', "Have a question, need support, or want to explore a partnership?\nReach out to us, we'd love to hear from you."))) !!}</p>
             </div>
             <div class="contact-photo" role="img" aria-label="Two people collaborating at a laptop"></div>
         </section>
