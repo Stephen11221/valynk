@@ -297,15 +297,29 @@
     transform: translateY(-50%);
 }
 .register-field-icon .register-eye {
-    right: 10px;
-    left: auto;
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
     padding: 0;
     border: 0;
     background: transparent;
     cursor: pointer;
 }
+.register-field-icon .register-eye i {
+    position: static;
+    transform: none;
+}
+.register-field-icon .register-eye:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 1px;
+    border-radius: 4px;
+}
 .register-field-icon:has(.register-eye) input {
-    padding-right: 29px;
+    padding-right: 35px;
 }
 .register-phone {
     display: grid;
