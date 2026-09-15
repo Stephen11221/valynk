@@ -8,6 +8,7 @@
 <div class="mx-auto max-w-3xl">
     <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
         <div class="mb-6 flex items-center justify-between"><div><p class="text-sm font-bold text-slate-900">{{ $user->name }}</p><p class="text-xs text-slate-500">{{ $user->email }}</p></div><a href="{{ route('admin.users') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-900"><i class="fa-solid fa-arrow-left mr-1"></i> Back to users</a></div>
+        <p class="mb-5 text-xs text-slate-500">Choosing Admin grants full administrator access. Changing an admin to another type removes that access.</p>
         <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-5">
             @csrf
             @method('PUT')

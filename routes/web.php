@@ -11,6 +11,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 Route::get('/', [SitePageController::class, 'show'])->defaults('slug', 'home')->name('home');
 
@@ -51,13 +53,19 @@ Route::post('/register', function (Request $request) {
         'name' => ['required', 'string', 'max:255'],
         'email' => ['required', 'email', 'max:255', 'unique:users,email'],
         'phone' => ['required', 'string', 'max:30'],
-        'account_type' => ['required', 'in:Individual,Family,Provider,Institution,Partner / Other'],
+        'account_type' => ['required', Rule::in(['Individual', 'Family', 'Provider', 'Institution', 'Partner / Other', 'Admin'])],
         'password' => ['required', 'string', 'min:12', 'confirmed'],
         'location' => ['nullable', 'string', 'max:100'],
         'terms' => ['accepted'],
     ]);
 
-    User::create([
+    if ($validated['account_type'] === 'Admin' && ! $request->user()?->is_admin) {
+        throw ValidationException::withMessages([
+            'account_type' => 'Only an existing administrator can create an admin account. Log in as an admin first.',
+        ]);
+    }
+
+    $user = new User([
         'name' => $validated['name'],
         'email' => $validated['email'],
         'phone' => $validated['phone'],
@@ -65,6 +73,11 @@ Route::post('/register', function (Request $request) {
         'location' => $validated['location'] ?? null,
         'password' => Hash::make($validated['password']),
     ]);
+    $user->forceFill(['is_admin' => $validated['account_type'] === 'Admin'])->save();
+
+    if ($request->user()?->is_admin) {
+        return redirect()->route('admin.users')->with('status', "{$user->name}'s account was created.");
+    }
 
     return redirect()->route('login')->with('status', 'Your account has been created. You can now log in.');
 })->name('register.store');

@@ -2,7 +2,7 @@
 
 @section('title', 'Account Management')
 @section('header_title', 'Accounts')
-@section('header_subtitle', 'Manage all Individual, Family, Provider, Institution, and Partner accounts')
+@section('header_subtitle', 'Manage Individual, Family, Provider, Institution, Partner, and Admin accounts')
 
 @section('content')
 <div class="space-y-6">
@@ -19,7 +19,7 @@
 
     <div class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
-            @foreach(['all' => 'All users', 'individual' => 'Individuals', 'family' => 'Families', 'provider' => 'Providers', 'institution' => 'Institutions'] as $role => $label)
+            @foreach(['all' => 'All users', 'individual' => 'Individuals', 'family' => 'Families', 'provider' => 'Providers', 'institution' => 'Institutions', 'admin' => 'Admins'] as $role => $label)
                 <a href="{{ route('admin.users', ['role' => $role, 'search' => $search]) }}"
                    class="whitespace-nowrap rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors {{ $currentRole === $role ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
                     {{ $label }}@if($role !== 'all') ({{ $accountCounts[ucfirst($role)] ?? 0 }})@endif

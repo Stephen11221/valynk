@@ -7,11 +7,12 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    private const ACCOUNT_TYPES = ['Individual', 'Family', 'Provider', 'Institution', 'Partner / Other'];
+    private const ACCOUNT_TYPES = ['Individual', 'Family', 'Provider', 'Institution', 'Partner / Other', 'Admin'];
 
     /**
      * Display the main admin dashboard overview.
@@ -218,7 +219,8 @@ class DashboardController extends Controller
             'password' => ['required', 'string', 'min:12', 'confirmed'],
         ]);
 
-        $user = User::create($validated);
+        $user = new User($validated);
+        $user->forceFill(['is_admin' => $validated['account_type'] === 'Admin'])->save();
 
         return redirect()
             ->route('admin.users')
@@ -240,7 +242,13 @@ class DashboardController extends Controller
             unset($validated['password']);
         }
 
-        $user->update($validated);
+        if ($user->is(auth()->user()) && $validated['account_type'] !== 'Admin') {
+            throw ValidationException::withMessages([
+                'account_type' => 'You cannot remove your own administrator access.',
+            ]);
+        }
+
+        $user->fill($validated)->forceFill(['is_admin' => $validated['account_type'] === 'Admin'])->save();
 
         return redirect()
             ->route('admin.users')

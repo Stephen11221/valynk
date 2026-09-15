@@ -16,10 +16,10 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $password = env('ADMIN_PASSWORD');
+        $password = config('admin_seed.password');
 
-        if (! $password) {
-            return;
+        if (! is_string($password) || $password === '') {
+            throw new \RuntimeException('ADMIN_PASSWORD is required to seed the administrator account. Set it in .env before running db:seed.');
         }
 
         if (strlen($password) < 10) {
@@ -27,9 +27,10 @@ class AdminUserSeeder extends Seeder
         }
 
         $admin = User::updateOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'admin@valynk.co.ke')],
+            ['email' => config('admin_seed.email')],
             [
-                'name' => env('ADMIN_NAME', 'Admin User'),
+                'name' => config('admin_seed.name'),
+                'account_type' => 'Admin',
                 'email_verified_at' => now(),
                 'password' => Hash::make($password),
             ],

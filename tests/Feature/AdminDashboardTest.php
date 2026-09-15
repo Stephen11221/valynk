@@ -96,12 +96,57 @@ class AdminDashboardTest extends TestCase
         $this->post(route('admin.users.store'), [
             'name' => 'Invalid User',
             'email' => 'existing@example.com',
-            'account_type' => 'Admin',
+            'account_type' => 'Unknown',
             'password' => 'a-secure-password',
             'password_confirmation' => 'a-secure-password',
         ])->assertSessionHasErrors(['email', 'account_type']);
 
         $this->assertSame(1, User::query()->where('email', 'existing@example.com')->count());
+    }
+
+    public function test_admin_user_management_can_create_and_edit_an_admin_account(): void
+    {
+        $this->post(route('admin.users.store'), [
+            'name' => 'Staff Admin',
+            'email' => 'staff-admin@example.test',
+            'account_type' => 'Admin',
+            'password' => 'strong-staff-password',
+            'password_confirmation' => 'strong-staff-password',
+        ])->assertRedirect(route('admin.users'));
+
+        $staff = User::where('email', 'staff-admin@example.test')->firstOrFail();
+        $this->assertTrue($staff->is_admin);
+        $this->get(route('admin.users', ['role' => 'admin']))->assertSee('Staff Admin');
+        $this->get(route('admin.users.edit', $staff))->assertSee('value="Admin" selected', false);
+
+        $this->put(route('admin.users.update', $staff), [
+            'name' => 'Staff Admin Updated',
+            'email' => 'staff-admin@example.test',
+            'account_type' => 'Admin',
+        ])->assertRedirect(route('admin.users'));
+        $this->assertSame('Staff Admin Updated', $staff->fresh()->name);
+        $this->assertTrue($staff->fresh()->is_admin);
+    }
+
+    public function test_admin_can_remove_staff_access_but_cannot_remove_their_own(): void
+    {
+        $staff = User::factory()->create(['account_type' => 'Admin']);
+        $staff->forceFill(['is_admin' => true])->save();
+
+        $this->put(route('admin.users.update', $staff), [
+            'name' => $staff->name,
+            'email' => $staff->email,
+            'account_type' => 'Individual',
+        ])->assertRedirect(route('admin.users'));
+        $this->assertFalse($staff->fresh()->is_admin);
+
+        $currentAdmin = auth()->user();
+        $this->put(route('admin.users.update', $currentAdmin), [
+            'name' => $currentAdmin->name,
+            'email' => $currentAdmin->email,
+            'account_type' => 'Individual',
+        ])->assertSessionHasErrors('account_type');
+        $this->assertTrue($currentAdmin->fresh()->is_admin);
     }
 
     /**

@@ -8,7 +8,7 @@
 <div class="mx-auto max-w-3xl">
     <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
         <div class="mb-6 flex items-center justify-between gap-3">
-            <div><h2 class="text-lg font-bold text-slate-900">New user account</h2><p class="text-xs text-slate-500">The user can sign in with the password you set.</p></div>
+            <div><h2 class="text-lg font-bold text-slate-900">New user account</h2><p class="text-xs text-slate-500">The user can sign in with the password you set. Selecting Admin grants full administrator access.</p></div>
             <a href="{{ route('admin.users') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-900"><i class="fa-solid fa-arrow-left mr-1"></i> Back to users</a>
         </div>
         @if($errors->any()) <p role="alert" class="mb-5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">Please correct the fields below.</p> @endif
