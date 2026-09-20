@@ -355,3 +355,59 @@ h4 {
     .process { margin: 14px 10px 0; padding: 28px 18px; }
     .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* One shared color treatment for public-site action buttons. */
+:root {
+    --action-background: #f58a07;
+    --action-hover-background: #ffad42;
+    --action-text: #00141b;
+}
+
+body :is(.button, .login, .price-button, .about-button) {
+    background-color: var(--action-background) !important;
+    border-color: var(--action-background) !important;
+    color: var(--action-text) !important;
+}
+
+body :is(.button, .login, .price-button, .about-button):hover {
+    background-color: var(--action-hover-background) !important;
+    border-color: var(--action-hover-background) !important;
+}
+
+body :is(.button, .login, .price-button, .about-button):focus-visible {
+    outline: 3px solid var(--action-background);
+    outline-offset: 3px;
+}
+
+
+/* Readable shared navigation, actions, and footer text. */
+.links { font-size: 16px; }
+body :is(.button, .login, .about-button) { font-size: 16px; line-height: 1.5; }
+.footer-column h3 { font-size: 17px; }
+.footer-column a, .footer-copy { font-size: 16px; line-height: 1.65; }
+.footer-copy { max-width: 280px; }
+.subscribe input { font-size: 16px; }
+.copyright { font-size: 14px; line-height: 1.6; gap: 20px; flex-wrap: wrap; }
+.footer-grid { grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)) 1.3fr; gap: 28px; }
+.footer-grid > * { min-width: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 1400px) {
+    .nav { position: relative; }
+    .links { display: none; }
+    .actions { margin-left: auto; }
+    .menu { display: block; cursor: pointer; }
+    .nav-toggle:checked ~ .links {
+        display: flex; position: absolute; top: calc(100% + 8px); left: 10px; right: 10px;
+        z-index: 10; flex-direction: column; align-items: stretch; gap: 0; padding: 8px 16px;
+        max-height: calc(100dvh - 90px); overflow-y: auto;
+        background: #00141b; border: 1px solid #26444e;
+    }
+    .nav-toggle:checked ~ .links a { padding: 12px 0; border-bottom: 1px solid #26444e; }
+    .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+    .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 380px) {
+    .footer-grid { grid-template-columns: 1fr; }
+}

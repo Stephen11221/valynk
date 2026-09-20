@@ -1,0 +1,13 @@
+{
+  "tool": "built-in image_gen",
+  "images": [
+    {
+      "file": "family.png",
+      "prompt": "Create a photorealistic wide landscape website photo, aspect ratio 2.4:1. A happy Black African family of four, father in navy shirt at left, two school-aged children in middle and right, mother in mustard cardigan behind, sitting close on a beige sofa looking at a tablet together. Warm natural daylight, tasteful modern home shelves and plants, candid affectionate smiles, premium editorial photography. All four faces visible. No text, no logos, no graphics. This is a website asset; provide the saved local image path."
+    },
+    {
+      "file": "teamwork.png",
+      "prompt": "Photorealistic wide landscape website banner photograph, aspect ratio 2.4:1. Three hikers silhouetted on rocky mountain summit at sunset; central hiker extends hand to help left hiker climb up, third standing on right with backpack. Warm golden sun low between rocks, layered blue mountains in background, cinematic yet natural editorial photography. Clear human anatomy, generous horizontal composition. No text, no logos. Website asset."
+    }
+  ]
+}
