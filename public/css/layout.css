@@ -381,7 +381,7 @@ body :is(.button, .login, .price-button, .about-button):focus-visible {
 
 
 /* Readable shared navigation, actions, and footer text. */
-.links { font-size: 16px; }
+.site-header .links { font-size: 15px; }
 body :is(.button, .login, .about-button) { font-size: 16px; line-height: 1.5; }
 footer .footer-column h3 { font-size: 10px; }
 footer .footer-column a, footer .footer-copy { font-size: 10px; line-height: 1.5; }
@@ -413,3 +413,6 @@ footer .copyright { font-size: 10px; line-height: 1.5; gap: 16px; flex-wrap: wra
 @media (max-width: 380px) {
     .footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Consistent header navigation and action text. */
+.site-header .actions :is(.button, .login) { font-size: 15px; }
