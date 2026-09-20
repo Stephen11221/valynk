@@ -383,12 +383,12 @@ body :is(.button, .login, .price-button, .about-button):focus-visible {
 /* Readable shared navigation, actions, and footer text. */
 .links { font-size: 16px; }
 body :is(.button, .login, .about-button) { font-size: 16px; line-height: 1.5; }
-.footer-column h3 { font-size: 10px; }
-.footer-column a, .footer-copy { font-size: 10px; line-height: 1.65; }
+footer .footer-column h3 { font-size: 10px; }
+footer .footer-column a, footer .footer-copy { font-size: 10px; line-height: 1.5; }
 .footer-copy { max-width: 280px; }
 footer .subscribe input, footer .subscribe .button { font-size: 10px; }
-.copyright { font-size: 10px; line-height: 1.6; gap: 20px; flex-wrap: wrap; }
-.footer-grid { grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)) 1.3fr; gap: 28px; }
+footer .copyright { font-size: 10px; line-height: 1.5; gap: 16px; flex-wrap: wrap; }
+.footer-grid { grid-template-columns: minmax(0, 1.4fr) repeat(5, minmax(0, 1fr)) minmax(0, 1.3fr); gap: clamp(10px, 1.2vw, 18px); align-items: start; }
 .footer-grid > * { min-width: 0; overflow-wrap: anywhere; }
 
 @media (max-width: 1400px) {
@@ -403,6 +403,8 @@ footer .subscribe input, footer .subscribe .button { font-size: 10px; }
         background: #00141b; border: 1px solid #26444e;
     }
     .nav-toggle:checked ~ .links a { padding: 12px 0; border-bottom: 1px solid #26444e; }
+}
+@media (max-width: 900px) {
     .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 620px) {
