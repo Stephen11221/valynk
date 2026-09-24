@@ -30,6 +30,7 @@
         </section>
 
         <section class="solutions-cards">
+            <article class="development"><i class="fa-solid fa-chart-line"></i><h2>Performance, Confidence &amp; Personal Development</h2><p>Build mindset, focus, healthy habits and confidence with support for your child.</p><a href="{{ route('development.landing') }}">Explore <i class="fa-solid fa-arrow-right"></i></a></article>
             <article class="education">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <h2>Learning &amp; Education</h2>

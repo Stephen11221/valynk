@@ -3,6 +3,7 @@
 @section('title', 'Individual Dashboard')
 
 @section('content')
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:15px;padding:20px;margin-bottom:24px;border:1px solid #e5dff4;border-radius:12px;background:#f6f0ff;color:#151447"><div><strong style="font-size:20px">Your child’s development journey</strong><p style="margin:5px 0">Assess needs, explore providers and follow your next steps.</p></div><a href="{{ route('development.home') }}" style="background:#5820a3;color:white;padding:12px 20px;border-radius:7px;font-weight:700">Open family journey →</a></div>
 @include('account.partials.status')
 <section class="rounded-2xl bg-[#061633] p-6 text-white shadow-sm sm:p-8">
     <p class="text-xs font-bold uppercase tracking-widest text-amber-300">Individual account</p>

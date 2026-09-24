@@ -27,6 +27,9 @@
                 </h1>
                 <p>{{ data_get($page, 'content.intro', 'VALYNK helps families find the right specialist support for your child, at every stage of growth and development.') }}</p>
                 <div class="family-actions">
+                    @if (auth()->user()?->account_type === 'Family' && ! auth()->user()->is_admin)
+                        <a class="button" href="{{ route('account.family.documents') }}">My Family Documents <i class="fa-regular fa-folder" aria-hidden="true"></i></a>
+                    @endif
                     <a class="button" href="#family-solutions">Find Support for My Child <i class="fa-solid fa-arrow-right"></i></a>
                     <a class="family-guide" href="#quick-guide">Not Sure Where to Start?<strong>Take the Guide <i class="fa-solid fa-arrow-right"></i></strong></a>
                 </div>

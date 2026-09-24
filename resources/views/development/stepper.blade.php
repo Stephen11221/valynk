@@ -1,0 +1,1 @@
+<ol class="stepper" aria-label="Your progress">@foreach(['Create Account','Take Assessment','View Report & Match','Pay & Connect'] as $label)<li class="{{ $loop->iteration<=($wizard??1)?'done':'' }}" @if($loop->iteration===($wizard??1)) aria-current="step" @endif><span>{{ $loop->iteration<($wizard??1)?'✓':$loop->iteration }}</span>{{ $label }}</li>@endforeach</ol>

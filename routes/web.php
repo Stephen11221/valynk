@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Account\DashboardController as AccountDashboardController;
+use App\Http\Controllers\Account\FamilyDocumentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\SitePageAdminController;
@@ -38,6 +39,11 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/dashboard', [AccountDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/profile', [AccountDashboardController::class, 'edit'])->name('account.profile.edit');
     Route::put('/dashboard/profile', [AccountDashboardController::class, 'update'])->name('account.profile.update');
+    Route::get('/dashboard/family/documents', [FamilyDocumentController::class, 'index'])->name('account.family.documents');
+    Route::post('/dashboard/family/documents', [FamilyDocumentController::class, 'store'])->name('account.family.documents.store');
+    Route::post('/dashboard/family/folders', [FamilyDocumentController::class, 'storeFolder'])->name('account.family.folders.store');
+    Route::get('/dashboard/family/documents/{document}/download', [FamilyDocumentController::class, 'download'])->whereNumber('document')->name('account.family.documents.download');
+    Route::delete('/dashboard/family/documents/{document}', [FamilyDocumentController::class, 'destroy'])->whereNumber('document')->name('account.family.documents.destroy');
 });
 Route::get('/forgot-password', [PasswordResetController::class, 'requestForm'])->name('password.request');
 Route::post('/forgot-password', [PasswordResetController::class, 'sendLink'])->middleware('throttle:3,1')->name('password.email');
@@ -100,3 +106,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:manage-admin'])
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     Route::get('/audit-logs', [DashboardController::class, 'auditLogs'])->name('audit-logs');
 });
+
+require __DIR__.'/development.php';

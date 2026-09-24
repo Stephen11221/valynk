@@ -1,0 +1,1 @@
+<div class="choices payment-methods">@foreach(['M-PESA','Card','Bank transfer'] as $method)<label class="choice"><input type="radio" name="method" value="{{ $method }}" @checked($loop->first)><span>{{ $method }}</span></label>@endforeach</div>
