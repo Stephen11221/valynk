@@ -130,6 +130,7 @@
                             <span>Subscriptions</span>
                         </a>
 
+                        <a href="{{ route('admin.solutions.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.solutions.*') ? 'sidebar-item-active' : 'sidebar-item-hover' }}"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>Solutions</span></a>
                               <a href="{{ route('admin.content') }}"
                                   class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.content') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                             <i class="fa-solid fa-file-pen w-4 text-center text-sm"></i>

@@ -8,16 +8,29 @@ use App\Models\DevelopmentChild;
 use App\Models\DevelopmentConnection;
 use App\Models\ProviderProfile;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class DevelopmentController extends Controller
 {
     public function landing()
     {
         return view('development.landing');
+    }
+
+    public function login(Request $request): View|RedirectResponse
+    {
+        if ($request->user()) {
+            return redirect()->route('development.home');
+        }
+
+        $request->session()->put('url.intended', route('development.home'));
+
+        return view('development.login');
     }
 
     public function register()
@@ -37,7 +50,7 @@ class DevelopmentController extends Controller
         Auth::login($user);
         $r->session()->regenerate();
 
-        return redirect()->route('development.home');
+        return redirect()->route('development.assessment', [DevelopmentChild::where('user_id', $user->id)->firstOrFail(), 1]);
     }
 
     private function childRules(): array
@@ -192,9 +205,9 @@ class DevelopmentController extends Controller
     public function preview(Request $r, string $page)
     {
         abort_unless(in_array($page, ['dashboard', 'providers', 'provider', 'programme', 'payment', 'confirmation', 'success', 'tracking']), 404);
-        $key = $r->query('programme','pap');
-        abort_unless(is_string($key) && array_key_exists($key,config('development.programmes')),404);
+        $key = $r->query('programme', 'pap');
+        abort_unless(is_string($key) && array_key_exists($key, config('development.programmes')), 404);
 
-        return view('development.preview.'.$page,['programme' => config('development.programmes.'.$key), 'programmeKey' => $key, 'preview' => true]);
+        return view('development.preview.'.$page, ['programme' => config('development.programmes.'.$key), 'programmeKey' => $key, 'preview' => true]);
     }
 }

@@ -34,6 +34,10 @@ class SitePageController extends Controller
 
         abort_if($page && ! $page->is_published, 404);
 
-        return view(self::VIEWS[$slug], compact('page'));
+        $solutions = $slug === 'solutions'
+            ? array_filter(($page ?? new SitePage)->solutionDetails(), fn (array $solution): bool => $solution['is_published'])
+            : [];
+
+        return view(self::VIEWS[$slug], compact('page', 'solutions'));
     }
 }

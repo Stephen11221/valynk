@@ -42,11 +42,11 @@ class SitePageAdminController extends Controller
         $sitePage->update([
             'title' => $data['title'],
             'meta_description' => $data['meta_description'] ?? null,
-            'content' => [
+            'content' => array_replace($sitePage->fresh()->content ?? [], [
                 'eyebrow' => $data['eyebrow'] ?? '',
                 'heading' => $data['heading'],
                 'intro' => $data['intro'],
-            ],
+            ]),
             'is_published' => (bool) $data['is_published'],
         ]);
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Account\DevelopmentController as Dev;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/solutions/performance-confidence', [Dev::class, 'landing'])->name('development.landing');
+Route::get('/development/login', [Dev::class, 'login'])->name('development.login');
 Route::get('/development/sample-report', [Dev::class, 'sample'])->name('development.sample');
 Route::get('/development/sample-report.pdf', [Dev::class, 'samplePdf'])->name('development.sample.pdf');
 Route::get('/development/preview/{page}', [Dev::class, 'preview'])->name('development.preview');

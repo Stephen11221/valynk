@@ -5,6 +5,7 @@ use App\Http\Controllers\Account\FamilyDocumentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\SitePageAdminController;
+use App\Http\Controllers\Admin\SolutionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\SitePageController;
@@ -97,6 +98,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:manage-admin'])
     Route::get('/transactions', [DashboardController::class, 'transactions'])->name('transactions');
     Route::get('/payments', [DashboardController::class, 'payments'])->name('payments');
     Route::get('/subscriptions', [DashboardController::class, 'subscriptions'])->name('subscriptions');
+    Route::resource('solutions', SolutionController::class)->except(['show', 'destroy']);
     Route::get('/content', [SitePageAdminController::class, 'index'])->name('content');
     Route::get('/content/{sitePage}/edit', [SitePageAdminController::class, 'edit'])->name('content.edit');
     Route::put('/content/{sitePage}', [SitePageAdminController::class, 'update'])->name('content.update');

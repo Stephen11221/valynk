@@ -3,90 +3,105 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ data_get($page, 'meta_description', 'Explore VALYNK solutions for individuals, institutions, providers, foundations and corporations.') }}">
+    <meta name="description" content="{{ data_get($page, 'meta_description', 'Explore trusted support across every area of your child’s development — in school, in life and in the opportunities ahead.') }}">
     <title>{{ data_get($page, 'title', 'Solutions | VALYNK') }}</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" referrerpolicy="no-referrer">
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/solutions.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}?v={{ filemtime(public_path('css/layout.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/solutions.css') }}?v={{ filemtime(public_path('css/solutions.css')) }}">
 </head>
-<body>
+<body class="solutions-page">
     @include('partials.navbar')
 
     <main id="top">
-        <section class="solutions-hero">
+        <section class="solutions-hero" aria-labelledby="solutions-title">
+            <img class="solutions-hero-photo" src="{{ asset('images/solutions/hero.png') }}" alt="Children and young adults looking ahead with confidence" fetchpriority="high" width="2172" height="724">
             <div class="solutions-copy">
-                <p class="eyebrow">{{ data_get($page, 'content.eyebrow', 'Our solutions') }}</p>
-                <h1>{!! nl2br(e(data_get($page, 'content.heading', "Different Needs.\nOne Powerful Approach."))) !!}</h1>
-                <div class="rule"></div>
-                <p>{{ data_get($page, 'content.intro', 'VALYNK offers a range of solutions designed to help individuals, institutions and organisations unlock potential, build capability and achieve lasting results.') }}</p>
+                <p class="solutions-badge">{{ data_get($page, 'content.eyebrow', 'Solutions') }}</p>
+                <h1 id="solutions-title">
+                    @if (data_get($page, 'content.heading') && data_get($page, 'content.heading') !== "Different Needs.\nOne Powerful Approach.")
+                        {!! nl2br(e(data_get($page, 'content.heading'))) !!}
+                    @else
+                        Your Child’s<br><span>Brighter Future</span> Starts Here.
+                    @endif
+                </h1>
+                <p>{{ data_get($page, 'content.intro') && data_get($page, 'content.intro') !== 'VALYNK offers a range of solutions designed to help individuals, institutions and organisations unlock potential, build capability and achieve lasting results.' ? data_get($page, 'content.intro') : 'Explore trusted support across every area of your child’s development — in school, in life and in the opportunities ahead.' }}</p>
+                <div class="solutions-actions">
+                    <a class="solutions-button" href="#solutions">Explore All Solutions <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    <a class="solutions-guide-link" href="{{ route('development.landing') }}"><span>Not Sure Where to Start?<strong>Take the Guide</strong></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
             </div>
-            <div class="solutions-image" role="img" aria-label="Professionals collaborating around a laptop"></div>
+            <p class="solutions-motto">Right<br>Support.<br>Brighter<br>Tomorrows.</p>
         </section>
 
-        <section class="solutions-cards">
-            <article class="development"><i class="fa-solid fa-chart-line"></i><h2>Performance, Confidence &amp; Personal Development</h2><p>Build mindset, focus, healthy habits and confidence with support for your child.</p><a href="{{ route('development.landing') }}">Explore <i class="fa-solid fa-arrow-right"></i></a></article>
-            <article class="education">
-                <i class="fa-solid fa-graduation-cap"></i>
-                <h2>Learning &amp; Education</h2>
-                <p>Academic support, tutoring, learning programs and skill development for all ages.</p>
-                <a href="#">Explore <i class="fa-solid fa-arrow-right"></i></a>
-            </article>
-            <article class="development">
-                <i class="fa-solid fa-brain"></i>
-                <h2>Child Development</h2>
-                <p>Cognitive, emotional and social development services to help children thrive.</p>
-                <a href="#">Explore <i class="fa-solid fa-arrow-right"></i></a>
-            </article>
-            <article class="wellbeing">
-                <i class="fa-solid fa-heart"></i>
-                <h2>Health &amp; Wellbeing</h2>
-                <p>Physical, mental and emotional wellbeing services for the whole family.</p>
-                <a href="#">Explore <i class="fa-solid fa-arrow-right"></i></a>
-            </article>
-            <article class="care">
-                <i class="fa-solid fa-briefcase"></i>
-                <h2>Care &amp; Support</h2>
-                <p>Trusted care, counselling and support services you can rely on.</p>
-                <a href="#">Explore <i class="fa-solid fa-arrow-right"></i></a>
-            </article>
-            <article class="talent">
-                <i class="fa-solid fa-star"></i>
-                <h2>Enrichment &amp; Talent</h2>
-                <p>Unlock potential through creativity, talent programs and life skills.</p>
-                <a href="#">Explore <i class="fa-solid fa-arrow-right"></i></a>
-            </article>
-            <article class="organisation">
-                <i class="fa-solid fa-building-columns"></i>
-                <h2>Organisation Solutions</h2>
-                <p>Professional services and solutions for schools, NGOs and institutions.</p>
-                <a href="#">Explore <i class="fa-solid fa-arrow-right"></i></a>
-            </article>
+        <section class="solutions-trust" aria-label="Our promise">
+            @foreach ([['shield-halved', 'Trusted Providers', 'Only vetted, high-quality professionals and programmes.', 'navy'], ['people-group', 'Personalised Matching', 'Support that fits your child’s needs and goals.', 'blue'], ['seedling', 'Relevant at Every Stage', 'From early years to young adulthood.', 'green'], ['star', 'A Brighter Future', 'Build the capabilities for lifelong success.', 'gold']] as [$icon, $title, $description, $tone])
+                <div class="trust-item tone-{{ $tone }}"><span class="solution-icon"><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i></span><div><h2>{{ $title }}</h2><p>{{ $description }}</p></div></div>
+            @endforeach
         </section>
 
-        <section class="match-strip">
-            <i class="fa-solid fa-diagram-project" aria-hidden="true"></i>
-            <div>
-                <h2>Need Something Specific?</h2>
-                <p>Tell us what you need and we'll help you find the perfect match from our trusted network.</p>
+        <div class="solutions-layout">
+            <div class="solutions-primary">
+                <section id="solutions" aria-labelledby="our-solutions-title">
+                    <header class="solutions-heading"><h2 id="our-solutions-title">Our Solutions</h2><p>Explore each solution area to find the right support for your child. Each solution brings together trusted providers and proven programmes to help them develop, perform and thrive.</p></header>
+                    <div class="solutions-grid">
+                        @foreach ($solutions as $key => $details)
+                            <article class="solution-card tone-{{ $details['tone'] }}">
+                                @if($details['image_url'])
+                                    <img class="solution-photo solution-custom-photo" src="{{ $details['image_url'] }}" alt="" loading="lazy" referrerpolicy="no-referrer">
+                                @else
+                                    <div class="solution-photo solution-photo-{{ $details['photo'] }}" aria-hidden="true"></div>
+                                @endif
+                                <div class="solution-card-copy">
+                                    <span class="solution-icon"><i class="fa-solid fa-{{ $details['icon'] }}" aria-hidden="true"></i></span>
+                                    <h3>{{ $details['title'] }}</h3><p>{{ $details['description'] }}</p>
+                                    <button type="button" class="solution-explore" data-solution-open="solution-{{ $key }}" aria-haspopup="dialog" aria-controls="solution-{{ $key }}" aria-label="Explore {{ $details['title'] }}">Explore <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                </section>
+
+                <section class="solutions-stages" aria-labelledby="stages-title">
+                    <h2 id="stages-title">Relevant at Every Stage</h2>
+                    <p>Our solutions are tailored to be relevant across all stages of your child’s journey — while remaining adaptive to individual needs.</p>
+                    <ol class="stages-list">
+                        @foreach ([['pink', 'seedling', 'Early Years', '5 – 6', 'Pre-Primary (PP1–2)', 'Build strong foundations'], ['blue', 'child', 'Lower Primary', '7 – 8', 'Grade 1 – 3', 'Develop key skills and curiosity'], ['teal', 'people-group', 'Upper Primary', '9 – 11', 'Grade 4 – 6', 'Strengthen capability and identity'], ['gold', 'person', 'Lower Secondary', '12 – 14', 'Grade 7 – 9', 'Prepare for opportunities and independence'], ['orange', 'person', 'Upper Secondary', '15 – 17', 'Grade 10 – 12', 'Transition with confidence to higher education, work and life'], ['purple', 'graduation-cap', 'Young Adulthood', '18+', 'Beyond School', 'Build a fulfilling future']] as [$tone, $icon, $title, $age, $grade, $description])
+                            <li class="tone-{{ $tone }}"><div class="stage-label"><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i><div><h3>{{ $title }}</h3><span>({{ $age }})</span><span>{{ $grade }}</span></div></div><p>{{ $description }}</p></li>
+                        @endforeach
+                    </ol>
+                </section>
             </div>
-            <a class="button" href="#contact">Get Matched <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-        </section>
 
-        <section class="value-band">
-            <div class="value-heading">Value<br><span>You Can See</span></div>
-            <article><i class="fa-solid fa-gauge-high"></i><strong>Higher<br>Performance</strong></article>
-            <article><i class="fa-solid fa-lightbulb"></i><strong>Stronger<br>Leadership</strong></article>
-            <article><i class="fa-solid fa-people-group"></i><strong>More Engaged<br>Teams</strong></article>
-            <article><i class="fa-solid fa-chart-line"></i><strong>Lasting<br>Behaviour Change</strong></article>
-            <article><i class="fa-solid fa-star"></i><strong>Greater<br>Social Impact</strong></article>
+            <aside class="solutions-sidebar" aria-label="Help choosing support">
+                <section class="solutions-why">
+                    <h2>Why Choose VALYNK?</h2>
+                    @foreach ([['calendar-check', 'Verified & Vetted Experts', 'Only qualified, trusted professionals.'], ['shield-halved', 'Evidence-Based Matching', 'Matches based on your child’s needs and goals.'], ['link', 'Age-Sensitive Guidance', 'Support that fits your child’s age and developmental stage.'], ['star', 'Whole-Child Approach', 'Mind, skills, direction and wellbeing — all connected.'], ['user', 'Track Progress & Outcomes', 'See what’s working and plan what’s next.']] as [$icon, $title, $description])
+                        <div class="solutions-reason"><span><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i></span><div><h3>{{ $title }}</h3><p>{{ $description }}</p></div></div>
+                    @endforeach
+                </section>
+                <section class="solutions-quick-guide"><div><h2>Not sure where to start?</h2><p>Explore our approach and find the best starting point for your child.</p><a class="solutions-button" href="{{ route('development.landing') }}">Take the Quick Guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div><i class="fa-solid fa-clipboard-check guide-illustration" aria-hidden="true"></i></section>
+                <section class="solutions-help"><h2>Need help choosing?</h2><p>Talk to our Family Support Team.</p><a href="{{ route('contact') }}"><i class="fa-regular fa-comment-dots" aria-hidden="true"></i> Contact our team <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></section>
+            </aside>
+        </div>
+
+        <section class="solutions-process" aria-labelledby="process-title">
+            <h2 id="process-title">How VALYNK Helps You Find the Right Support</h2>
+            <ol>
+                @foreach ([['blue', 'magnifying-glass', 'Explore', 'Discover solutions that match your child’s interests and goals.'], ['purple', 'file-lines', 'Tell Us More', 'Complete a short assessment to help us understand your child’s needs.'], ['green', 'people-group', 'Get Matched', 'We identify suitable providers and programmes based on your child’s profile.'], ['gold', 'calendar-days', 'See Options', 'View upcoming intakes or available delivery arrangements.'], ['pink', 'link', 'Connect', 'Express interest or enrol directly with the provider.']] as [$tone, $icon, $title, $description])
+                    <li class="tone-{{ $tone }}"><span class="process-number">{{ $loop->iteration }}</span><i class="fa-solid fa-{{ $icon }} process-icon" aria-hidden="true"></i><div><h3>{{ $title }}</h3><p>{{ $description }}</p></div>@unless($loop->last)<i class="fa-solid fa-chevron-right process-arrow" aria-hidden="true"></i>@endunless</li>
+                @endforeach
+            </ol>
         </section>
     </main>
-</main>
-@include('partials.footer')
-</body></html>
+
+    @foreach($solutions as $key => $details)
+        @include('partials.solution-dialog', ['key' => $key, 'details' => $details])
+    @endforeach
+    <script src="{{ asset('js/solutions.js') }}?v={{ filemtime(public_path('js/solutions.js')) }}" defer></script>
+    @include('partials.footer')
+</body>
+</html>

@@ -17,6 +17,12 @@ class SitePage extends Model
         'is_published',
     ];
 
+    /** @return array<string, array<string, mixed>> */
+    public function solutionDetails(): array
+    {
+        return array_replace(config('solutions'), $this->content['solutions'] ?? []);
+    }
+
     protected function casts(): array
     {
         return [

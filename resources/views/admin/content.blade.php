@@ -7,6 +7,7 @@
 @section('content')
 <div class="bg-white rounded-xl border border-slate-200 p-5">
     @if(session('status')) <p role="status" class="mb-4 text-emerald-700">{{ session('status') }}</p> @endif
+    <a href="{{ route('admin.solutions.index') }}" class="mb-4 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white">Manage solution popups</a>
     <h2 class="text-base font-bold text-slate-900">All Content</h2>
     <p class="text-xs text-slate-500 mb-5">These pages are loaded from the site_pages table.</p>
     @forelse($pages as $page)
