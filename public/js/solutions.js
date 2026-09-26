@@ -24,6 +24,7 @@
             backdropPointerDown = false;
         });
         dialog.addEventListener('close', () => {
+            if (document.querySelector('.solution-dialog[open]')) return;
             document.documentElement.classList.remove('solution-modal-open');
             opener?.focus({ preventScroll: true });
         });

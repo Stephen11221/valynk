@@ -3,6 +3,8 @@
     <section class="solution-dialog-hero">
         @if($details['image_url'])
             <img class="solution-dialog-image" src="{{ $details['image_url'] }}" alt="" loading="lazy" referrerpolicy="no-referrer">
+        @elseif($key === 'performance-confidence')
+            <img class="solution-dialog-image" src="{{ asset('images/solutions/confidence-hero.png') }}" alt="" loading="lazy">
         @else
             <div class="solution-dialog-image solution-photo solution-photo-{{ $details['photo'] }}" aria-hidden="true"></div>
         @endif

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SitePage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class SitePageAdminController extends Controller
@@ -39,16 +40,19 @@ class SitePageAdminController extends Controller
             'is_published' => ['required', 'boolean'],
         ]);
 
-        $sitePage->update([
-            'title' => $data['title'],
-            'meta_description' => $data['meta_description'] ?? null,
-            'content' => array_replace($sitePage->fresh()->content ?? [], [
-                'eyebrow' => $data['eyebrow'] ?? '',
-                'heading' => $data['heading'],
-                'intro' => $data['intro'],
-            ]),
-            'is_published' => (bool) $data['is_published'],
-        ]);
+        DB::transaction(function () use ($sitePage, $data): void {
+            $sitePage = SitePage::query()->whereKey($sitePage->id)->lockForUpdate()->firstOrFail();
+            $sitePage->update([
+                'title' => $data['title'],
+                'meta_description' => $data['meta_description'] ?? null,
+                'content' => array_replace($sitePage->content ?? [], [
+                    'eyebrow' => $data['eyebrow'] ?? '',
+                    'heading' => $data['heading'],
+                    'intro' => $data['intro'],
+                ]),
+                'is_published' => (bool) $data['is_published'],
+            ]);
+        });
 
         return redirect()->route('admin.content')->with('status', 'Page saved.');
     }
