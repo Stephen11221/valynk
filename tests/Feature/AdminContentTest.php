@@ -101,6 +101,16 @@ class AdminContentTest extends TestCase
         $this->assertDatabaseCount('site_pages', 0);
     }
 
+    public function test_admin_layout_still_renders_when_page_config_is_missing_from_cache(): void
+    {
+        $admin = User::factory()->create();
+        $admin->forceFill(['is_admin' => true])->save();
+        $this->actingAs($admin);
+        config(['site-pages' => null]);
+
+        $this->get(route('admin.solutions.index'))->assertOk()->assertSee('Solutions');
+    }
+
     public function test_regular_user_cannot_change_page(): void
     {
         $page = SitePage::query()->create(['slug' => 'about', 'title' => 'Original', 'is_published' => true]);

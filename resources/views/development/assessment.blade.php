@@ -1,3 +1,4 @@
+@php($checkoutPage = $checkoutPage ?? false)
 @php($plansPage = $plansPage ?? false)
 @php($journeyStage = $step === 5 ? 4 : ($step === 4 ? 3 : 2))
 <!doctype html>
@@ -5,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $step === 5 ? ($plansPage ? 'Choose a Plan' : 'Review & Consent') : ($step === 4 ? 'Tell Us More About Your Child' : 'Take a Brief Assessment') }} | VALYNK</title>
+    <title>{{ $step === 5 ? ($checkoutPage ? 'Complete Payment' : ($plansPage ? 'Choose a Plan' : 'Review & Consent')) : ($step === 4 ? 'Tell Us More About Your Child' : 'Take a Brief Assessment') }} | VALYNK</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -14,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/assessment.css') }}?v={{ filemtime(public_path('css/assessment.css')) }}">
     <script src="{{ asset('js/assessment.js') }}?v={{ filemtime(public_path('js/assessment.js')) }}" defer></script>
 </head>
-<body class="assessment-page {{ $step === 2 ? 'assessment-needs-page' : ($step >= 3 ? 'assessment-support-page'.($step === 4 ? ' assessment-child-page' : ($step === 5 ? ' assessment-review-page'.($plansPage ? ' assessment-plans-page' : '') : '')) : '') }}">
+<body class="assessment-page {{ $step === 2 ? 'assessment-needs-page' : ($step >= 3 ? 'assessment-support-page'.($step === 4 ? ' assessment-child-page' : ($step === 5 ? ' assessment-review-page'.($plansPage ? ' assessment-plans-page'.($checkoutPage ? ' assessment-checkout-page' : '') : '') : '')) : '') }}">
 <a class="connection-skip" href="#assessment-form">Skip to assessment</a>
 <main class="connection-shell assessment-shell">
     <a class="connection-close" href="{{ route('development.home') }}" aria-label="Close and return to your dashboard"><i class="fa-solid fa-xmark" aria-hidden="true"></i></a>
@@ -38,7 +39,7 @@
 
     <section class="assessment-content" aria-labelledby="assessment-title">
         <header class="connection-heading assessment-heading">
-            <div>@if(in_array($step, [3, 4, 5], true))<p class="support-stage-label">Step {{ $journeyStage }} of 4</p>@endif<h1 id="assessment-title">@if(!in_array($step, [3, 4, 5], true))<span>Step {{ $journeyStage }}:</span>@endif {{ $step === 5 ? ($plansPage ? 'Choose a Plan, Preview Your Report and Pay' : 'Review, Consent and Continue') : ($step === 4 ? 'Tell Us More About Your Child' : 'Take a Brief Assessment') }}</h1><p>{{ $step === 5 ? ($plansPage ? 'Preview a sample report and explore plans for your family’s next steps.' : 'Please review your information, give your consent, and continue to your report and provider options.') : ($step === 4 ? 'This helps us find the most suitable support and providers.' : 'Let’s understand your child better so we can find relevant support.') }}</p></div>
+            <div>@if(in_array($step, [3, 4, 5], true))<p class="support-stage-label">Step {{ $journeyStage }} of 4</p>@endif<h1 id="assessment-title">@if(!in_array($step, [3, 4, 5], true))<span>Step {{ $journeyStage }}:</span>@endif {{ $step === 5 ? ($checkoutPage ? 'Complete Payment to Unlock Your Full Report' : ($plansPage ? 'Choose a Plan, Preview Your Report and Pay' : 'Review, Consent and Continue')) : ($step === 4 ? 'Tell Us More About Your Child' : 'Take a Brief Assessment') }}</h1><p>{{ $step === 5 ? ($plansPage ? ($checkoutPage ? 'Review your selected plan, payment method and total before continuing.' : 'Preview a sample report and explore plans for your family’s next steps.') : 'Please review your information, give your consent, and continue to your report and provider options.') : ($step === 4 ? 'This helps us find the most suitable support and providers.' : 'Let’s understand your child better so we can find relevant support.') }}</p></div>
             <ol class="connection-stepper" aria-label="Your progress">@foreach(['Create Account', 'Take Assessment', 'View Report & Match', 'Connect'] as $label)<li class="{{ $loop->iteration < $journeyStage ? 'completed' : '' }}" @if($loop->iteration === $journeyStage) aria-current="step" @endif><span>@if($loop->iteration < $journeyStage)<i class="fa-solid fa-check" aria-hidden="true"></i>@else{{ $loop->iteration }}@endif</span><p>{{ $label }}</p></li>@endforeach</ol>
         </header>
         @if($step < 4)
@@ -86,9 +87,9 @@
                     </fieldset>
                 @endforeach
             @else
-                @include($plansPage ? 'development.plan-options' : 'development.assessment-review')
+                @include($checkoutPage ? 'development.checkout-details' : ($plansPage ? 'development.plan-options' : 'development.assessment-review'))
             @endif
-            <div class="assessment-actions"><a class="assessment-back" href="{{ $child && $step > 1 ? route('development.assessment', [$child, $plansPage ? 5 : $step - 1]) : route('development.home') }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back</a><button class="connection-submit" type="submit">{{ $step === 5 ? ($plansPage ? 'Review Payment Options' : 'Preview Report & Choose a Plan') : 'Next' }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button><a class="assessment-help" href="{{ route('contact') }}"><strong>Need Help?</strong><i class="fa-regular fa-comment-dots" aria-hidden="true"></i><span>Contact us</span></a></div>
+            <div class="assessment-actions"><a class="assessment-back" href="{{ $checkoutPage ? route('development.plans', ['assessment' => $assessment?->id, 'plan' => $plan, 'method' => $method]) : ($child && $step > 1 ? route('development.assessment', [$child, $plansPage ? 5 : $step - 1]) : route('development.home')) }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back</a><button class="connection-submit" type="submit" @if($checkoutPage) disabled aria-describedby="payment-unavailable" @endif>{{ $step === 5 ? ($checkoutPage ? 'Complete Payment — Unavailable' : ($plansPage ? 'Review Payment Options' : 'Preview Report & Choose a Plan')) : 'Next' }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button><a class="assessment-help" href="{{ route('contact') }}"><strong>Need Help?</strong><i class="fa-regular fa-comment-dots" aria-hidden="true"></i><span>Contact us</span></a></div>
         </form>
     </section>
 </main>

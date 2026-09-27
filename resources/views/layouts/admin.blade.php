@@ -130,6 +130,7 @@
                             <span>Content Management</span>
                         </a>
 
+                        @if(\Illuminate\Support\Facades\Route::has('admin.pages.edit') && is_array(config('site-pages')))
                         <details class="mt-2" open>
                             <summary class="cursor-pointer rounded-lg px-3.5 py-2.5 text-sm font-semibold text-slate-300">Website Page Editors</summary>
                             <ul class="ml-3 space-y-1 border-l border-slate-700 pl-2" aria-label="Website page editors">
@@ -144,6 +145,7 @@
                                 @endforeach
                             </ul>
                         </details>
+                        @endif
 
                               <a href="{{ route('admin.reports') }}"
                                   class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.reports') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">

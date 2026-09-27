@@ -69,6 +69,21 @@ class DevelopmentJourneyTest extends TestCase
         $this->get(route('development.checkout', ['plan' => 'invalid', 'method' => 'Card']))->assertSessionHasErrors('plan');
     }
 
+    public function test_checkout_uses_configured_amounts_and_retains_selections(): void
+    {
+        $this->actingAs(User::factory()->create());
+        foreach (config('development.plans') as $plan => $fee) {
+            foreach (['Card', 'M-PESA', 'Bank transfer'] as $method) {
+                $this->get(route('development.checkout', ['plan' => $plan, 'method' => $method, 'amount' => 1]))
+                    ->assertOk()->assertSee($plan.' Plan')->assertSee(number_format($fee))
+                    ->assertSee(route('development.plans', ['plan' => $plan, 'method' => $method]))
+                    ->assertSee('Payments are not available yet')->assertSee('Complete Payment — Unavailable');
+            }
+        }
+        $this->get(route('development.checkout', ['plan' => 'Individual', 'method' => 'Card']))
+            ->assertSee('class="checkout-card-fields" disabled', false);
+    }
+
     public function test_children_and_reports_are_private(): void
     {
         $owner = User::factory()->create();
