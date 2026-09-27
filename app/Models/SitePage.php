@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class SitePage extends Model
 {
@@ -20,7 +21,15 @@ class SitePage extends Model
     /** @return array<string, array<string, mixed>> */
     public function solutionDetails(): array
     {
-        return array_replace(config('solutions'), $this->content['solutions'] ?? []);
+        $solutions = array_replace(config('solutions'), $this->content['solutions'] ?? []);
+        foreach ($solutions as &$details) {
+            $details['display_image_url'] = ! empty($details['image_path'])
+                ? Storage::disk('public')->url($details['image_path'])
+                : ($details['image_url'] ?? null);
+        }
+        unset($details);
+
+        return $solutions;
     }
 
     protected function casts(): array

@@ -8,9 +8,18 @@
     @if($errors->any())
         <div role="alert" class="my-4 rounded-lg bg-rose-50 p-4 text-sm text-rose-700"><p class="font-bold">Please correct the following:</p><ul class="list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
     @endif
-    <form method="POST" action="{{ $solution ? route('admin.solutions.update', $solution) : route('admin.solutions.store') }}" class="mt-5 grid gap-5" id="solution-editor">
+    <form method="POST" enctype="multipart/form-data" action="{{ $solution ? route('admin.solutions.update', $solution) : route('admin.solutions.store') }}" class="mt-5 grid gap-5" id="solution-editor">
         @csrf
         @if($solution) @method('PUT') @endif
+        <section class="rounded-lg border border-slate-200 p-4">
+            <h2 class="font-bold text-slate-900">Solution image</h2>
+            <p class="mt-1 text-sm text-slate-500">Upload a JPG, PNG or WebP image (up to 5 MB). Used on the solution card and popup. An upload takes priority over the image URL below.</p>
+            <div class="mt-3 max-w-md" data-current-image>@include('admin.solution-image', ['details' => $details])</div>
+            <img data-upload-preview hidden alt="New solution image preview" class="mt-3 h-48 w-full max-w-md rounded-lg object-cover">
+            <label class="mt-3 grid gap-2 text-sm font-semibold">Upload or replace image<input type="file" name="image" accept="image/jpeg,image/png,image/webp" data-solution-upload class="rounded-lg border border-slate-300 p-2"></label>
+            @error('image')<p role="alert" class="mt-2 text-sm text-rose-700">{{ $message }}</p>@enderror
+            @if(!empty($details['image_path']))<label class="mt-3 flex items-center gap-2 text-sm"><input type="checkbox" name="remove_image" value="1" @checked(old('remove_image'))> Remove uploaded image and use the URL or default photo</label>@endif
+        </section>
         @foreach(['title' => ['Solution title', 180], 'description' => ['Card and popup introduction', 1000], 'tagline' => ['Hero tagline (optional)', 150], 'age_range' => ['Age range and stage', 150], 'support_intro' => ['Support areas introduction', 500], 'image_url' => ['Hero and card image URL (HTTPS, optional)', 2000]] as $field => [$label, $maximum])
             <label class="grid gap-1 text-sm font-semibold">{{ $label }}
                 <input name="{{ $field }}" value="{{ old($field, $details[$field] ?? '') }}" maxlength="{{ $maximum }}" type="{{ $field === 'image_url' ? 'url' : 'text' }}" @required(!in_array($field, ['tagline', 'image_url'])) class="w-full rounded-lg border border-slate-300 p-2 font-normal">

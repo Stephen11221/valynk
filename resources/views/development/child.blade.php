@@ -24,7 +24,7 @@
             <ul class="connection-highlights">@foreach($solution['highlights'] as $highlight)<li><i class="fa-solid fa-{{ ['brain', 'bullseye', 'person', 'star'][$loop->index] }}" aria-hidden="true"></i><span>{{ $highlight }}</span></li>@endforeach</ul>
             <p class="connection-tagline">{{ $solution['tagline'] ?: 'Confident. Capable. Prepared for what’s next.' }}</p>
         </div>
-        <img class="connection-portrait" src="{{ $solution['image_url'] ?: asset('images/solutions/confidence-hero.png') }}" alt="A student looking ahead with confidence" referrerpolicy="no-referrer">
+        <img class="connection-portrait" src="{{ ($solution['display_image_url'] ?? $solution['image_url']) ?: asset('images/solutions/confidence-hero.png') }}" alt="A student looking ahead with confidence" referrerpolicy="no-referrer">
     </aside>
 
     <section class="connection-content" aria-labelledby="connection-title">

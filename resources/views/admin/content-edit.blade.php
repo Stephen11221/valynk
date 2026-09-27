@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Page')
-@section('header_title', 'Edit Page')
+@section('title', $sitePage->slug === 'solutions' ? 'Edit Solutions Landing Page' : 'Edit Page')
+@section('header_title', $sitePage->slug === 'solutions' ? 'Edit Solutions Landing Page' : 'Edit Page')
 @section('header_subtitle', 'Changes to published pages appear on the public website.')
 
 @section('content')
 <div class="max-w-3xl rounded-xl border border-slate-200 bg-white p-5">
-    <a href="{{ route('admin.content') }}" class="text-xs text-indigo-700">← All Content</a>
+    <a href="{{ route($sitePage->slug === 'solutions' ? 'admin.solutions.index' : 'admin.content') }}" class="text-xs text-indigo-700">← {{ $sitePage->slug === 'solutions' ? 'All Solutions' : 'All Content' }}</a>
     <h2 class="mt-3 text-lg font-bold text-slate-900">{{ $sitePage->title }}</h2>
     @if($errors->any()) <p role="alert" class="my-3 text-sm text-rose-700">Please correct the fields below.</p> @endif
     <form method="POST" action="{{ route('admin.content.update', $sitePage) }}" class="mt-5 grid gap-4">

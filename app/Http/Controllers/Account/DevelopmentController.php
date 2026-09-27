@@ -147,7 +147,7 @@ class DevelopmentController extends Controller
                 $r->validate(['guardian' => 'accepted', 'consent' => 'accepted', 'sharing' => 'accepted']);
                 $assessment->update(['consented_at' => now()]);
 
-                return redirect()->route('development.report', $assessment);
+                return redirect()->route('development.plans', ['assessment' => $assessment->id]);
             }
             $rules = [];
             foreach (config("development.questions.$step") as $key => [$label, $type, $options]) {
@@ -237,14 +237,18 @@ class DevelopmentController extends Controller
         return view('development.bookings', ['connections' => DevelopmentConnection::where('user_id', $r->user()->id)->with(['provider.user', 'child'])->latest()->get()]);
     }
 
-    public function plans()
+    public function plans(Request $r): View
     {
-        return view('development.plans');
+        $data = $r->validate(['assessment' => 'nullable|integer', 'plan' => ['nullable', Rule::in(array_keys(config('development.plans')))], 'method' => ['nullable', Rule::in(['M-PESA', 'Card', 'Bank transfer'])]]);
+        $assessment = isset($data['assessment']) ? DevelopmentAssessment::whereHas('child', fn ($query) => $query->where('user_id', $r->user()->id))->whereNotNull('consented_at')->with('child')->findOrFail($data['assessment']) : null;
+
+        return view('development.plans', ['assessment' => $assessment, 'child' => $assessment?->child]);
     }
 
     public function checkout(Request $r)
     {
-        $data = $r->validate(['plan' => ['required', Rule::in(array_keys(config('development.plans')))], 'method' => ['required', Rule::in(['M-PESA', 'Card', 'Bank transfer'])]]);
+        $data = $r->validate(['plan' => ['required', Rule::in(array_keys(config('development.plans')))], 'method' => ['required', Rule::in(['M-PESA', 'Card', 'Bank transfer'])], 'assessment' => 'nullable|integer']);
+        $data['assessment'] = isset($data['assessment']) ? DevelopmentAssessment::whereHas('child', fn ($query) => $query->where('user_id', $r->user()->id))->whereNotNull('consented_at')->findOrFail($data['assessment']) : null;
 
         return view('development.checkout', $data);
     }

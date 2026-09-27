@@ -40,6 +40,28 @@ class AdminContentTest extends TestCase
         $this->assertDatabaseHas('site_pages', ['id' => $page->id, 'title' => 'New title', 'is_published' => true]);
     }
 
+    public function test_solutions_are_managed_separately_from_general_content(): void
+    {
+        $admin = User::factory()->create();
+        $admin->forceFill(['is_admin' => true])->save();
+        $this->actingAs($admin);
+        $page = SitePage::query()->create(['slug' => 'solutions', 'title' => 'Solution landing content', 'is_published' => true]);
+
+        $this->get(route('admin.content'))->assertOk()
+            ->assertDontSee('Solution landing content')
+            ->assertDontSee(route('admin.transactions'))
+            ->assertDontSee(route('admin.payments'))
+            ->assertSee(route('admin.solutions.index'));
+        $this->get(route('admin.solutions.index'))->assertOk()
+            ->assertSee(route('admin.content.edit', $page))
+            ->assertSee(route('admin.solutions.create'));
+        $this->get(route('admin.content.edit', $page))->assertOk()->assertSee('Edit Solutions Landing Page');
+        $this->put(route('admin.content.update', $page), [
+            'title' => 'Updated solutions', 'heading' => 'Find support', 'intro' => 'Explore support areas', 'is_published' => '1',
+        ])->assertRedirect(route('admin.solutions.index'));
+        $this->assertDatabaseHas('site_pages', ['id' => $page->id, 'title' => 'Updated solutions']);
+    }
+
     public function test_regular_user_cannot_change_page(): void
     {
         $page = SitePage::query()->create(['slug' => 'about', 'title' => 'Original', 'is_published' => true]);

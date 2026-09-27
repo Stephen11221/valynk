@@ -112,16 +112,10 @@
                             <span>Matches</span>
                         </a>
 
-                        <a href="{{ route('admin.transactions') }}"
-                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.transactions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                            <i class="fa-solid fa-receipt w-4 text-center text-sm"></i>
-                            <span>Transactions</span>
-                        </a>
-
-                        <a href="{{ route('admin.payments') }}"
-                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.payments') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
-                            <i class="fa-solid fa-credit-card w-4 text-center text-sm"></i>
-                            <span>Payments</span>
+                        <a href="{{ route('admin.solutions.index') }}"
+                           class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.solutions.*') || (request()->routeIs('admin.content.*') && request()->route('sitePage')?->slug === 'solutions') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-layer-group w-4 text-center text-sm" aria-hidden="true"></i>
+                            <span>Solutions</span>
                         </a>
 
                         <a href="{{ route('admin.subscriptions') }}"
@@ -130,7 +124,6 @@
                             <span>Subscriptions</span>
                         </a>
 
-                        <a href="{{ route('admin.solutions.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.solutions.*') ? 'sidebar-item-active' : 'sidebar-item-hover' }}"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>Solutions</span></a>
                               <a href="{{ route('admin.content') }}"
                                   class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.content') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                             <i class="fa-solid fa-file-pen w-4 text-center text-sm"></i>

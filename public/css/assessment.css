@@ -203,3 +203,112 @@
 .assessment-child-page .assessment-side-steps li:nth-child(2) .assessment-side-number { background: white; color: #071e3f; box-shadow: none; }
 @media (max-width: 1250px) { .assessment-child-top, .assessment-child-details { grid-template-columns: 1fr; } }
 @media (max-width: 650px) { .child-health .support-card-options { grid-template-columns: 1fr 1fr; } .child-question .support-radio-options { grid-template-columns: 1fr; } .child-question .support-card-options .assessment-option { min-height: 85px; } .child-question textarea { font-size: 16px; } }
+
+/* Final review and consent. */
+.assessment-review-page { background: radial-gradient(ellipse at 12% 40%, #381643, #1c082f 75%); color: #240b59; }
+.assessment-review-page .assessment-story { background: transparent; }
+.assessment-review-page .assessment-story::after { background: linear-gradient(180deg, #29103830, transparent); }
+.assessment-review-page .assessment-content { padding-top: 26px; }
+.assessment-review-page .assessment-heading h1 { color: #260b60; font-size: clamp(27px, 2.55vw, 39px); }
+.assessment-review-page .assessment-heading { align-items: flex-start; }
+.assessment-review-page .assessment-heading > div > p { font-size: 15px; }
+.assessment-review-page .assessment-side-steps li:not([aria-current]) .assessment-side-number { background: white; color: #240b59; box-shadow: none; }
+.assessment-review-page .assessment-side-steps [aria-current] h3 { color: #ff8500; }
+.assessment-review-page .assessment-story .connection-tagline { border-top: 1px solid #ffffff60; padding-top: 20px; margin-top: 32px; max-width: 235px; font: 400 27px/1.3 'DM Sans', sans-serif; transform: none; }
+.assessment-review-page .connection-tagline em { font-style: normal; color: #ff8500; }
+.assessment-review-page .assessment-story-values { background: #281039; }
+.assessment-review-page .assessment-child-line { display: none; }
+.review-layout { display: grid; grid-template-columns: minmax(0, 57%) minmax(0, 1fr); gap: 26px; margin-top: 28px; }
+.review-card { border: 1px solid #e7e1f0; border-radius: 8px; overflow: hidden; }
+.review-card-heading { display: flex; align-items: center; gap: 18px; padding: 19px 20px; background: #fbf7fb; }
+.review-card-heading > i, .review-callout > i { display: grid; place-items: center; flex: 0 0 56px; height: 56px; color: white; background: linear-gradient(135deg, #ff5900, #ff8a00); border-radius: 50%; font-size: 28px; }
+.review-card-heading h2, .review-callout h2 { font: 800 21px/1.3 'Manrope', sans-serif; letter-spacing: -.6px; }
+.review-card-heading p { font-size: 13px; margin-top: 6px; line-height: 1.5; }
+.review-edit { display: flex; gap: 8px; margin-left: auto; color: #ff5900; font-size: 13px; flex-shrink: 0; }
+.review-summary { display: grid; grid-template-columns: 1.2fr 1fr; margin: 0; padding: 0 16px; }
+.review-summary > div { display: flex; gap: 18px; align-items: center; padding: 24px 0; border-bottom: 1px solid #e7e1f0; min-width: 0; }
+.review-summary > div:nth-child(even) { padding-left: 20px; }
+.review-summary > div:last-child { grid-column: 1 / -1; border: 0; }
+.review-summary i { flex: 0 0 36px; font-size: 29px; }
+.review-summary dt { font-size: 12px; margin-bottom: 5px; }
+.review-summary dd { margin: 0; font-size: 13px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.review-consent { border: 0; margin: 0; padding: 5px 16px; min-width: 0; }
+.review-consent label { display: flex; align-items: flex-start; gap: 15px; padding: 17px 0; font-size: 14px; line-height: 1.6; cursor: pointer; }
+.review-consent input { flex: 0 0 23px; width: 23px; height: 23px; margin: 2px 0 0; accent-color: #ff6900; }
+.review-privacy { margin: 10px 16px 0; padding: 19px 0; border-top: 1px solid #e7e1f0; font-size: 14px; }
+.review-privacy summary { cursor: pointer; color: #ec5500; text-decoration: underline; }
+.review-privacy summary i { margin-right: 10px; font-size: 22px; }
+.review-privacy p { margin-top: 12px; line-height: 1.6; }
+.review-all-answers { border-top: 1px solid #e7e1f0; margin: 0 16px; padding: 13px 0; font-size: 13px; }
+.review-all-answers summary { cursor: pointer; font-weight: 700; }
+.review-all-answers section { border-top: 1px solid #e7e1f0; padding: 15px 0; margin-top: 12px; }
+.review-all-answers h3 { font-size: 15px; }
+.review-all-answers h3 a { float: right; color: #dc5100; }
+.review-all-answers dt { font-weight: 700; margin-top: 12px; }
+.review-all-answers dd { margin: 5px 0; overflow-wrap: anywhere; }
+.review-callout { display: flex; align-items: flex-start; gap: 21px; padding: 22px 20px; margin-top: 23px; border-radius: 10px; }
+.review-callout p { font-size: 13px; line-height: 1.65; margin-top: 8px; }
+.review-almost { background: #fff1e7; }
+.review-almost h2 { color: #f65c00; }
+.review-safe { background: #f3eaff; }
+.review-safe > i { background: #2d0b68; }
+.review-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.assessment-review-page .assessment-actions { border-top: 1px solid #e8d5ff; padding-top: 30px; grid-template-columns: minmax(110px, .7fr) minmax(240px, 1.6fr) auto; }
+.assessment-review-page .assessment-actions .connection-submit { font-size: 16px; background: linear-gradient(100deg, #ff7800, #ff5400); }
+.assessment-review-page .assessment-back { background: #f0e5ff; color: #240b59; }
+@media (max-width: 1250px) { .review-layout { grid-template-columns: 1fr; } .assessment-review-page .assessment-actions { grid-template-columns: 130px 1fr; } }
+@media (max-width: 650px) { .review-card-heading { gap: 10px; padding: 16px 12px; flex-wrap: wrap; } .review-card-heading > div { flex: 1; min-width: 160px; } .review-card-heading h2, .review-callout h2 { font-size: 19px; } .review-summary { grid-template-columns: 1fr; } .review-summary > div:nth-child(even) { padding-left: 0; } .review-summary > div { padding: 16px 0; } .review-callout { gap: 12px; padding: 20px 14px; } .assessment-review-page .assessment-actions { grid-template-columns: 1fr; } .assessment-review-page .assessment-actions .connection-submit { font-size: 15px; padding: 14px; } .assessment-review-page .assessment-actions .assessment-help { grid-column: 1; } }
+
+/* Plans and sample report preview. */
+.assessment-plans-page .assessment-heading h1 { font-size: clamp(25px, 2.15vw, 34px); }
+.plans-layout { display: grid; grid-template-columns: minmax(0, 49%) minmax(0, 1fr); gap: 22px; margin-top: 24px; }
+.plans-preview { padding: 18px 16px; border-radius: 9px; background: #f2edff; }
+.plans-preview > header { display: flex; gap: 17px; align-items: center; margin-bottom: 18px; }
+.plans-preview > header > i { display: grid; place-items: center; flex: 0 0 60px; height: 60px; border-radius: 50%; background: #2e1065; color: white; font-size: 32px; }
+.plans-preview h2 { font: 800 23px/1.25 'Manrope', sans-serif; }
+.plans-preview header p { font-size: 13px; line-height: 1.5; margin-top: 6px; }
+.plans-report-cover { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 18px #28104c10; }
+.plans-report-banner { padding: 24px 20px; min-height: 150px; background: linear-gradient(90deg, white 42%, #ffffff20), url('../images/solutions/confidence-hero.png') right 38% / 65% auto no-repeat; }
+.plans-report-brand { width: 160px; height: 46px; object-fit: contain; }
+.plans-report-banner h3 { font-size: 16px; margin-top: 8px; max-width: 180px; }
+.plans-report-banner p { font-size: 11px; margin-top: 5px; }
+.plans-report-details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; font-size: 11px; line-height: 1.6; }
+.plans-report-details section { min-width: 0; padding: 9px; background: #fcfbff; border: 1px solid #f0ebf7; border-radius: 6px; }
+.plans-report-details p { margin-bottom: 8px; }
+.plans-report-details h4 { font-size: 12px; margin: 13px 0 10px; }
+.sample-strength { margin: 17px 0; display: flex; align-items: center; gap: 8px; }
+.sample-strength span { width: 40px; height: 24px; background: linear-gradient(90deg, #6400c5 65%, #eae2f6 65%); flex-shrink: 0; }
+.sample-strength:nth-of-type(2) span { background: linear-gradient(90deg, #ff8200 45%, #eae2f6 45%); }
+.sample-strength:nth-of-type(3) span { background: linear-gradient(90deg, #956dba 50%, #eae2f6 50%); }
+.sample-area { display: flex; align-items: center; gap: 8px; }
+.sample-area i { color: #ff7700; font-size: 19px; }
+.plans-sample-link { display: flex; justify-content: center; align-items: center; gap: 12px; border: 1px solid #301165; border-radius: 7px; padding: 16px 8px; font-size: 15px; font-weight: 800; margin-top: 22px; text-decoration: none; }
+.plans-own-report { display: block; text-align: center; font-size: 12px; line-height: 1.5; margin: 16px 0 2px; }
+.plans-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.plans-fieldset legend { font-size: 18px; font-weight: 800; margin-bottom: 13px; }
+.plans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.plans-card { position: relative; padding: 16px; border: 1px solid #e1deee; border-radius: 8px; cursor: pointer; min-width: 0; background: white; }
+.plans-card:has(:checked) { border-color: #ff6800; background: #fff6ef; }
+.plans-card:has(:focus-visible) { outline: 3px solid #8465b7; outline-offset: 3px; }
+.plans-card > input { position: absolute; top: 12px; right: 12px; width: 20px; height: 20px; accent-color: #ff7300; }
+.plans-card-heading { display: flex; align-items: center; gap: 12px; padding-right: 17px; }
+.plans-card-heading > i { font-size: 30px; }
+.plans-card:has(:checked) .plans-card-heading > i { color: #ff7100; }
+.plans-card h3 { font-size: 16px; }
+.plans-card-heading p { font-size: 12px; line-height: 1.7; }
+.plans-card-heading strong { font-size: 16px; }
+.plans-card ul { list-style: none; margin: 16px 0 0; padding: 0; }
+.plans-card li { display: flex; align-items: baseline; gap: 9px; font-size: 12px; line-height: 1.5; margin: 8px 0; }
+.plans-methods { margin-top: 22px; }
+.plans-method-grid { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 9px; }
+.plans-method-grid .plans-card { display: flex; align-items: center; gap: 10px; padding: 17px 20px 17px 12px; }
+.plans-method-grid .plans-card > i { font-size: 25px; }
+.plans-method-grid span { font-size: 11px; font-weight: 700; }
+.plans-method-grid small { display: block; font-size: 10px; font-weight: 400; margin-top: 3px; }
+.plans-method-grid input { width: 14px; height: 14px; right: 6px; top: 6px; }
+.plans-availability { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #f2ebff; margin-top: 16px; border-radius: 8px; }
+.plans-availability > i { font-size: 34px; }
+.plans-availability h3 { font-size: 15px; }
+.plans-availability p { font-size: 11px; line-height: 1.5; margin-top: 4px; }
+@media (max-width: 1250px) { .plans-layout { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .plans-grid { grid-template-columns: 1fr; } .plans-method-grid { grid-template-columns: 1fr; } .plans-method-grid .plans-card { min-height: 60px; } .plans-method-grid span { font-size: 14px; } .plans-report-details { grid-template-columns: 1fr; } .plans-sample-link { font-size: 13px; } .plans-preview { padding: 16px 12px; } }

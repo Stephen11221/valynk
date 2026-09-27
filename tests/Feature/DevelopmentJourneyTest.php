@@ -57,11 +57,14 @@ class DevelopmentJourneyTest extends TestCase
         $this->get(route('development.report', $a))->assertNotFound();
         $this->get(route('development.assessment', [$child, 5]))->assertOk()->assertSee('Parental Consent');
         $this->post(route('development.assessment.save', [$child, 5]), [])->assertSessionHasErrors(['guardian', 'consent', 'sharing']);
-        $this->post(route('development.assessment.save', [$child, 5]), ['guardian' => 1, 'consent' => 1, 'sharing' => 1])->assertRedirect(route('development.report', $a));
+        $this->post(route('development.assessment.save', [$child, 5]), ['guardian' => 1, 'consent' => 1, 'sharing' => 1])->assertRedirect(route('development.plans', ['assessment' => $a->id]));
         $this->get(route('development.report', $a))->assertOk()->assertSee('Learner')->assertSee('Academic Support')->assertDontSee('78%');
         $this->assertStringNotContainsString('Private parent observation', DB::table('development_assessments')->value('answers'));
         $this->get(route('development.home'))->assertOk()->assertSee('Learner');
         $this->get(route('development.plans'))->assertOk();
+        $this->get(route('development.plans', ['assessment' => $a->id]))->assertOk()->assertSee('Learner')->assertSee('Preview Your Report');
+        $this->get(route('development.checkout', ['assessment' => $a->id, 'plan' => 'Family', 'method' => 'M-PESA']))->assertOk()->assertSee(route('development.report', $a));
+        $this->get(route('development.checkout', ['plan' => 'Family', 'method' => 'unknown']))->assertSessionHasErrors('method');
         $this->get(route('development.checkout', ['plan' => 'Family', 'method' => 'Card']))->assertOk()->assertSee('Payments are not available yet');
         $this->get(route('development.checkout', ['plan' => 'invalid', 'method' => 'Card']))->assertSessionHasErrors('plan');
     }
@@ -76,6 +79,12 @@ class DevelopmentJourneyTest extends TestCase
         $this->actingAs($other)->get(route('development.assessment', [$child, 1]))->assertNotFound();
         $this->post(route('development.assessment.save', [$child, 1]), [])->assertNotFound();
         $this->get(route('development.report', $a))->assertNotFound();
+        $this->get(route('development.plans', ['assessment' => $a->id]))->assertNotFound();
+        $this->get(route('development.checkout', ['assessment' => $a->id, 'plan' => 'Family', 'method' => 'Card']))->assertNotFound();
+        $this->actingAs($owner);
+        $a->update(['consented_at' => null]);
+        $this->get(route('development.plans', ['assessment' => $a->id]))->assertNotFound();
+        $this->get(route('development.checkout', ['assessment' => $a->id, 'plan' => 'Family', 'method' => 'Card']))->assertNotFound();
     }
 
     public function test_directory_and_connection_requests_use_approved_providers_and_owned_children(): void

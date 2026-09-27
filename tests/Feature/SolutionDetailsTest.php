@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\SitePage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SolutionDetailsTest extends TestCase
@@ -133,6 +135,48 @@ class SolutionDetailsTest extends TestCase
 
         $this->assertSame($details, $page->fresh()->content['solutions']);
         $this->get(route('solutions'))->assertOk()->assertSee('New headline')->assertSee('Find your strengths');
+    }
+
+    public function test_uploaded_image_is_displayed_preserved_replaced_and_removed(): void
+    {
+        Storage::fake('public');
+        $this->signInAdmin();
+        $payload = $this->payload();
+        $payload['image'] = UploadedFile::fake()->image('hero.jpg');
+        $url = route('admin.solutions.update', 'performance-confidence');
+        $this->put($url, $payload)->assertSessionHasNoErrors();
+        $page = SitePage::where('slug', 'solutions')->firstOrFail();
+        $path = $page->content['solutions']['performance-confidence']['image_path'];
+        Storage::disk('public')->assertExists($path);
+        foreach ([route('admin.solutions.index'), route('admin.solutions.edit', 'performance-confidence'), route('solutions')] as $pageUrl) {
+            $this->get($pageUrl)->assertOk()->assertSee(Storage::disk('public')->url($path));
+        }
+        unset($payload['image']);
+        $payload['title'] = 'Updated existing solution';
+        $this->put($url, $payload)->assertSessionHasNoErrors();
+        $this->assertSame($path, $page->fresh()->content['solutions']['performance-confidence']['image_path']);
+        $payload['image'] = UploadedFile::fake()->image('replacement.png');
+        $this->put($url, $payload)->assertSessionHasNoErrors();
+        $replacement = $page->fresh()->content['solutions']['performance-confidence']['image_path'];
+        Storage::disk('public')->assertMissing($path);
+        Storage::disk('public')->assertExists($replacement);
+        unset($payload['image']);
+        $payload['remove_image'] = 1;
+        $this->put($url, $payload)->assertSessionHasNoErrors();
+        Storage::disk('public')->assertMissing($replacement);
+        $this->assertNull($page->fresh()->content['solutions']['performance-confidence']['image_path']);
+    }
+
+    public function test_invalid_uploads_and_rejected_solution_do_not_store_files(): void
+    {
+        Storage::fake('public');
+        $this->signInAdmin();
+        foreach ([UploadedFile::fake()->create('unsafe.svg', 10, 'image/svg+xml'), UploadedFile::fake()->image('large.jpg')->size(5121)] as $image) {
+            $this->post(route('admin.solutions.store'), array_merge($this->payload(), ['image' => $image]))->assertSessionHasErrors('image');
+        }
+        $this->put(route('admin.solutions.update', 'unknown'), array_merge($this->payload(), ['image' => UploadedFile::fake()->image('photo.jpg')]))->assertNotFound();
+        $this->assertSame([], Storage::disk('public')->allFiles());
+        $this->assertDatabaseCount('site_pages', 0);
     }
 
     private function signInAdmin(): void

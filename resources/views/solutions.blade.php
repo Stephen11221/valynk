@@ -50,8 +50,8 @@
                     <div class="solutions-grid">
                         @foreach ($solutions as $key => $details)
                             <article class="solution-card tone-{{ $details['tone'] }}">
-                                @if($details['image_url'])
-                                    <img class="solution-photo solution-custom-photo" src="{{ $details['image_url'] }}" alt="" loading="lazy" referrerpolicy="no-referrer">
+                                @if($details['display_image_url'])
+                                    <img class="solution-photo solution-custom-photo" src="{{ $details['display_image_url'] }}" alt="" loading="lazy" referrerpolicy="no-referrer">
                                 @else
                                     <div class="solution-photo solution-photo-{{ $details['photo'] }}" aria-hidden="true"></div>
                                 @endif

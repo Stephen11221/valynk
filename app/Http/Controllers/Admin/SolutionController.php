@@ -7,6 +7,7 @@ use App\Models\SitePage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -16,9 +17,10 @@ class SolutionController extends Controller
 {
     public function index(): View
     {
-        $solutions = (SitePage::query()->where('slug', 'solutions')->first() ?? new SitePage)->solutionDetails();
+        $solutionPage = SitePage::query()->where('slug', 'solutions')->first();
+        $solutions = ($solutionPage ?? new SitePage)->solutionDetails();
 
-        return view('admin.solutions', compact('solutions'));
+        return view('admin.solutions', compact('solutions', 'solutionPage'));
     }
 
     public function create(): View
@@ -53,6 +55,8 @@ class SolutionController extends Controller
             'age_range' => ['required', 'string', 'max:150'],
             'tone' => ['required', Rule::in(['pink', 'blue', 'green', 'gold', 'purple', 'teal', 'orange'])],
             'image_url' => ['nullable', 'url:https', 'max:2000'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'remove_image' => ['sometimes', 'boolean'],
             'photo' => ['required', 'integer', 'between:0,7'],
             'support_intro' => ['required', 'string', 'max:500'],
             'highlights' => ['required', 'string', 'max:1000'],
@@ -86,29 +90,51 @@ class SolutionController extends Controller
         }
         $data['areas'] = $areas;
 
-        DB::transaction(function () use ($data, $solution): void {
-            SitePage::query()->firstOrCreate(['slug' => 'solutions'], [
-                'title' => 'Solutions | VALYNK', 'content' => [], 'is_published' => true,
-            ]);
-            $page = SitePage::query()->where('slug', 'solutions')->lockForUpdate()->firstOrFail();
-            $solutions = $page->solutionDetails();
-            if ($solution !== null) {
-                abort_unless(isset($solutions[$solution]), 404);
-                $data['icon'] = $solutions[$solution]['icon'];
-                foreach ($data['areas'] as $index => &$area) {
-                    $area['photo'] = $solutions[$solution]['areas'][$index]['photo'] ?? $data['photo'];
+        $uploadedPath = null;
+        $oldImagePath = null;
+        unset($data['image'], $data['remove_image']);
+        try {
+            DB::transaction(function () use ($data, $solution, $request, &$uploadedPath, &$oldImagePath): void {
+                SitePage::query()->firstOrCreate(['slug' => 'solutions'], [
+                    'title' => 'Solutions | VALYNK', 'content' => [], 'is_published' => true,
+                ]);
+                $page = SitePage::query()->where('slug', 'solutions')->lockForUpdate()->firstOrFail();
+                $solutions = $page->solutionDetails();
+                if ($solution !== null) {
+                    abort_unless(isset($solutions[$solution]), 404);
+                    $data['icon'] = $solutions[$solution]['icon'];
+                    foreach ($data['areas'] as $index => &$area) {
+                        $area['photo'] = $solutions[$solution]['areas'][$index]['photo'] ?? $data['photo'];
+                    }
+                    unset($area);
+                } else {
+                    $solution = Str::slug($data['title']);
+                    if ($solution === '' || isset($solutions[$solution])) {
+                        throw ValidationException::withMessages(['title' => 'Please use a unique solution title.']);
+                    }
                 }
-                unset($area);
-            } else {
-                $solution = Str::slug($data['title']);
-                if ($solution === '' || isset($solutions[$solution])) {
-                    throw ValidationException::withMessages(['title' => 'Please use a unique solution title.']);
+                $oldImagePath = $solutions[$solution]['image_path'] ?? null;
+                $data['image_path'] = $request->boolean('remove_image') ? null : $oldImagePath;
+                if ($request->hasFile('image')) {
+                    $uploadedPath = $request->file('image')->store('solutions', 'public');
+                    if ($uploadedPath === false) {
+                        throw ValidationException::withMessages(['image' => 'The image could not be saved. Please try again.']);
+                    }
+                    $data['image_path'] = $uploadedPath;
                 }
+                $content = $page->content ?? [];
+                $content['solutions'][$solution] = $data;
+                $page->update(['content' => $content]);
+            });
+        } catch (\Throwable $exception) {
+            if ($uploadedPath) {
+                Storage::disk('public')->delete($uploadedPath);
             }
-            $content = $page->content ?? [];
-            $content['solutions'][$solution] = $data;
-            $page->update(['content' => $content]);
-        });
+            throw $exception;
+        }
+        if ($oldImagePath && ($uploadedPath || $request->boolean('remove_image'))) {
+            Storage::disk('public')->delete($oldImagePath);
+        }
 
         return redirect()->route('admin.solutions.index')->with('status', 'Solution details saved.');
     }

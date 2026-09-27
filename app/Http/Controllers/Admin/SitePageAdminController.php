@@ -15,7 +15,7 @@ class SitePageAdminController extends Controller
 
     public function index(): View
     {
-        $pages = SitePage::query()->whereIn('slug', self::PUBLIC_SLUGS)->orderBy('slug')->get();
+        $pages = SitePage::query()->whereIn('slug', self::PUBLIC_SLUGS)->where('slug', '!=', 'solutions')->orderBy('slug')->get();
 
         return view('admin.content', compact('pages'));
     }
@@ -54,6 +54,6 @@ class SitePageAdminController extends Controller
             ]);
         });
 
-        return redirect()->route('admin.content')->with('status', 'Page saved.');
+        return redirect()->route($sitePage->slug === 'solutions' ? 'admin.solutions.index' : 'admin.content')->with('status', 'Page saved.');
     }
 }

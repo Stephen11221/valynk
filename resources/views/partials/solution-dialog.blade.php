@@ -1,8 +1,8 @@
 <dialog id="solution-{{ $key }}" class="solution-dialog tone-{{ $details['tone'] }}" aria-labelledby="solution-title-{{ $key }}">
     <button type="button" class="solution-dialog-close" data-solution-close aria-label="Close solution details" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     <section class="solution-dialog-hero">
-        @if($details['image_url'])
-            <img class="solution-dialog-image" src="{{ $details['image_url'] }}" alt="" loading="lazy" referrerpolicy="no-referrer">
+        @if($details['display_image_url'])
+            <img class="solution-dialog-image" src="{{ $details['display_image_url'] }}" alt="" loading="lazy" referrerpolicy="no-referrer">
         @elseif($key === 'performance-confidence')
             <img class="solution-dialog-image" src="{{ asset('images/solutions/confidence-hero.png') }}" alt="" loading="lazy">
         @else
