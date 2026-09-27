@@ -130,6 +130,21 @@
                             <span>Content Management</span>
                         </a>
 
+                        <details class="mt-2" open>
+                            <summary class="cursor-pointer rounded-lg px-3.5 py-2.5 text-sm font-semibold text-slate-300">Website Page Editors</summary>
+                            <ul class="ml-3 space-y-1 border-l border-slate-700 pl-2" aria-label="Website page editors">
+                                @foreach(config('site-pages') as $pageSlug => $pageDefaults)
+                                    @php($isEditingPage = (request()->routeIs('admin.pages.*') && request()->route('slug') === $pageSlug) || (request()->routeIs('admin.content.*') && request()->route('sitePage')?->slug === $pageSlug))
+                                    <li>
+                                        <a href="{{ route('admin.pages.edit', $pageSlug) }}" @if($isEditingPage) aria-current="page" @endif class="flex items-center gap-3 rounded-lg px-3.5 py-2 text-sm transition-all {{ $isEditingPage ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                                            <i class="fa-regular fa-file-lines w-4 text-center" aria-hidden="true"></i>
+                                            <span>{{ $pageSlug === 'solutions' ? 'Solutions Landing Page' : \Illuminate\Support\Str::headline($pageSlug) }}</span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </details>
+
                               <a href="{{ route('admin.reports') }}"
                                   class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.reports') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
                             <i class="fa-solid fa-chart-column w-4 text-center text-sm"></i>
