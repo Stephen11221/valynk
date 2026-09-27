@@ -135,41 +135,56 @@ class DevelopmentController extends Controller
         return view('development.assessment', compact('child', 'assessment', 'step'));
     }
 
-    public function saveAssessment(Request $r, int $child, int $step)
+    public function saveAssessment(Request $r, int $child, int $step): RedirectResponse
     {
         abort_unless($step >= 1 && $step <= 5, 404);
-        $child = $this->ownedChild($r, $child);
-        $assessment = $this->assessmentFor($child);
-        abort_if($step > ($assessment?->step ?? 1), 422);
-        if ($step === 5) {
-            $r->validate(['guardian' => 'accepted', 'consent' => 'accepted', 'sharing' => 'accepted']);
-            $assessment->update(['consented_at' => now()]);
 
-            return redirect()->route('development.report', $assessment);
-        }
-        $rules = [];
-        foreach (config("development.questions.$step") as $key => [$label,$type,$options]) {
-            if (in_array($type, ['multi', 'goals'])) {
-                $rules[$key] = ['required', 'array', 'min:1', 'max:'.($type === 'goals' ? 3 : count($options))];
-                $rules[$key.'.*'] = ['string', 'distinct', Rule::in($options)];
-            } elseif ($type === 'text') {
-                $rules[$key] = ['nullable', 'string', 'max:500'];
-            } else {
-                $rules[$key] = ['required', Rule::in($options)];
-            }
-        }
-        $data = $r->validate($rules);
-        foreach (['health', 'challenges'] as $key) {
-            if (in_array('None', $data[$key] ?? []) && count($data[$key]) > 1) {
-                return back()->withErrors([$key => 'Choose None by itself, or select the relevant areas.'])->withInput();
-            }
-        }
-        if (! $assessment) {
-            $assessment = $child->assessments()->create(['answers' => []]);
-        }
-        $assessment->update(['answers' => array_merge($assessment->answers ?? [], $data), 'step' => max($assessment->step, $step + 1), 'consented_at' => null]);
+        return DB::transaction(function () use ($r, $child, $step): RedirectResponse {
+            $child = DevelopmentChild::query()->where('user_id', $r->user()->id)->lockForUpdate()->findOrFail($child);
+            $assessment = $this->assessmentFor($child);
+            abort_if($step > ($assessment?->step ?? 1), 422);
+            if ($step === 5) {
+                $r->validate(['guardian' => 'accepted', 'consent' => 'accepted', 'sharing' => 'accepted']);
+                $assessment->update(['consented_at' => now()]);
 
-        return redirect()->route('development.assessment', [$child, $step + 1]);
+                return redirect()->route('development.report', $assessment);
+            }
+            $rules = [];
+            foreach (config("development.questions.$step") as $key => [$label, $type, $options]) {
+                if (in_array($type, ['multi', 'goals'])) {
+                    $rules[$key] = ['required', 'array', 'min:1', 'max:'.($type === 'goals' ? 3 : count($options))];
+                    $rules[$key.'.*'] = ['string', 'distinct', Rule::in($options)];
+                } elseif ($type === 'text') {
+                    $rules[$key] = ['nullable', 'string', 'max:500'];
+                } else {
+                    $rules[$key] = ['required', Rule::in($options)];
+                }
+                if (in_array('Other', $options, true)) {
+                    $rules[$key.'_other'] = [Rule::requiredIf(in_array('Other', (array) $r->input($key, []), true)), 'nullable', 'string', 'max:500'];
+                }
+            }
+            $data = $r->validate($rules);
+            foreach (config("development.questions.$step") as $key => [$label, $type, $options]) {
+                if (in_array('Other', $options, true) && ! in_array('Other', (array) ($data[$key] ?? []), true)) {
+                    $data[$key.'_other'] = null;
+                }
+            }
+            foreach (['health', 'challenges'] as $key) {
+                if (in_array('None', $data[$key] ?? [], true) && count($data[$key]) > 1) {
+                    return back()->withErrors([$key => 'Choose None by itself, or select the relevant areas.'])->withInput();
+                }
+            }
+            if (! $assessment) {
+                $assessment = $child->assessments()->create(['answers' => []]);
+            }
+            $assessment->update([
+                'answers' => array_merge($assessment->answers ?? [], $data),
+                'step' => max($assessment->step, $step + 1),
+                'consented_at' => null,
+            ]);
+
+            return redirect()->route('development.assessment', [$child, $step + 1]);
+        });
     }
 
     public function report(Request $r, int $assessment)

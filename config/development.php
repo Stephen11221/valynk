@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'assessment_icons' => [
+        'reasons' => ['book-open', 'people-group', 'brain', 'heart', 'dumbbell', 'users', 'compass', 'ellipsis'],
+        'goals' => ['bullseye', 'person-rays', 'chart-column', 'lightbulb', 'user-group', 'heart', 'star', 'ellipsis'],
+    ],
     'plans' => ['Individual' => 1500, 'Family' => 2500, 'Provider' => 3500, 'Institution' => 7500],
     'questions' => [
         1 => [
