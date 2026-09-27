@@ -9,12 +9,10 @@
         <a href="{{ route('solutions') }}" class="text-indigo-700">View public Solutions page →</a>
         <a href="{{ route('admin.solutions.create') }}" class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white">Add solution</a>
     </div>
-    @if($solutionPage)
         <section class="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-4">
             <div><h2 class="font-bold text-slate-900">Solutions landing page</h2><p class="mt-1 text-sm text-slate-500">Edit the page heading, introduction, search description and publishing status.</p></div>
-            <a href="{{ route('admin.content.edit', $solutionPage) }}" class="rounded-lg border border-indigo-200 px-4 py-2 text-sm font-semibold text-indigo-700">Edit landing page</a>
+            <a href="{{ route('admin.pages.edit', 'solutions') }}" class="rounded-lg border border-indigo-200 px-4 py-2 text-sm font-semibold text-indigo-700">Edit landing page</a>
         </section>
-    @endif
     <h2 class="text-base font-bold text-slate-900">Solution details</h2>
     <div class="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
     @foreach($solutions as $key => $details)

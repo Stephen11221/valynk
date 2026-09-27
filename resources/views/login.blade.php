@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Log in to your VALYNK account.">
-    <title>Login | VALYNK</title>
+    <meta name="description" content="{{ data_get($page ?? null, 'meta_description', 'Log in to your VALYNK account.') }}">
+    <title>{{ data_get($page ?? null, 'title', 'Login | VALYNK') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,9 +23,9 @@
             <section class="login-card" aria-labelledby="login-title">
                 <div class="login-promo">
                     <div class="login-promo-content">
-                        <h1>One Ecosystem.<br><span>Limitless Possibilities.</span></h1>
+                        <h1>@if(data_get($page ?? null, 'content.heading')){!! nl2br(e(data_get($page, 'content.heading'))) !!}@elseOne Ecosystem.<br><span>Limitless Possibilities.</span>@endif</h1>
                         <div class="login-rule"></div>
-                        <p class="login-promo-copy">Access trusted services, verified Providers and meaningful opportunities - all in one place.</p>
+                        <p class="login-promo-copy">{{ data_get($page ?? null, 'content.intro', 'Access trusted services, verified Providers and meaningful opportunities - all in one place.') }}</p>
 
                         <div class="login-orbit" aria-hidden="true">
                             <div class="login-orbit-node learning"><i class="fa-solid fa-graduation-cap"></i><span>Learning &amp;<br>Education</span></div>

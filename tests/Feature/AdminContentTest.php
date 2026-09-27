@@ -53,13 +53,52 @@ class AdminContentTest extends TestCase
             ->assertDontSee(route('admin.payments'))
             ->assertSee(route('admin.solutions.index'));
         $this->get(route('admin.solutions.index'))->assertOk()
-            ->assertSee(route('admin.content.edit', $page))
+            ->assertSee(route('admin.pages.edit', 'solutions'))
             ->assertSee(route('admin.solutions.create'));
         $this->get(route('admin.content.edit', $page))->assertOk()->assertSee('Edit Solutions Landing Page');
         $this->put(route('admin.content.update', $page), [
             'title' => 'Updated solutions', 'heading' => 'Find support', 'intro' => 'Explore support areas', 'is_published' => '1',
         ])->assertRedirect(route('admin.solutions.index'));
         $this->assertDatabaseHas('site_pages', ['id' => $page->id, 'title' => 'Updated solutions']);
+    }
+
+    public function test_every_public_page_has_an_individual_editor_and_saves_without_seeding(): void
+    {
+        $admin = User::factory()->create();
+        $admin->forceFill(['is_admin' => true])->save();
+        $this->actingAs($admin);
+        $index = $this->get(route('admin.content'))->assertOk();
+        foreach (array_keys(config('site-pages')) as $slug) {
+            if ($slug !== 'solutions') {
+                $index->assertSee(route('admin.pages.edit', $slug));
+            }
+            $this->get(route('admin.pages.edit', $slug))->assertOk();
+        }
+        $this->assertDatabaseCount('site_pages', 0);
+        foreach (array_keys(config('site-pages')) as $slug) {
+            $heading = 'Updated '.$slug.' headline';
+            $this->put(route('admin.pages.update', $slug), [
+                'title' => 'Page '.$slug, 'heading' => $heading, 'intro' => 'A new introduction for '.$slug,
+                'meta_description' => 'Search description for '.$slug, 'is_published' => 1,
+            ])->assertSessionHasNoErrors()->assertRedirect();
+            $this->get(route($slug))->assertOk()->assertSee($heading)->assertSee('A new introduction for '.$slug);
+            $this->get(route('admin.pages.edit', $slug))->assertOk()->assertSee($heading);
+        }
+        $this->assertDatabaseCount('site_pages', count(config('site-pages')));
+    }
+
+    public function test_page_editors_reject_invalid_unknown_and_unauthorised_requests(): void
+    {
+        $this->get(route('admin.pages.edit', 'about'))->assertRedirect(route('login'));
+        $this->actingAs(User::factory()->create());
+        $this->put(route('admin.pages.update', 'about'), [])->assertForbidden();
+        $admin = User::factory()->create();
+        $admin->forceFill(['is_admin' => true])->save();
+        $this->actingAs($admin);
+        $this->get(route('admin.pages.edit', 'unknown'))->assertNotFound();
+        $this->put(route('admin.pages.update', 'unknown'), [])->assertNotFound();
+        $this->put(route('admin.pages.update', 'about'), [])->assertSessionHasErrors(['title', 'heading', 'intro']);
+        $this->assertDatabaseCount('site_pages', 0);
     }
 
     public function test_regular_user_cannot_change_page(): void

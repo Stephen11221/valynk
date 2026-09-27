@@ -100,6 +100,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:manage-admin'])
     Route::get('/subscriptions', [DashboardController::class, 'subscriptions'])->name('subscriptions');
     Route::resource('solutions', SolutionController::class)->except(['show', 'destroy']);
     Route::get('/content', [SitePageAdminController::class, 'index'])->name('content');
+    Route::get('/pages/{slug}/edit', [SitePageAdminController::class, 'editPage'])->name('pages.edit');
+    Route::put('/pages/{slug}', [SitePageAdminController::class, 'updatePage'])->name('pages.update');
     Route::get('/content/{sitePage}/edit', [SitePageAdminController::class, 'edit'])->name('content.edit');
     Route::put('/content/{sitePage}', [SitePageAdminController::class, 'update'])->name('content.update');
     Route::get('/reports', [DashboardController::class, 'reports'])->name('reports');

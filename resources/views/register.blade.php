@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Create your VALYNK account.">
-    <title>Get Started | VALYNK</title>
+    <meta name="description" content="{{ data_get($page ?? null, 'meta_description', 'Create your VALYNK account.') }}">
+    <title>{{ data_get($page ?? null, 'title', 'Get Started | VALYNK') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -20,8 +20,8 @@
         <div class="register-shell">
             <section class="register-card" aria-labelledby="register-title">
                 <div class="register-promo"><div class="register-promo-content">
-                    <h1>Join VALYNK.<br><span>Let's Get You Started.</span></h1><div class="login-rule"></div>
-                    <p class="register-promo-copy">Create your account and unlock a world of trusted support and opportunities.</p>
+                    <h1>@if(data_get($page ?? null, 'content.heading')){!! nl2br(e(data_get($page, 'content.heading'))) !!}@elseJoin VALYNK.<br><span>Let's Get You Started.</span>@endif</h1><div class="login-rule"></div>
+                    <p class="register-promo-copy">{{ data_get($page ?? null, 'content.intro', 'Create your account and unlock a world of trusted support and opportunities.') }}</p>
                     <div class="login-orbit register-orbit" aria-hidden="true">
                         <div class="login-orbit-node learning"><i class="fa-solid fa-graduation-cap"></i><span>Learning &amp;<br>Education</span></div><div class="login-orbit-node child"><i class="fa-solid fa-brain"></i><span>Child<br>Development</span></div><div class="login-orbit-node health"><i class="fa-regular fa-heart"></i><span>Health &amp;<br>Wellbeing</span></div><div class="login-orbit-node care"><i class="fa-solid fa-briefcase"></i><span>Care &amp;<br>Support</span></div><div class="login-orbit-node enrichment"><i class="fa-regular fa-star"></i><span>Enrichment &amp;<br>Talent</span></div><div class="login-orbit-node organization"><i class="fa-solid fa-building-columns"></i><span>Organization<br>Solutions</span></div><div class="login-orbit-center"><img src="{{ asset('logo/logo.jpeg') }}" alt="VALYNK - The link that delivers"></div>
                     </div>

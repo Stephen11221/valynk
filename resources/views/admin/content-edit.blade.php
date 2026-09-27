@@ -1,22 +1,25 @@
 @extends('layouts.admin')
 
-@section('title', $sitePage->slug === 'solutions' ? 'Edit Solutions Landing Page' : 'Edit Page')
-@section('header_title', $sitePage->slug === 'solutions' ? 'Edit Solutions Landing Page' : 'Edit Page')
+@section('title', $sitePage->slug === 'solutions' ? 'Edit Solutions Landing Page' : 'Edit '.\Illuminate\Support\Str::headline($sitePage->slug))
+@section('header_title', $sitePage->slug === 'solutions' ? 'Edit Solutions Landing Page' : 'Edit '.\Illuminate\Support\Str::headline($sitePage->slug))
 @section('header_subtitle', 'Changes to published pages appear on the public website.')
 
 @section('content')
 <div class="max-w-3xl rounded-xl border border-slate-200 bg-white p-5">
     <a href="{{ route($sitePage->slug === 'solutions' ? 'admin.solutions.index' : 'admin.content') }}" class="text-xs text-indigo-700">← {{ $sitePage->slug === 'solutions' ? 'All Solutions' : 'All Content' }}</a>
+    <a href="{{ route($sitePage->slug) }}" target="_blank" rel="noopener" class="ml-4 text-sm text-indigo-700">View public page ↗</a>
     <h2 class="mt-3 text-lg font-bold text-slate-900">{{ $sitePage->title }}</h2>
     @if($errors->any()) <p role="alert" class="my-3 text-sm text-rose-700">Please correct the fields below.</p> @endif
-    <form method="POST" action="{{ route('admin.content.update', $sitePage) }}" class="mt-5 grid gap-4">
+    <form method="POST" action="{{ route('admin.pages.update', $sitePage->slug) }}" class="mt-5 grid gap-4">
         @csrf
         @method('PUT')
         <label class="grid gap-1 text-sm font-semibold">Page title <input name="title" value="{{ old('title', $sitePage->title) }}" required maxlength="255" class="rounded-lg border border-slate-300 p-2 font-normal"></label>
         @error('title') <p class="text-xs text-rose-700">{{ $message }}</p> @enderror
         <label class="grid gap-1 text-sm font-semibold">Search description <textarea name="meta_description" maxlength="500" rows="2" class="rounded-lg border border-slate-300 p-2 font-normal">{{ old('meta_description', $sitePage->meta_description) }}</textarea></label>
         @error('meta_description') <p class="text-xs text-rose-700">{{ $message }}</p> @enderror
+        @if(!in_array($sitePage->slug, ['login', 'register', 'families'], true))
         <label class="grid gap-1 text-sm font-semibold">Eyebrow <input name="eyebrow" value="{{ old('eyebrow', data_get($sitePage, 'content.eyebrow')) }}" maxlength="255" class="rounded-lg border border-slate-300 p-2 font-normal"></label>
+        @endif
         <label class="grid gap-1 text-sm font-semibold">Main heading <textarea name="heading" required maxlength="500" rows="2" class="rounded-lg border border-slate-300 p-2 font-normal">{{ old('heading', data_get($sitePage, 'content.heading')) }}</textarea></label>
         @error('heading') <p class="text-xs text-rose-700">{{ $message }}</p> @enderror
         <label class="grid gap-1 text-sm font-semibold">Introduction <textarea name="intro" required maxlength="2000" rows="4" class="rounded-lg border border-slate-300 p-2 font-normal">{{ old('intro', data_get($sitePage, 'content.intro')) }}</textarea></label>
