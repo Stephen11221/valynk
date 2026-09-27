@@ -12,15 +12,17 @@
     <link rel="stylesheet" href="{{ asset('css/assessment.css') }}?v={{ filemtime(public_path('css/assessment.css')) }}">
     <script src="{{ asset('js/assessment.js') }}?v={{ filemtime(public_path('js/assessment.js')) }}" defer></script>
 </head>
-<body class="assessment-page {{ $step === 2 ? 'assessment-needs-page' : '' }}">
+<body class="assessment-page {{ $step === 2 ? 'assessment-needs-page' : ($step === 3 ? 'assessment-support-page' : '') }}">
 <a class="connection-skip" href="#assessment-form">Skip to assessment</a>
 <main class="connection-shell assessment-shell">
     <a class="connection-close" href="{{ route('development.home') }}" aria-label="Close and return to your dashboard"><i class="fa-solid fa-xmark" aria-hidden="true"></i></a>
     <aside class="connection-story assessment-story">
         <a class="connection-brand" href="{{ route('home') }}"><img src="{{ asset('logo/logo.jpeg') }}" alt="VALYNK — Connect, Empower, Transform"></a>
         <div class="connection-story-copy">
+            @if($step !== 3)
             <h2><span>Welcome,</span> <br>Let’s Find the Right Support for Your Child.</h2>
             <p class="assessment-story-intro">A few quick questions will help us understand your child’s needs and match you with suitable support and providers.</p>
+            @endif
             <ol class="assessment-side-steps">
                 @foreach([['Account Created', 'Welcome to VALYNK'], ['Take Assessment', 'Help us understand your child'], ['View Report & Match', 'Review your support summary'], ['Connect', 'Choose support for your child']] as [$title, $description])
                     <li @if($loop->iteration === 2) aria-current="step" @endif><span class="assessment-side-number">{{ $loop->iteration }}</span><div><h3>{{ $title }} @if($loop->first)<i class="fa-solid fa-circle-check" aria-label="Completed"></i>@endif</h3><p>{{ $description }}</p></div></li>
@@ -29,14 +31,15 @@
             <p class="connection-tagline">A Brighter<br>Tomorrow<br>Together</p>
         </div>
         <img class="connection-portrait" src="{{ asset('images/solutions/confidence-hero.png') }}" alt="A student looking ahead with confidence">
+        @if($step === 3)<div class="assessment-story-values"><span><i class="fa-solid fa-people-group" aria-hidden="true"></i>People<br>First</span><span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i>Trusted<br>Connections</span><span><i class="fa-solid fa-lightbulb" aria-hidden="true"></i>Brighter<br>Futures</span></div>@endif
     </aside>
 
     <section class="assessment-content" aria-labelledby="assessment-title">
         <header class="connection-heading assessment-heading">
-            <div><h1 id="assessment-title"><span>Step 2:</span> {{ $step === 5 ? 'Review Your Assessment' : 'Take a Brief Assessment' }}</h1><p>Let’s understand your child better so we can find relevant support.</p></div>
+            <div>@if($step === 3)<p class="support-stage-label">Step 2 of 4</p>@endif<h1 id="assessment-title">@if($step !== 3)<span>Step 2:</span>@endif {{ $step === 5 ? 'Review Your Assessment' : 'Take a Brief Assessment' }}</h1><p>Let’s understand your child better so we can find relevant support.</p></div>
             <ol class="connection-stepper" aria-label="Your progress">@foreach(['Create Account', 'Take Assessment', 'View Report & Match', 'Connect'] as $label)<li class="{{ $loop->first ? 'completed' : '' }}" @if($loop->iteration === 2) aria-current="step" @endif><span>@if($loop->first)<i class="fa-solid fa-check" aria-hidden="true"></i>@else{{ $loop->iteration }}@endif</span><p>{{ $label }}</p></li>@endforeach</ol>
         </header>
-        <div class="assessment-notice"><i class="fa-solid fa-{{ $step === 2 ? 'people-group' : 'clipboard-list' }}" aria-hidden="true"></i><div><h2>{{ $step === 5 ? 'Please review your answers before continuing.' : ($step === 2 ? 'Every child is unique.' : 'A few questions. A clearer picture of your child’s needs.') }}</h2><p>{{ $step === 2 ? 'Your responses help us understand their learning, emotional and social needs so we can match you with the right support.' : 'Your responses are confidential. Your progress is saved when you select Next.' }}</p></div></div>
+        <div class="assessment-notice"><i class="fa-solid fa-{{ $step === 2 ? 'people-group' : ($step === 3 ? 'bullseye' : 'clipboard-list') }}" aria-hidden="true"></i><div><h2>{{ $step === 5 ? 'Please review your answers before continuing.' : ($step === 2 ? 'Every child is unique.' : ($step === 3 ? 'Almost there!' : 'A few questions. A clearer picture of your child’s needs.')) }}</h2><p>{{ $step === 2 ? 'Your responses help us understand their learning, emotional and social needs so we can match you with the right support.' : ($step === 3 ? 'A few more questions to help us identify the best support for your child.' : 'Your responses are confidential. Your progress is saved when you select Next.') }}</p></div></div>
         <p class="assessment-child-line"><strong>{{ $child->name }}</strong> · Age {{ $child->age }} · {{ $child->grade }} <span>{{ $step === 5 ? 'Review & consent' : 'Part '.$step.' of 4' }}</span></p>
 
         <form id="assessment-form" method="POST" action="{{ route('development.assessment.save', [$child, $step]) }}">
@@ -44,6 +47,8 @@
             @if($errors->any())<div class="connection-errors" role="alert" tabindex="-1"><strong>Please check your answers.</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
             @if($step === 2)
                 @include('development.assessment-needs')
+            @elseif($step === 3)
+                @include('development.assessment-support')
             @elseif($step < 5)
                 @foreach(config('development.questions.'.$step) as $key => [$label, $type, $options])
                     <fieldset class="assessment-question" data-question="{{ $key }}" @if($type === 'goals') data-max="3" @endif>

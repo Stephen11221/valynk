@@ -61,6 +61,32 @@ class AssessmentPageTest extends TestCase
         $this->get(route('development.report', $assessment))->assertNotFound();
     }
 
+    public function test_support_preferences_restore_and_update_the_existing_learning_details(): void
+    {
+        $child = $this->childForParent();
+        $assessment = $child->assessments()->create([
+            'answers' => ['learning' => ['Hands-on'], 'differences' => 'Yes', 'difference_details' => 'Reading support'],
+            'step' => 3,
+        ]);
+        $this->get(route('development.assessment', [$child, 3]))->assertOk()->assertSee('Almost there!')->assertSee('Reading support');
+        $payload = [
+            'support' => ['Academic Support', 'Other'], 'support_other' => 'School transition',
+            'heard' => 'Other', 'heard_other' => 'Community event', 'expectations' => 'Practical learning support',
+            'updates' => 'No', 'differences' => 'Not sure', 'difference_details' => 'Awaiting an assessment',
+        ];
+        $this->post(route('development.assessment.save', [$child, 3]), array_replace($payload, ['updates' => 'invalid']))->assertSessionHasErrors('updates');
+        $this->assertSame(3, $assessment->fresh()->step);
+        $this->post(route('development.assessment.save', [$child, 3]), $payload)->assertSessionHasNoErrors()->assertRedirect(route('development.assessment', [$child, 4]));
+        $assessment->refresh();
+        $this->assertSame(['Hands-on'], $assessment->answers['learning']);
+        foreach ($payload as $key => $value) {
+            $this->assertSame($value, $assessment->answers[$key]);
+        }
+        $this->assertStringNotContainsString('Practical learning support', DB::table('development_assessments')->value('answers'));
+        $this->get(route('development.assessment', [$child, 3]))->assertOk()->assertSee('Awaiting an assessment')->assertSee('Community event');
+        $this->get(route('development.assessment', [$child, 2]))->assertOk()->assertSee('Awaiting an assessment');
+    }
+
     public function test_duplicate_submissions_update_the_same_assessment(): void
     {
         $child = $this->childForParent();
