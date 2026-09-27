@@ -7,6 +7,7 @@ use App\Models\DevelopmentAssessment;
 use App\Models\DevelopmentChild;
 use App\Models\DevelopmentConnection;
 use App\Models\ProviderProfile;
+use App\Models\SitePage;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,18 +25,37 @@ class DevelopmentController extends Controller
 
     public function login(Request $request): View|RedirectResponse
     {
+        $request->validate(['solution' => ['nullable', 'string', 'max:180']]);
+        $destination = $request->filled('solution')
+            ? route('get-connected', ['solution' => $request->query('solution')])
+            : route('development.home');
         if ($request->user()) {
-            return redirect()->route('development.home');
+            return redirect()->to($destination);
         }
 
-        $request->session()->put('url.intended', route('development.home'));
+        $request->session()->put('url.intended', $destination);
 
-        return view('development.login');
+        return view('login');
     }
 
-    public function register()
+    public function getConnected(Request $request): View
     {
-        return view('development.child', ['register' => true]);
+        $request->validate(['solution' => ['nullable', 'string', 'max:180']]);
+        $solutionKey = $request->query('solution') ?: 'performance-confidence';
+        $page = SitePage::query()->where('slug', 'solutions')->first();
+        $solutions = ($page ?? new SitePage)->solutionDetails();
+        abort_if(($page && ! $page->is_published) || ! isset($solutions[$solutionKey]) || ! $solutions[$solutionKey]['is_published'], 404);
+
+        return view('development.child', [
+            'register' => ! $request->user(),
+            'solutionKey' => $solutionKey,
+            'solution' => $solutions[$solutionKey],
+        ]);
+    }
+
+    public function register(Request $request): View
+    {
+        return $this->getConnected($request);
     }
 
     public function storeAccount(Request $r)
@@ -55,12 +75,24 @@ class DevelopmentController extends Controller
 
     private function childRules(): array
     {
-        return ['child_name' => 'required|string|max:120', 'age' => 'required|integer|min:5|max:25', 'grade' => 'required|string|max:60', 'school' => 'nullable|string|max:150'];
+        $page = SitePage::query()->where('slug', 'solutions')->first();
+        $solutions = $page && ! $page->is_published ? [] : array_filter(($page ?? new SitePage)->solutionDetails(), fn (array $solution): bool => $solution['is_published']);
+
+        return [
+            'child_name' => ['required', 'string', 'max:120'],
+            'age' => ['required', 'integer', 'min:5', 'max:25'],
+            'grade' => ['required', 'string', 'max:60'],
+            'school' => ['nullable', 'string', 'max:150'],
+            'solution' => ['nullable', 'string', Rule::in(array_keys($solutions))],
+            'pwd_status' => ['required_with:solution', 'nullable', Rule::in(['yes', 'no', 'prefer_not_to_say'])],
+            'pwd_details' => ['exclude_unless:pwd_status,yes', 'nullable', 'string', 'max:250'],
+            'support_notes' => ['nullable', 'string', 'max:500'],
+        ];
     }
 
     private function newChild(int $userId, array $data): DevelopmentChild
     {
-        return DevelopmentChild::create(['user_id' => $userId, 'name' => $data['child_name'], 'age' => $data['age'], 'grade' => $data['grade'], 'school' => $data['school'] ?? null]);
+        return DevelopmentChild::create(['user_id' => $userId, 'name' => $data['child_name'], 'age' => $data['age'], 'grade' => $data['grade'], 'school' => $data['school'] ?? null, 'solution' => $data['solution'] ?? null, 'pwd_status' => $data['pwd_status'] ?? null, 'pwd_details' => $data['pwd_details'] ?? null, 'support_notes' => $data['support_notes'] ?? null]);
     }
 
     public function home(Request $r)
@@ -68,9 +100,9 @@ class DevelopmentController extends Controller
         return view('development.home', ['children' => DevelopmentChild::where('user_id', $r->user()->id)->with('assessments')->get(), 'connections' => DevelopmentConnection::where('user_id', $r->user()->id)->with(['child', 'provider.user'])->latest()->get()]);
     }
 
-    public function child()
+    public function child(Request $request): View
     {
-        return view('development.child', ['register' => false]);
+        return $this->getConnected($request);
     }
 
     public function storeChild(Request $r)

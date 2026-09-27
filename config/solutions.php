@@ -25,7 +25,7 @@ return [
         ],
         'support_intro' => 'Four core areas that build a stronger, more resilient and high-performing future.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'development.landing',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [
@@ -105,7 +105,7 @@ return [
         ],
         'support_intro' => 'Explore tailored support for your child’s needs, interests and stage of development.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'contact',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [
@@ -185,7 +185,7 @@ return [
         ],
         'support_intro' => 'Explore tailored support for your child’s needs, interests and stage of development.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'contact',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [
@@ -265,7 +265,7 @@ return [
         ],
         'support_intro' => 'Explore tailored support for your child’s needs, interests and stage of development.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'contact',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [
@@ -345,7 +345,7 @@ return [
         ],
         'support_intro' => 'Explore tailored support for your child’s needs, interests and stage of development.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'contact',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [
@@ -425,7 +425,7 @@ return [
         ],
         'support_intro' => 'Explore tailored support for your child’s needs, interests and stage of development.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'contact',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [
@@ -505,7 +505,7 @@ return [
         ],
         'support_intro' => 'Explore tailored support for your child’s needs, interests and stage of development.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'contact',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [
@@ -585,7 +585,7 @@ return [
         ],
         'support_intro' => 'Explore tailored support for your child’s needs, interests and stage of development.',
         'cta_label' => 'Get Connected',
-        'cta_route' => 'contact',
+        'cta_route' => 'get-connected',
         'is_published' => true,
         'areas' => [
             [

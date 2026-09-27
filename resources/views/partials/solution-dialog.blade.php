@@ -32,7 +32,7 @@
         </section>
         <aside class="solution-dialog-sidebar">
             <section class="solution-benefits"><h3><i class="fa-solid fa-star" aria-hidden="true"></i> Key Benefits for Your Child</h3><ul>@foreach($details['benefits'] as $benefit)<li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>{{ $benefit }}</span></li>@endforeach</ul></section>
-            <section class="solution-connect"><h3>Ready to take the next step?</h3><p>Get connected with trusted providers and programmes that match your child’s needs.</p><a class="solutions-button" href="{{ route($details['cta_route']) }}">{{ $details['cta_label'] }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></section>
+            <section class="solution-connect"><h3>Ready to take the next step?</h3><p>Get connected with trusted providers and programmes that match your child’s needs.</p><a class="solutions-button" href="{{ route($details['cta_route'], $details['cta_route'] === 'get-connected' ? ['solution' => $key] : []) }}">{{ $details['cta_label'] }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></section>
         </aside>
     </div>
     <div class="solution-dialog-trust">

@@ -31,7 +31,7 @@ class DevelopmentJourneyTest extends TestCase
 
     public function test_registration_creates_real_family_and_child(): void
     {
-        $this->post(route('development.register.store'), ['name' => 'Test Parent', 'email' => 'parent@example.test', 'phone' => '0700000000', 'password' => 'a-secure-test-password', 'password_confirmation' => 'a-secure-test-password', 'terms' => 1, 'child_name' => 'Test Child', 'age' => 10, 'grade' => 'Grade 5'])->assertRedirect(route('development.home'));
+        $this->post(route('development.register.store'), ['name' => 'Test Parent', 'email' => 'parent@example.test', 'phone' => '0700000000', 'password' => 'a-secure-test-password', 'password_confirmation' => 'a-secure-test-password', 'terms' => 1, 'child_name' => 'Test Child', 'age' => 10, 'grade' => 'Grade 5'])->assertRedirect(route('development.assessment', [DevelopmentChild::sole(), 1]));
         $this->assertAuthenticated();
         $this->assertDatabaseHas('users', ['account_type' => 'Family', 'email' => 'parent@example.test']);
         $this->assertDatabaseHas('development_children', ['name' => 'Test Child']);

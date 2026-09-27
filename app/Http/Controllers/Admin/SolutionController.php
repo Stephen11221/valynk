@@ -58,7 +58,7 @@ class SolutionController extends Controller
             'highlights' => ['required', 'string', 'max:1000'],
             'benefits' => ['required', 'string', 'max:3000'],
             'cta_label' => ['required', 'string', 'max:80'],
-            'cta_route' => ['required', Rule::in(['contact', 'register', 'development.landing', 'development.register'])],
+            'cta_route' => ['required', Rule::in(['get-connected', 'contact', 'register', 'development.landing', 'development.register'])],
             'is_published' => ['required', 'boolean'],
             'areas' => ['required', 'array', 'min:1', 'max:8'],
             'areas.*' => ['required', 'array:title,points,image_url'],
