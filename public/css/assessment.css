@@ -182,3 +182,24 @@
 @media (max-width: 1250px) { .assessment-support-page .assessment-shell { grid-template-columns: 27% minmax(0, 1fr); } .assessment-support-layout { grid-template-columns: 1fr; } .assessment-support-aside { border-left: 0; padding-left: 0; } .assessment-support-page .assessment-side-steps h3 { font-size: 14px; } .assessment-support-page .assessment-side-steps p { font-size: 12px; } .assessment-story-values { flex-wrap: wrap; } }
 @media (max-width: 950px) { .assessment-support-page .assessment-shell { grid-template-columns: 1fr; } .assessment-support-page .assessment-story { min-height: 190px; padding: 22px 24px 60px; border-radius: 14px 14px 0 0; } .assessment-support-page .assessment-story .connection-brand { margin-bottom: 0; } .assessment-support-page .assessment-story .connection-portrait { height: 115%; width: 55%; right: -5%; } .assessment-story-values { padding: 10px 20px; justify-content: flex-start; gap: 25px; } .assessment-support-page .assessment-content { border-radius: 0 0 14px 14px; } }
 @media (max-width: 650px) { .assessment-support-page .assessment-content { padding: 24px 16px; } .assessment-support-page .assessment-heading h1 { font-size: 29px; } .support-card-options { grid-template-columns: 1fr 1fr; } .support-card-options .assessment-option { gap: 9px; padding: 16px 22px 16px 10px; min-height: 90px; } .support-card-options .assessment-option > i { font-size: 24px; width: 25px; } .support-radio-options .assessment-option { flex-basis: 40%; } .support-expectations-input textarea { font-size: 16px; } .assessment-choice-help { padding: 22px 16px; } .assessment-story-values { gap: 15px; padding-inline: 10px; } .assessment-story-values > span { font-size: 9px; } .assessment-story-values i { width: 29px; height: 29px; font-size: 16px; } }
+
+/* Education, health and challenges: assessment part four. */
+.assessment-child-top { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.assessment-child-details { display: grid; grid-template-columns: minmax(0, 55%) minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+.assessment-child-details { align-items: start; row-gap: 0; }
+.child-question { min-width: 0; padding: 0 0 20px; }
+.child-question legend { float: none; width: auto; margin-bottom: 14px; font-size: 16px; line-height: 1.45; }
+.child-question legend small { font-size: 13px; font-weight: 400; }
+.child-question .support-radio-options { display: grid; grid-template-columns: 1fr 1fr; }
+.child-question .support-radio-options .assessment-option { min-height: 53px; }
+.child-question .support-card-options .assessment-option { min-height: 63px; padding: 10px 22px 10px 12px; gap: 9px; }
+.child-question .support-card-options .assessment-option > i { font-size: 25px; width: 27px; }
+.child-question .support-card-options .assessment-option > span { font-size: 12px; }
+.child-challenges .support-card-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.child-additional { padding-top: 18px; border-bottom: 0; }
+.assessment-child-page .assessment-choice-help { margin-top: 10px; padding: 26px 22px; }
+.assessment-child-page .assessment-actions { border-top: 1px solid #e0e6ef; padding-top: 28px; }
+.assessment-child-page .assessment-child-line { margin-bottom: 16px; }
+.assessment-child-page .assessment-side-steps li:nth-child(2) .assessment-side-number { background: white; color: #071e3f; box-shadow: none; }
+@media (max-width: 1250px) { .assessment-child-top, .assessment-child-details { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .child-health .support-card-options { grid-template-columns: 1fr 1fr; } .child-question .support-radio-options { grid-template-columns: 1fr; } .child-question .support-card-options .assessment-option { min-height: 85px; } .child-question textarea { font-size: 16px; } }
