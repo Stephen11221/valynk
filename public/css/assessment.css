@@ -362,3 +362,46 @@
 .assessment-checkout-page .connection-submit:disabled { cursor: not-allowed; opacity: .65; }
 @media (max-width: 1250px) { .checkout-layout { grid-template-columns: 1fr; } }
 @media (max-width: 650px) { .checkout-payment { padding: 16px 10px; } .checkout-order header { flex-wrap: wrap; } .checkout-field-row { grid-template-columns: 1fr; gap: 0; } .checkout-card-number input { font-size: 14px; padding-right: 72px; } .checkout-card-number span { font-size: 22px; } }
+
+/* Checkout typography and colour hierarchy. */
+.assessment-checkout-page { --checkout-ink: #180c49; --checkout-muted: #574d73; --checkout-border: #ded8ec; background: radial-gradient(ellipse at 15% 35%, #321442, #140d2e 78%); color: var(--checkout-ink); }
+.assessment-checkout-page .assessment-content { background: #fefeff; }
+.assessment-checkout-page .assessment-heading h1 { color: var(--checkout-ink); font-size: clamp(28px, 2.3vw, 36px); line-height: 1.18; letter-spacing: -.9px; }
+.assessment-checkout-page .assessment-heading > div > p { font-size: 16px; line-height: 1.5; color: var(--checkout-muted); }
+.assessment-checkout-page .assessment-heading .support-stage-label { color: #bd4300; font-size: 16px; }
+.assessment-checkout-page .connection-stepper p { font-size: 13px; line-height: 1.4; }
+.assessment-checkout-page .connection-stepper .completed, .assessment-checkout-page .connection-stepper [aria-current] { color: #b83d00; }
+.assessment-checkout-page .assessment-side-steps h3 { font-size: 18px; }
+.assessment-checkout-page .assessment-side-steps p { font-size: 15px; line-height: 1.5; color: #eee7f7; }
+.assessment-checkout-page .checkout-layout h2 { font-size: 23px; letter-spacing: -.5px; }
+.assessment-checkout-page .checkout-intro { font-size: 15px; line-height: 1.5; color: var(--checkout-muted); }
+.assessment-checkout-page .checkout-payment { background: #fff; border-color: var(--checkout-border); padding: 20px 16px 26px; }
+.assessment-checkout-page .checkout-method { padding: 20px 24px 18px 12px; gap: 9px; border-color: var(--checkout-border); }
+.assessment-checkout-page .checkout-method span { font-size: 14px; line-height: 1.4; }
+.assessment-checkout-page .checkout-method small { font-size: 12px; color: var(--checkout-muted); }
+.assessment-checkout-page .checkout-method.selected { border-color: #f66a00; background: #fff3e9; box-shadow: inset 0 0 0 1px #f66a00; }
+.assessment-checkout-page a:focus-visible { outline: 3px solid #7852bb; outline-offset: 4px; }
+.assessment-checkout-page .checkout-unavailable { color: #713808; background: #fff3e4; border: 1px solid #f2d6b3; font-size: 14px; }
+.assessment-checkout-page .checkout-card-fields label { font-size: 16px; }
+.assessment-checkout-page .checkout-card-fields input { height: 54px; font-size: 17px; background: #f8f7fb; border-color: var(--checkout-border); }
+.assessment-checkout-page .checkout-card-fields input::placeholder { color: #79708e; }
+.assessment-checkout-page .checkout-security { color: var(--checkout-muted); font-size: 15px; }
+.assessment-checkout-page .checkout-order { background: #fbf9ff; border-color: var(--checkout-border); }
+.assessment-checkout-page .checkout-order > h2 { background: #eee8fa; padding: 20px; }
+.assessment-checkout-page .checkout-order-inner { padding: 24px 20px 18px; }
+.assessment-checkout-page .checkout-order h3 { font-size: 21px; }
+.assessment-checkout-page .checkout-order header p, .assessment-checkout-page .checkout-order li { font-size: 16px; line-height: 1.5; }
+.assessment-checkout-page .checkout-order header a { color: #b83d00; font-size: 14px; line-height: 1.4; }
+.assessment-checkout-page .checkout-total { font-size: 17px; }
+.assessment-checkout-page .checkout-total p > strong { font-size: 30px; }
+.assessment-checkout-page .checkout-sample { background: #eae0fb; }
+.assessment-checkout-page .checkout-sample strong { font-size: 17px; }
+.assessment-checkout-page .checkout-sample small { font-size: 14px; line-height: 1.5; color: #4e406d; }
+.assessment-checkout-page .checkout-next { background: #fff1e5; }
+.assessment-checkout-page .checkout-next p, .assessment-checkout-page .checkout-next a { font-size: 15px; line-height: 1.6; }
+.assessment-checkout-page .checkout-next a { color: #923300; text-underline-offset: 3px; }
+.assessment-checkout-page .assessment-back { background: #eee5fb; font-size: 19px; }
+.assessment-checkout-page .assessment-actions .connection-submit:disabled { background: #e6e0ed; color: #61556f; opacity: 1; font-size: 18px; box-shadow: none; }
+.assessment-checkout-page .assessment-help { font-size: 14px; }
+@media (min-width: 1251px) and (max-width: 1450px) { .assessment-checkout-page .checkout-methods { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .assessment-checkout-page .assessment-heading h1 { font-size: 28px; } .assessment-checkout-page .checkout-layout h2 { font-size: 21px; } .assessment-checkout-page .checkout-order-inner { padding: 18px 14px; } .assessment-checkout-page .checkout-method span { font-size: 16px; } .assessment-checkout-page .checkout-method small { font-size: 13px; } .assessment-checkout-page .checkout-card-number input { font-size: 16px; } .assessment-checkout-page .assessment-actions .connection-submit:disabled { font-size: 16px; padding-inline: 10px; } }

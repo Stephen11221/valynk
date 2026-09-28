@@ -33,6 +33,6 @@
             <div class="checkout-total"><strong>Total (KES)</strong><p><strong>{{ number_format(config('development.plans.'.$plan)) }}</strong> / month</p></div>
             <a class="checkout-sample" href="{{ route('development.sample.pdf') }}" target="_blank" rel="noopener"><i class="fa-solid fa-eye" aria-hidden="true"></i><span><strong>View What You’ll Get</strong><small>See a sample of the full report.</small></span><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></a>
         </div></section>
-        <aside class="checkout-next"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><div><h2>Your Next Steps</h2><p>Explore a sample report and review the support available for your child.</p>@if($assessment)<a href="{{ route('development.report', $assessment) }}">View your saved support summary →</a>@endif<a href="{{ route('contact') }}">Contact us about payment availability →</a></div></aside>
+        <aside class="checkout-next"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><div><h2>Your Next Steps</h2><p>Explore a sample report and review the support available for your child.</p>@if($assessment)<a href="{{ route('development.report', $assessment) }}">View your saved support summary →</a>@endif<a href="{{ route('contact') }}">Contact us about payment availability →</a><a href="{{ route('development.preview', 'success') }}">Preview the payment success page →</a></div></aside>
     </div>
 </div>
