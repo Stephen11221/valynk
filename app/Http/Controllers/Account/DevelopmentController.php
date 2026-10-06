@@ -369,16 +369,23 @@ class DevelopmentController extends Controller
 
     public function plans(Request $r): View
     {
-        $data = $r->validate(['assessment' => 'nullable|integer', 'plan' => ['nullable', Rule::in(array_keys(config('development.plans')))], 'method' => ['nullable', Rule::in(['M-PESA', 'Card', 'Bank transfer'])]]);
+        $data = $r->validate(['assessment' => 'nullable|integer', 'plan' => ['nullable', Rule::in(array_merge(array_keys(config('development.plans')), array_keys(config('development.report_subscriptions'))))], 'method' => ['nullable', Rule::in(['M-PESA', 'Card', 'Bank transfer'])]]);
         $assessment = isset($data['assessment']) ? DevelopmentAssessment::whereHas('child', fn ($query) => $query->where('user_id', $r->user()->id))->whereNotNull('consented_at')->with('child')->findOrFail($data['assessment']) : null;
+
+        if (data_get($assessment?->answers, 'personal_development')) {
+            return view('development.subscription-preview', ['assessment' => $assessment, 'child' => $assessment->child, 'activeStage' => 4]);
+        }
+        abort_if(isset($data['plan']) && array_key_exists($data['plan'], config('development.report_subscriptions')), 422);
 
         return view('development.plans', ['assessment' => $assessment, 'child' => $assessment?->child]);
     }
 
     public function checkout(Request $r)
     {
-        $data = $r->validate(['plan' => ['required', Rule::in(array_keys(config('development.plans')))], 'method' => ['required', Rule::in(['M-PESA', 'Card', 'Bank transfer'])], 'assessment' => 'nullable|integer']);
+        $data = $r->validate(['plan' => ['required', Rule::in(array_merge(array_keys(config('development.plans')), array_keys(config('development.report_subscriptions'))))], 'method' => ['required', Rule::in(['M-PESA', 'Card', 'Bank transfer'])], 'assessment' => 'nullable|integer']);
         $data['assessment'] = isset($data['assessment']) ? DevelopmentAssessment::whereHas('child', fn ($query) => $query->where('user_id', $r->user()->id))->whereNotNull('consented_at')->findOrFail($data['assessment']) : null;
+
+        abort_if(array_key_exists($data['plan'], config('development.report_subscriptions')) && ! data_get($data['assessment']?->answers, 'personal_development'), 422);
 
         return view('development.checkout', $data);
     }

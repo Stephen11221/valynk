@@ -51,6 +51,21 @@ class PersonalDevelopmentReportTest extends TestCase
         $this->get(route('development.report', $assessment))->assertRedirect(route('login'));
     }
 
+    public function test_subscription_preview_has_selected_plans_and_uses_configured_checkout_amounts(): void
+    {
+        $assessment = $this->assessmentForParent(1);
+        $this->get(route('development.plans', ['assessment' => $assessment->id]))->assertOk()->assertViewIs('development.subscription-preview')
+            ->assertSee('Learner')->assertSee('KES 1,500')->assertSee('KES 3,500')
+            ->assertSee('Payments are not available yet')->assertSee(route('development.report', $assessment));
+        foreach (['monthly' => '1,500', 'three-month' => '3,500'] as $plan => $fee) {
+            $this->get(route('development.checkout', ['assessment' => $assessment->id, 'plan' => $plan, 'method' => 'M-PESA', 'amount' => 1]))->assertOk()->assertSee($fee)
+                ->assertSee('M-Pesa payments are not enabled yet');
+        }
+        $this->get(route('development.plans', ['assessment' => $assessment->id, 'plan' => 'three-month']))->assertOk()->assertSee('value="three-month" required checked', false);
+        $assessment->update(['consented_at' => null]);
+        $this->get(route('development.plans', ['assessment' => $assessment->id]))->assertNotFound();
+    }
+
     private function assessmentForParent(int $optionIndex): DevelopmentAssessment
     {
         $parent = User::factory()->create(['account_type' => 'Family']);

@@ -1,7 +1,10 @@
 @php
+    $subscription = config('development.report_subscriptions.'.$plan);
+    $fee = $subscription['fee'] ?? config('development.plans.'.$plan);
+    $period = $subscription['period'] ?? '/ month';
     $selection = ['assessment' => $assessment?->id, 'plan' => $plan, 'method' => $method];
-    $planIcon = ['Individual' => 'user', 'Family' => 'user-group', 'Provider' => 'handshake', 'Institution' => 'building'][$plan];
-    $features = ['Individual' => ['1 child profile', 'Full report & provider matches', 'Tips and resources', 'Access to your dashboard'], 'Family' => ['Up to 4 child profiles', 'Full reports & matches', 'Parent resources', 'Priority support'], 'Provider' => ['List your services', 'Receive qualified referrals', 'Manage your profile', 'Track impact'], 'Institution' => ['Multiple learner profiles', 'Bulk assessments & matches', 'Impact reporting', 'Dedicated support']][$plan];
+    $planIcon = ['Individual' => 'user', 'Family' => 'user-group', 'Provider' => 'handshake', 'Institution' => 'building'][$plan] ?? 'file-lines';
+    $features = ['Individual' => ['1 child profile', 'Full report & provider matches', 'Tips and resources', 'Access to your dashboard'], 'Family' => ['Up to 4 child profiles', 'Full reports & matches', 'Parent resources', 'Priority support'], 'Provider' => ['List your services', 'Receive qualified referrals', 'Manage your profile', 'Track impact'], 'Institution' => ['Multiple learner profiles', 'Bulk assessments & matches', 'Impact reporting', 'Dedicated support']][$plan] ?? ['Assessment summary', 'Provider discovery', 'Access preview for '.($subscription['days'] ?? 30).' days'];
 @endphp
 <div class="checkout-layout">
     <section class="checkout-payment" aria-labelledby="payment-title">
@@ -28,9 +31,9 @@
     </section>
     <div>
         <section class="checkout-order" aria-labelledby="order-title"><h2 id="order-title">2. Order Summary</h2><div class="checkout-order-inner">
-            <header><i class="fa-solid fa-{{ $planIcon }}" aria-hidden="true"></i><div><h3>{{ $plan }} Plan</h3><p><strong>KES {{ number_format(config('development.plans.'.$plan)) }}</strong> / month</p></div><a href="{{ route('development.plans', $selection) }}">Change Plan</a></header>
+            <header><i class="fa-solid fa-{{ $planIcon }}" aria-hidden="true"></i><div><h3>{{ $plan }} Plan</h3><p><strong>KES {{ number_format($fee) }}</strong> {{ $period }}</p></div><a href="{{ route('development.plans', $selection) }}">Change Plan</a></header>
             <ul>@foreach($features as $feature)<li><i class="fa-solid fa-square-check" aria-hidden="true"></i>{{ $feature }}</li>@endforeach</ul>
-            <div class="checkout-total"><strong>Total (KES)</strong><p><strong>{{ number_format(config('development.plans.'.$plan)) }}</strong> / month</p></div>
+            <div class="checkout-total"><strong>Total (KES)</strong><p><strong>{{ number_format($fee) }}</strong> {{ $period }}</p></div>
             <a class="checkout-sample" href="{{ route('development.sample.pdf') }}" target="_blank" rel="noopener"><i class="fa-solid fa-eye" aria-hidden="true"></i><span><strong>View What You’ll Get</strong><small>See a sample of the full report.</small></span><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></a>
         </div></section>
         <aside class="checkout-next"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><div><h2>Your Next Steps</h2><p>Explore a sample report and review the support available for your child.</p>@if($assessment)<a href="{{ route('development.report', $assessment) }}">View your saved support summary →</a>@endif<a href="{{ route('contact') }}">Contact us about payment availability →</a><a href="{{ route('development.preview', 'success') }}">Preview the payment success page →</a></div></aside>

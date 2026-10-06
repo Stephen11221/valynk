@@ -42,10 +42,15 @@ class PersonalDevelopmentReport
         $priorities = $observations;
         usort($priorities, fn (array $first, array $second): int => $second['priority'] <=> $first['priority']);
 
+        $areaPriorities = [];
+        foreach ($priorities as $item) {
+            $areaPriorities[$item['area']] ??= $item;
+        }
+
         return [
             'strengths' => array_values($strengths),
             'development' => array_values($development),
-            'recommendations' => array_column(array_slice($priorities, 0, 3), 'recommendation'),
+            'recommendations' => array_column(array_values($areaPriorities), 'recommendation'),
             'observations' => $observations,
         ];
     }

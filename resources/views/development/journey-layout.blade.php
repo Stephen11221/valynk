@@ -16,6 +16,9 @@
     <aside class="focus-story"><img src="{{ asset('images/about/family.png') }}" alt="A parent supporting her child"><div><h2>@if($activeStage === 2)Let’s<br>Get to Know<br><em>Your Child</em>@else Let’s<br>Understand<br><em>Better</em>@endif</h2><p>{{ $activeStage === 2 ? 'Please share a few details about your child so we can personalise the assessment and recommend the right support.' : 'A few simple questions (3–5 minutes) to understand your child’s current situation so we can recommend the most relevant support.' }}</p></div></aside>
     <section class="focus-content" aria-labelledby="journey-title">
         <ol class="focus-stepper" aria-label="Your progress">@foreach(['Sign Up & Quick Questions', 'Child’s Details', 'Full Assessment', 'Preview Report', 'Match & Programmes'] as $label)<li class="{{ $loop->iteration < $activeStage ? 'completed' : '' }}" @if($loop->iteration === $activeStage) aria-current="step" @endif><span>@if($loop->iteration < $activeStage)<i class="fa-solid fa-check" aria-hidden="true"></i>@else{{ $loop->iteration }}@endif</span><p>{{ $label }}</p></li>@endforeach</ol>
+        @hasSection('wide-content')
+            @yield('wide-content')
+        @else
         <div class="focus-columns">
             <div class="focus-card">@if($errors->any())<div class="connection-errors" role="alert"><strong>Please check your answers.</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif @yield('form')</div>
             <aside class="focus-panels" aria-label="Helpful information">
@@ -29,6 +32,7 @@
                 @endif
             </aside>
         </div>
+        @endif
     </section>
 </main>
 </body>

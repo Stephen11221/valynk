@@ -17,6 +17,7 @@ return [
         'reasons' => ['book-open', 'people-group', 'brain', 'heart', 'dumbbell', 'users', 'compass', 'ellipsis'],
         'goals' => ['bullseye', 'person-rays', 'chart-column', 'lightbulb', 'user-group', 'heart', 'star', 'ellipsis'],
     ],
+    'report_subscriptions' => ['monthly' => ['name' => 'Monthly Access', 'fee' => 1500, 'period' => 'per month', 'days' => 30], 'three-month' => ['name' => '3-Month Access', 'fee' => 3500, 'period' => 'for 3 months', 'days' => 90]],
     'plans' => ['Individual' => 1500, 'Family' => 2500, 'Provider' => 3500, 'Institution' => 7500],
     'mindset_questions' => [
         1 => [
