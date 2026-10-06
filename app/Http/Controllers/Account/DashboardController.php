@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Models\DevelopmentChild;
+use App\Models\DevelopmentConnection;
+use App\Models\SitePage;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +33,43 @@ class DashboardController extends Controller
 
         $user->load('providerProfile');
 
-        return view(self::DASHBOARD_VIEWS[$user->account_type] ?? 'account.dashboard', ['user' => $user]);
+        $dashboardView = self::DASHBOARD_VIEWS[$user->account_type] ?? 'account.dashboard';
+        $dashboardData = ['user' => $user];
+        if (in_array($dashboardView, ['account.dashboard', 'account.family-dashboard'], true)) {
+            $dashboardData += $this->familyData($user);
+        }
+
+        return view($dashboardView, $dashboardData);
+    }
+
+    public function section(Request $request, string $page): View|RedirectResponse
+    {
+        $user = $request->user();
+        if ($user->is_admin) {
+            return redirect()->route('admin.dashboard');
+        }
+        abort_unless(in_array($user->account_type, ['Family', 'Partner / Other'], true), 403);
+        abort_unless(in_array($page, ['assessments', 'payments', 'progress', 'messages', 'programmes', 'settings', 'help'], true), 404);
+
+        return view('account.sections', ['user' => $user, 'page' => $page] + $this->familyData($user));
+    }
+
+    /** @return array<string, mixed> */
+    private function familyData(User $user): array
+    {
+        $children = DevelopmentChild::query()->where('user_id', $user->id)->with('assessments')->latest()->get();
+        $connections = DevelopmentConnection::query()->where('user_id', $user->id)
+            ->whereHas('child', fn (Builder $query) => $query->where('user_id', $user->id))
+            ->with(['provider.user', 'child'])->latest()->limit(5)->get();
+        $selectedChild = $children->first();
+        $latestAssessment = $selectedChild?->assessments->sortByDesc('id')->first();
+        $assessmentProgress = $latestAssessment?->consented_at ? 100 : min(100, max(0, (($latestAssessment?->step ?? 1) - 1) * 25));
+        $solutionPage = SitePage::query()->where('slug', 'solutions')->first();
+        $solutions = ($solutionPage ?? new SitePage)->solutionDetails();
+        $selectedSolution = $solutions[$selectedChild?->solution ?? 'performance-confidence'] ?? null;
+        $publishedSolutions = $solutionPage && ! $solutionPage->is_published ? [] : array_filter($solutions, fn (array $solution): bool => $solution['is_published']);
+
+        return compact('children', 'connections', 'selectedChild', 'latestAssessment', 'assessmentProgress', 'selectedSolution', 'publishedSolutions');
     }
 
     public function edit(Request $request): View|RedirectResponse

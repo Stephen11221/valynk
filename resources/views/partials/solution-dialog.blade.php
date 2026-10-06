@@ -9,35 +9,48 @@
             <div class="solution-dialog-image solution-photo solution-photo-{{ $details['photo'] }}" aria-hidden="true"></div>
         @endif
         <div class="solution-dialog-intro">
-            <img class="solution-dialog-logo" src="{{ asset('logo/logo.jpeg') }}" alt="VALYNK" width="180" height="55">
-            <span class="solution-dialog-badge">Solution</span>
-            <h2 id="solution-title-{{ $key }}">{{ $details['title'] }}</h2>
+            <div class="solution-dialog-label">
+                <span class="solution-dialog-number">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                <div><p>{{ $details['title'] }}</p>@if($key === 'performance-confidence')<span>SOL-PCPD</span>@endif</div>
+            </div>
+            <h2 id="solution-title-{{ $key }}">{{ $key === 'performance-confidence' && $details['title'] === config('solutions.performance-confidence.title') ? 'Build Confidence, Resilience and a Positive Self-Image' : $details['title'] }}</h2>
             <p>{{ $details['description'] }}</p>
-            <ul class="solution-highlights">@foreach($details['highlights'] as $highlight)<li><i class="fa-solid fa-{{ ['brain', 'bullseye', 'person', 'star'][$loop->index] }}" aria-hidden="true"></i><strong>{{ $highlight }}</strong></li>@endforeach</ul>
         </div>
         @if($details['tagline'])<p class="solution-dialog-tagline">{{ $details['tagline'] }}</p>@endif
-        <div class="solution-age"><i class="fa-solid fa-people-group" aria-hidden="true"></i><strong>{{ $details['age_range'] }}</strong></div>
+        <div class="solution-overview">
+            <section class="solution-overview-item">
+                <span class="solution-overview-icon"><i class="fa-solid fa-people-group" aria-hidden="true"></i></span>
+                <div><h3>Who It’s For</h3><p>{{ $details['age_range'] }}</p></div>
+            </section>
+            <section class="solution-overview-item">
+                <span class="solution-overview-icon"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span>
+                <div><h3>Real-World Outcomes</h3><p>{{ $key === 'performance-confidence' && $details['benefits'] === config('solutions.performance-confidence.benefits') ? 'Greater self-belief, better focus, stronger habits and improved communication and relationships.' : implode(', ', $details['benefits']) }}</p></div>
+            </section>
+            <section class="solution-overview-item">
+                <span class="solution-overview-icon"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i></span>
+                <div><h3>How It Helps</h3><p>Through expert-led programmes and support, learners develop practical tools and real-life skills to manage challenges and make positive choices.</p></div>
+            </section>
+        </div>
     </section>
     <div class="solution-dialog-body">
         <section class="solution-support">
-            <h3>Key Areas of Support</h3><p>{{ $details['support_intro'] }}</p>
+            <h3>Key Areas Addressed</h3><p>{{ $details['support_intro'] }}</p>
             <div class="solution-support-grid">
                 @foreach($details['areas'] as $area)
-                    <article class="solution-support-card tone-{{ $area['tone'] }}">
-                        @if($area['image_url'])<img class="solution-photo solution-custom-photo" src="{{ $area['image_url'] }}" alt="" loading="lazy" referrerpolicy="no-referrer">@else<div class="solution-photo solution-photo-{{ $area['photo'] }}" aria-hidden="true"></div>@endif
-                        <div class="solution-support-copy"><span class="solution-icon"><i class="fa-solid fa-{{ $area['icon'] }}" aria-hidden="true"></i></span><h4>{{ $area['title'] }}</h4><ul>@foreach($area['points'] as $point)<li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>{{ $point }}</span></li>@endforeach</ul></div>
+                    <article class="solution-support-card">
+                        <div class="solution-support-copy">
+                            <div class="solution-support-marker"><span>{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span><i class="fa-solid fa-{{ $area['icon'] }}" aria-hidden="true"></i></div>
+                            <h4>{{ $area['title'] }}</h4>
+                            <ul>@foreach($area['points'] as $point)<li>{{ $point }}</li>@endforeach</ul>
+                        </div>
                     </article>
                 @endforeach
             </div>
         </section>
-        <aside class="solution-dialog-sidebar">
-            <section class="solution-benefits"><h3><i class="fa-solid fa-star" aria-hidden="true"></i> Key Benefits for Your Child</h3><ul>@foreach($details['benefits'] as $benefit)<li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>{{ $benefit }}</span></li>@endforeach</ul></section>
-            <section class="solution-connect"><h3>Ready to take the next step?</h3><p>Get connected with trusted providers and programmes that match your child’s needs.</p><a class="solutions-button" href="{{ route($details['cta_route'], $details['cta_route'] === 'get-connected' ? ['solution' => $key] : []) }}">{{ $details['cta_label'] }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></section>
-        </aside>
-    </div>
-    <div class="solution-dialog-trust">
-        @foreach([['shield-halved', 'Verified Providers', 'Only vetted, high-quality professionals and programmes.'], ['people-group', 'Personalised Matching', 'Support that fits your child’s needs and goals.'], ['seedling', 'Relevant at Every Stage', 'From early years to young adulthood.'], ['star', 'A Brighter Future', 'Build the capabilities for lifelong success.']] as [$icon, $title, $description])
-            <div><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i><p><strong>{{ $title }}</strong><span>{{ $description }}</span></p></div>
-        @endforeach
+        <section class="solution-connect">
+            <span class="solution-connect-icon"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i></span>
+            <div class="solution-connect-copy"><h3>Ready to find the right support?</h3><p>Click below to get connected. You’ll be taken to a short sign-up form and a few quick questions so we can understand your needs better.</p></div>
+            <div class="solution-connect-action"><a class="solutions-button" href="{{ route($details['cta_route'], $details['cta_route'] === 'get-connected' ? ['solution' => $key] : []) }}">{{ $details['cta_label'] }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><p>It only takes a few minutes.</p></div>
+        </section>
     </div>
 </dialog>

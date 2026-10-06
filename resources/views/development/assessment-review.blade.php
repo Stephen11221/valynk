@@ -15,6 +15,9 @@
         <section class="review-card" aria-labelledby="review-title">
             <header class="review-card-heading"><i class="fa-regular fa-file-lines" aria-hidden="true"></i><div><h2 id="review-title">Summary of Your Child’s Information</h2><p>Please review the details below. You can go back to edit if needed.</p></div><a href="{{ route('development.assessment', [$child, 4]) }}" class="review-edit"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Edit</a></header>
             <dl class="review-summary">
+                @foreach(config('development.mindset_questions') as $question)
+                    @if(data_get($answers, 'personal_development.'.$question['key']))<div><i class="fa-solid fa-{{ $question['icon'] }}" aria-hidden="true"></i><div><dt>{{ $question['label'] }}</dt><dd>{{ data_get($answers, 'personal_development.'.$question['key']) }}</dd></div></div>@endif
+                @endforeach
                 @foreach($summaryItems as [$icon, $label, $value])
                     <div><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i><div><dt>{{ $label }}</dt><dd>{{ $value }}</dd></div></div>
                 @endforeach

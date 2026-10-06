@@ -19,5 +19,18 @@
     const updateCounter = () => { document.querySelector('#notes-counter').textContent = `${Array.from(notes.value).length}/500`; };
     notes.addEventListener('input', updateCounter);
     updateCounter();
+    const reasons = [...document.querySelectorAll('[name="quick_questions[reasons][]"]')];
+    if (reasons.length) {
+        const updateReasons = () => {
+            const selected = reasons.filter(input => input.checked).length;
+            reasons[0].setCustomValidity(selected >= 3 ? '' : 'Please select at least 3 reasons for seeking support.');
+        };
+        reasons.forEach(input => input.addEventListener('change', updateReasons));
+        updateReasons();
+    }
+    document.querySelector('#connection-form')?.addEventListener('invalid', event => {
+        const section = event.target.closest('details');
+        if (section) section.open = true;
+    }, true);
     document.querySelector('.connection-errors')?.focus();
 })();

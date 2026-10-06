@@ -1,3 +1,4 @@
+@php($usesFamilyDashboard = in_array(auth()->user()?->account_type, ['Family', 'Partner / Other'], true))
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -14,9 +15,16 @@
         }
     </style>
     @stack('styles')
+    @if($usesFamilyDashboard)
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" referrerpolicy="no-referrer">
+        <link rel="stylesheet" href="{{ asset('css/family-dashboard.css') }}?v={{ filemtime(public_path('css/family-dashboard.css')) }}">
+        <script src="{{ asset('js/family-dashboard.js') }}?v={{ filemtime(public_path('js/family-dashboard.js')) }}" defer></script>
+    @endif
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900 @yield('body-class')">
-    @hasSection('header')
+<body class="min-h-screen bg-slate-50 text-slate-900 @yield('body-class') {{ $usesFamilyDashboard ? 'family-dashboard' : '' }}">
+    @if($usesFamilyDashboard)
+        @include('account.partials.dashboard-header')
+    @elseif($__env->hasSection('header'))
         @yield('header')
     @else
     <header class="border-b border-slate-200 bg-white">
@@ -36,6 +44,7 @@
     </header>
     @endif
     <main class="mx-auto max-w-6xl px-5 py-8 sm:py-10">
+        @if($usesFamilyDashboard) @include('account.partials.dashboard-sidebar') @endif
         @yield('content')
     </main>
     @yield('footer')

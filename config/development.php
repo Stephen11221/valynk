@@ -1,11 +1,91 @@
 <?php
 
 return [
+    'connection' => [
+        'reasons' => [
+            'Build confidence and self-belief',
+            'Improve focus and study habits',
+            'Set goals and stay motivated',
+            'Manage stress and handle challenges',
+            'Improve social skills and relationships',
+            'Develop discipline and consistent habits',
+        ],
+        'levels' => ['Very low', 'Low', 'Moderate', 'High', 'Very high'],
+        'timelines' => ['As soon as possible (within 1 month)', 'In 1–3 months', 'In 3–6 months', 'Just exploring for now'],
+    ],
     'assessment_icons' => [
         'reasons' => ['book-open', 'people-group', 'brain', 'heart', 'dumbbell', 'users', 'compass', 'ellipsis'],
         'goals' => ['bullseye', 'person-rays', 'chart-column', 'lightbulb', 'user-group', 'heart', 'star', 'ellipsis'],
     ],
     'plans' => ['Individual' => 1500, 'Family' => 2500, 'Provider' => 3500, 'Institution' => 7500],
+    'mindset_questions' => [
+        1 => [
+            'key' => 'confidence', 'area' => 'Positive Belief & Winning Mindset', 'icon' => 'brain',
+            'label' => 'How would you describe your child’s confidence when facing new challenges?',
+            'help' => 'This helps us understand your child’s self-belief when facing something new.',
+            'options' => [
+                'Very confident' => 'My child usually tries new things and believes they can do it.',
+                'Somewhat confident' => 'My child is confident sometimes, but can be unsure in new situations.',
+                'Not very confident' => 'My child often doubts themselves or is afraid to try new things.',
+                'I’m not sure' => 'It depends / I need more time to observe.',
+            ],
+        ],
+        2 => [
+            'key' => 'resilience', 'area' => 'Positive Belief & Winning Mindset', 'icon' => 'brain',
+            'label' => 'How does your child usually react when they make a mistake?',
+            'help' => 'This helps us understand how your child handles challenges, so we can recommend support that builds resilience and a growth mindset.',
+            'options' => [
+                'They stay positive and try again.' => 'They learn from the mistake and keep going.',
+                'They feel disappointed but try again.' => 'They may feel bad at first, but usually keep going.',
+                'They get upset and find it hard to continue.' => 'They often lose confidence when things don’t go well.',
+                'They avoid trying or give up easily.' => 'They are afraid of making mistakes.',
+            ],
+        ],
+        3 => [
+            'key' => 'focus', 'area' => 'Focus and Discipline', 'icon' => 'bullseye',
+            'label' => 'How easily can your child stay focused on a task (e.g. schoolwork or reading)?',
+            'help' => 'Focus and discipline help your child complete schoolwork, manage time, and build good habits — important skills for academic success and life growth.',
+            'options' => [
+                'Very easily' => 'They can usually stay focused for a long time without getting distracted.',
+                'Somewhat easily' => 'They can stay focused, but sometimes get distracted.',
+                'Not very easily' => 'They often get distracted and find it hard to stay focused.',
+                'Not easily at all' => 'They find it very difficult to stay focused, even for short periods.',
+            ],
+        ],
+        4 => [
+            'key' => 'routines', 'area' => 'Focus and Discipline', 'icon' => 'bullseye',
+            'label' => 'How consistently does your child follow routines and complete tasks?',
+            'help' => 'Consistent routines can help children build independence and follow through on their responsibilities.',
+            'options' => [
+                'Very consistently' => 'They usually follow routines and finish tasks independently.',
+                'Somewhat consistently' => 'They manage most tasks with a few reminders.',
+                'Not very consistently' => 'They need frequent reminders to stay on track.',
+                'I’m not sure' => 'I need more time to observe their habits.',
+            ],
+        ],
+        5 => [
+            'key' => 'motivation', 'area' => 'Motivation and Purpose', 'icon' => 'flag',
+            'label' => 'How motivated is your child to learn and work towards something important to them?',
+            'help' => 'Understanding what motivates your child helps us recommend support that connects with their interests.',
+            'options' => [
+                'Very motivated' => 'They show interest and keep working towards what matters to them.',
+                'Somewhat motivated' => 'They show interest but sometimes need encouragement.',
+                'Not very motivated' => 'They often find it difficult to get started or keep going.',
+                'I’m not sure' => 'Their motivation varies / I need more time to observe.',
+            ],
+        ],
+        6 => [
+            'key' => 'goals', 'area' => 'Motivation and Purpose', 'icon' => 'flag',
+            'label' => 'How clearly can your child identify a goal and take steps towards achieving it?',
+            'help' => 'Small, meaningful goals can help your child develop a sense of purpose and recognise their progress.',
+            'options' => [
+                'Very clearly' => 'They can set a goal and take practical steps towards it.',
+                'Somewhat clearly' => 'They have ideas but need help planning the next steps.',
+                'Not very clearly' => 'They find it difficult to decide what to aim for.',
+                'I’m not sure' => 'We have not explored goals together yet.',
+            ],
+        ],
+    ],
     'questions' => [
         1 => [
             'reasons' => ['What are your main reasons for seeking support?', 'multi', ['Academic Performance', 'Confidence & Self-Esteem', 'Focus & Attention', 'Emotional Wellbeing', 'Behaviour & Discipline', 'Social Skills & Relationships', 'Career Guidance', 'Other']],

@@ -9,6 +9,7 @@ use App\Models\DevelopmentConnection;
 use App\Models\ProviderProfile;
 use App\Models\SitePage;
 use App\Models\User;
+use App\Services\PersonalDevelopmentReport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,11 +59,11 @@ class DevelopmentController extends Controller
         return $this->getConnected($request);
     }
 
-    public function storeAccount(Request $r)
+    public function storeAccount(Request $r): RedirectResponse
     {
-        $data = $r->validate(['name' => 'required|string|max:255', 'email' => 'required|email|max:255|unique:users,email', 'phone' => 'required|string|max:30', 'password' => 'required|string|min:12|confirmed', 'terms' => 'accepted'] + $this->childRules());
+        $data = $r->validate(['name' => 'required|string|max:255', 'email' => 'required|email|max:255|unique:users,email', 'phone' => 'required|string|max:30', 'password' => 'required|string|min:12|confirmed', 'terms' => 'accepted', 'location' => 'nullable|string|max:100', 'country_code' => ['nullable', Rule::in(['+254', '+256', '+255', '+250', '+1', '+44'])]] + $this->childRules());
         $user = DB::transaction(function () use ($data) {
-            $u = User::create(['name' => $data['name'], 'email' => $data['email'], 'phone' => $data['phone'], 'password' => $data['password'], 'account_type' => 'Family']);
+            $u = User::create(['name' => $data['name'], 'email' => $data['email'], 'phone' => isset($data['country_code']) && ! str_starts_with($data['phone'], '+') ? $data['country_code'].ltrim($data['phone'], '0 ') : $data['phone'], 'location' => $data['location'] ?? null, 'password' => $data['password'], 'account_type' => 'Family']);
             $this->newChild($u->id, $data);
 
             return $u;
@@ -70,7 +71,9 @@ class DevelopmentController extends Controller
         Auth::login($user);
         $r->session()->regenerate();
 
-        return redirect()->route('development.assessment', [DevelopmentChild::where('user_id', $user->id)->firstOrFail(), 1]);
+        $child = DevelopmentChild::where('user_id', $user->id)->firstOrFail();
+
+        return redirect()->route('development.assessment', [$child, 1])->with('account_created_child', $child->id);
     }
 
     private function childRules(): array
@@ -79,6 +82,13 @@ class DevelopmentController extends Controller
         $solutions = $page && ! $page->is_published ? [] : array_filter(($page ?? new SitePage)->solutionDetails(), fn (array $solution): bool => $solution['is_published']);
 
         return [
+            'connection_form' => ['nullable', 'in:1'],
+            'quick_questions' => ['required_if:connection_form,1', 'nullable', 'array:reasons,current_level,timeline,relationship'],
+            'quick_questions.reasons' => ['required_with:quick_questions', 'array', 'min:3', 'max:6'],
+            'quick_questions.reasons.*' => ['string', 'distinct', Rule::in(config('development.connection.reasons'))],
+            'quick_questions.current_level' => ['required_with:quick_questions', Rule::in(config('development.connection.levels'))],
+            'quick_questions.timeline' => ['required_with:quick_questions', Rule::in(config('development.connection.timelines'))],
+            'quick_questions.relationship' => ['required_with:quick_questions', Rule::in(['Parent', 'Guardian'])],
             'child_name' => ['required', 'string', 'max:120'],
             'age' => ['required', 'integer', 'min:5', 'max:25'],
             'grade' => ['required', 'string', 'max:60'],
@@ -92,7 +102,12 @@ class DevelopmentController extends Controller
 
     private function newChild(int $userId, array $data): DevelopmentChild
     {
-        return DevelopmentChild::create(['user_id' => $userId, 'name' => $data['child_name'], 'age' => $data['age'], 'grade' => $data['grade'], 'school' => $data['school'] ?? null, 'solution' => $data['solution'] ?? null, 'pwd_status' => $data['pwd_status'] ?? null, 'pwd_details' => $data['pwd_details'] ?? null, 'support_notes' => $data['support_notes'] ?? null]);
+        $child = DevelopmentChild::create(['user_id' => $userId, 'name' => $data['child_name'], 'age' => $data['age'], 'grade' => $data['grade'], 'school' => $data['school'] ?? null, 'solution' => $data['solution'] ?? null, 'pwd_status' => $data['pwd_status'] ?? null, 'pwd_details' => $data['pwd_details'] ?? null, 'support_notes' => $data['support_notes'] ?? null]);
+        if (isset($data['quick_questions'])) {
+            $child->assessments()->create(['answers' => ['connection' => $data['quick_questions']], 'step' => 1]);
+        }
+
+        return $child;
     }
 
     public function home(Request $r)
@@ -105,12 +120,113 @@ class DevelopmentController extends Controller
         return $this->getConnected($request);
     }
 
-    public function storeChild(Request $r)
+    public function storeChild(Request $r): RedirectResponse
     {
         $data = $r->validate($this->childRules());
-        $child = $this->newChild($r->user()->id, $data);
+        $child = DB::transaction(fn (): DevelopmentChild => $this->newChild($r->user()->id, $data));
 
         return redirect()->route('development.assessment', [$child, 1]);
+    }
+
+    public function journey(Request $request, int $child): RedirectResponse
+    {
+        $child = $this->ownedChild($request, $child);
+        $assessment = $this->assessmentFor($child);
+        if (data_get($assessment?->answers, 'reasons') || ($assessment?->step > 1 && ! data_get($assessment->answers, 'details_confirmed'))) {
+            return redirect()->route('development.assessment', [$child, $assessment->step]);
+        }
+        if (! data_get($assessment?->answers, 'details_confirmed')) {
+            return redirect()->route('development.child.details', $child);
+        }
+        foreach (config('development.mindset_questions') as $number => $question) {
+            if (! data_get($assessment->answers, 'personal_development.'.$question['key'])) {
+                return redirect()->route('development.mindset', [$child, $number]);
+            }
+        }
+
+        return redirect()->route('development.assessment.complete', $child);
+    }
+
+    public function childDetails(Request $request, int $child): View
+    {
+        return view('development.child-details', ['child' => $this->ownedChild($request, $child), 'activeStage' => 2]);
+    }
+
+    public function saveChildDetails(Request $request, int $child): RedirectResponse
+    {
+        $child = $this->ownedChild($request, $child);
+        $rules = array_intersect_key($this->childRules(), array_flip(['child_name', 'age', 'grade', 'school', 'pwd_status', 'pwd_details']));
+        $rules['pwd_status'] = ['required', Rule::in(['yes', 'no', 'prefer_not_to_say'])];
+        $data = $request->validate($rules);
+        DB::transaction(function () use ($child, $data): void {
+            $child->update(['name' => $data['child_name'], 'age' => $data['age'], 'grade' => $data['grade'], 'school' => $data['school'] ?? null, 'pwd_status' => $data['pwd_status'], 'pwd_details' => $data['pwd_details'] ?? null]);
+            $assessment = $this->assessmentFor($child) ?? $child->assessments()->create(['answers' => [], 'step' => 1]);
+            $assessment->update(['answers' => array_merge($assessment->answers ?? [], ['details_confirmed' => true]), 'consented_at' => null]);
+        });
+
+        return redirect()->route('development.mindset', [$child, 1]);
+    }
+
+    public function mindset(Request $request, int $child, int $question = 1): View|RedirectResponse
+    {
+        $questions = config('development.mindset_questions');
+        abort_unless(isset($questions[$question]), 404);
+        $child = $this->ownedChild($request, $child);
+        $assessment = $this->assessmentFor($child);
+        if (! data_get($assessment?->answers, 'details_confirmed')) {
+            return redirect()->route('development.child.details', $child);
+        }
+        foreach ($questions as $number => $item) {
+            if ($number < $question && ! data_get($assessment->answers, 'personal_development.'.$item['key'])) {
+                return redirect()->route('development.mindset', [$child, $number]);
+            }
+        }
+
+        return view('development.mindset-question', ['child' => $child, 'assessment' => $assessment, 'questionNumber' => $question, 'question' => $questions[$question], 'activeStage' => 3]);
+    }
+
+    public function saveMindset(Request $request, int $child, int $question): RedirectResponse
+    {
+        $questions = config('development.mindset_questions');
+        abort_unless(isset($questions[$question]), 404);
+
+        return DB::transaction(function () use ($request, $child, $question, $questions): RedirectResponse {
+            $child = DevelopmentChild::query()->where('user_id', $request->user()->id)->lockForUpdate()->findOrFail($child);
+            $assessment = $this->assessmentFor($child);
+            abort_unless(data_get($assessment?->answers, 'details_confirmed'), 422);
+            foreach ($questions as $number => $item) {
+                abort_if($number < $question && ! data_get($assessment->answers, 'personal_development.'.$item['key']), 422);
+            }
+            $data = $request->validate(['answer' => ['required', Rule::in(array_keys($questions[$question]['options']))]]);
+            $answers = $assessment->answers;
+            $answers['personal_development'][$questions[$question]['key']] = $data['answer'];
+            $assessment->update(['answers' => $answers, 'step' => $question === count($questions) ? max($assessment->step, 5) : $assessment->step, 'consented_at' => null]);
+
+            return $question === count($questions)
+                ? redirect()->route('development.assessment.complete', $child)
+                : redirect()->route('development.mindset', [$child, $question + 1]);
+        });
+    }
+
+    public function assessmentComplete(Request $request, int $child): View|RedirectResponse
+    {
+        $child = $this->ownedChild($request, $child);
+        $assessment = $this->assessmentFor($child);
+        if (! data_get($assessment?->answers, 'details_confirmed')) {
+            return redirect()->route('development.child.details', $child);
+        }
+        $questions = config('development.mindset_questions');
+        foreach ($questions as $number => $question) {
+            if (! in_array(data_get($assessment->answers, 'personal_development.'.$question['key']), array_keys($question['options']), true)) {
+                return redirect()->route('development.mindset', [$child, $number]);
+            }
+        }
+
+        return view('development.assessment-complete', [
+            'child' => $child, 'assessment' => $assessment, 'activeStage' => 4,
+            'questionCount' => count($questions),
+            'assessedAreas' => array_values(array_unique(array_column($questions, 'area'))),
+        ]);
     }
 
     private function ownedChild(Request $r, int $id): DevelopmentChild
@@ -123,7 +239,7 @@ class DevelopmentController extends Controller
         return $child->assessments()->latest('id')->first();
     }
 
-    public function assessment(Request $r, int $child, int $step = 1)
+    public function assessment(Request $r, int $child, int $step = 1): View|RedirectResponse
     {
         abort_unless($step >= 1 && $step <= 5, 404);
         $child = $this->ownedChild($r, $child);
@@ -132,7 +248,14 @@ class DevelopmentController extends Controller
             return redirect()->route('development.assessment', [$child, $assessment?->step ?? 1]);
         }
 
-        return view('development.assessment', compact('child', 'assessment', 'step'));
+        $registeredSolutionTitle = null;
+        if ($step === 1 && (int) $r->session()->get('account_created_child') === $child->id) {
+            $page = SitePage::query()->where('slug', 'solutions')->first();
+            $solutions = ($page ?? new SitePage)->solutionDetails();
+            $registeredSolutionTitle = $solutions[$child->solution ?? 'performance-confidence']['title'] ?? 'Your selected support';
+        }
+
+        return view('development.assessment', compact('child', 'assessment', 'step', 'registeredSolutionTitle'));
     }
 
     public function saveAssessment(Request $r, int $child, int $step): RedirectResponse
@@ -187,10 +310,17 @@ class DevelopmentController extends Controller
         });
     }
 
-    public function report(Request $r, int $assessment)
+    public function report(Request $r, int $assessment, PersonalDevelopmentReport $personalReport): View
     {
         $assessment = DevelopmentAssessment::whereHas('child', fn ($q) => $q->where('user_id', $r->user()->id))->with('child')->findOrFail($assessment);
         abort_unless($assessment->consented_at, 404);
+
+        if (data_get($assessment->answers, 'personal_development')) {
+            return view('development.personal-report', [
+                'assessment' => $assessment, 'child' => $assessment->child, 'activeStage' => 4,
+                'report' => $personalReport->build($assessment),
+            ]);
+        }
 
         return view('development.report', ['assessment' => $assessment, 'sample' => false]);
     }

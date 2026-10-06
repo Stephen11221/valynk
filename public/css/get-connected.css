@@ -102,3 +102,133 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 1250px) { .connection-shell { grid-template-columns: 32% minmax(0, 1fr); } .connection-story { padding: 30px 22px; } .connection-brand img { height: 65px; } .connection-story h2 { font-size: 31px; } .connection-story-intro { font-size: 17px; } .connection-heading { display: block; } .connection-stepper { width: 90%; max-width: 500px; margin-top: 18px; } .connection-content { padding-left: 22px; } .connection-columns { gap: 15px; grid-template-columns: minmax(0, 1fr) 28%; } .connection-next li { display: block; padding-bottom: 40px; } .connection-step-icon { width: 42px; height: 42px; font-size: 21px; margin-bottom: 8px; } .connection-next-arrow { left: 12px; bottom: 8px; } .connection-next h2 { font-size: 17px; } .connection-trust { padding-inline: 22px; } .connection-trust > div { padding-inline: 15px; gap: 12px; } }
 @media (max-width: 950px) { body { padding: 12px; } .connection-shell { grid-template-columns: 1fr; } .connection-story { padding: 25px; min-height: 260px; } .connection-brand { margin-bottom: 14px; } .connection-brand img { width: 230px; height: 52px; } .connection-story-copy { max-width: 65%; } .connection-story h2 { font-size: 29px; } .connection-story h2 br { display: none; } .connection-story h2 span::before { content: ' '; } .connection-story-intro { font-size: 16px; } .connection-highlights, .connection-tagline { display: none; } .connection-portrait { right: -8%; width: 60%; height: 115%; mask-image: linear-gradient(90deg, transparent, #000 35%); } .connection-story::before { top: -90px; right: -250px; } .connection-content { padding: 25px; } .connection-heading { display: flex; flex-wrap: wrap; } .connection-heading h1 { font-size: 32px; } .connection-stepper { width: 100%; } .connection-columns { grid-template-columns: minmax(0, 1fr) 240px; gap: 20px; } .connection-next li { display: flex; gap: 10px; } .connection-next h2 { font-size: 19px; } .connection-fields { gap: 12px; } .connection-trust { grid-template-columns: 1fr 1fr; gap: 20px; } .connection-trust > div { padding: 0; border: 0 !important; } }
 @media (max-width: 650px) { body { padding: 8px; } .connection-shell { border-radius: 14px; } .connection-story { padding: 22px 18px; min-height: 255px; } .connection-story-copy { max-width: 78%; } .connection-story h2 { font-size: 26px; } .connection-story-intro { font-size: 14px; } .connection-brand img { width: 190px; } .connection-content { padding: 22px 16px; } .connection-heading { padding: 0; } .connection-heading h1 { font-size: 31px; } .connection-heading > div > p { font-size: 16px; } .connection-columns { grid-template-columns: 1fr; gap: 25px; } .connection-stepper { min-width: 0; max-width: none; } .connection-stepper li { font-size: 10px; } .connection-stepper li > span { width: 34px; height: 34px; font-size: 16px; } .connection-stepper li::before { top: 16px; } .connection-fields { grid-template-columns: 1fr; gap: 14px; } .connection-form legend { font-size: 21px; margin-bottom: 12px; } .connection-field > label { font-size: 14px; } .connection-input input, .connection-input select, .connection-input textarea { font-size: 16px; height: 45px; } .connection-input > i { top: 13px; } .connection-input .password-toggle { height: 43px; } .connection-input textarea { height: 110px; font-size: 14px; } .connection-child { margin-top: 22px !important; padding-top: 16px !important; } .connection-consent { font-size: 13px; margin-top: 14px; } .connection-submit { min-height: 48px; font-size: 15px; } .connection-next { padding: 22px; } .connection-next li { padding-bottom: 38px; gap: 18px; } .connection-next li p { font-size: 14px; } .connection-step-icon { width: 50px; height: 50px; font-size: 24px; } .connection-next-arrow { left: 18px; } .connection-trust { grid-template-columns: 1fr; padding: 24px; gap: 20px; } .connection-trust i { width: 43px; height: 43px; } }
+
+/* Get Connected sign-up and quick questions. */
+.connection-onboarding { padding: 0; background: #fff; color: #080b86; }
+.connection-onboarding .connection-shell { grid-template-columns: 46% minmax(0, 1fr); max-width: none; min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+.connection-onboarding .connection-close { width: 30px; height: 30px; font-size: 19px; top: 8px; right: 8px; }
+.connection-onboarding .connection-story { display: flex; flex-direction: column; padding: 24px 7.8% 48px; min-height: 100vh; }
+.connection-onboarding .connection-story::before { display: none; }
+.connection-onboarding .connection-story::after { background: linear-gradient(90deg, #001019e8, #00101950 60%, #00101915), linear-gradient(0deg, #001019 2%, #001019d9 28%, transparent 76%); }
+.connection-onboarding .connection-portrait { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% center; mask-image: none; }
+.connection-onboarding .connection-brand { margin: 0 0 32px; }
+.connection-onboarding .connection-brand img { width: 230px; height: 60px; }
+.connection-onboarding .connection-story-copy { max-width: 74%; }
+.connection-solution-label { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+.connection-solution-label > span { display: grid; place-items: center; flex: 0 0 52px; height: 52px; border-radius: 50%; background: #ff7800; font-size: 24px; font-weight: 800; }
+.connection-solution-label p { color: #ff8b00; text-transform: uppercase; font-size: 14px; line-height: 1.4; font-weight: 600; }
+.connection-onboarding .connection-story h2 { font-size: clamp(29px, 2.5vw, 40px); line-height: 1.08; color: #fff; }
+.connection-onboarding .connection-story-intro { font-size: 17px; line-height: 1.45; margin-top: 18px; }
+.connection-focus-areas { display: grid; gap: 22px; list-style: none; padding: 0; margin: 28px 0 38px; }
+.connection-focus-areas li { position: relative; padding-left: 30px; }
+.connection-focus-areas li::before { content: ''; position: absolute; left: 2px; top: 2px; bottom: 2px; width: 6px; border-radius: 4px; background: #ff8100; }
+.connection-focus-areas h3 { font-size: 16px; line-height: 1.25; margin-bottom: 5px; }
+.connection-focus-areas p { font-size: 15px; line-height: 1.35; }
+.connection-safe { position: relative; margin-top: 8px; padding: 20px 30px 20px 40px; border-radius: 14px; border-left: 5px solid #ff7800; background: #ffffff0d; }
+.connection-safe h3 { margin-bottom: 5px; font-size: 20px; }
+.connection-safe p { font-size: 17px; line-height: 1.4; }
+.connection-onboarding .connection-content { padding: 14px 4.4% 22px 5.8%; }
+.connection-onboarding .connection-heading { display: flex; flex-direction: column; gap: 20px; margin-bottom: 12px; padding: 0; }
+.connection-onboarding .connection-stepper { width: 100%; min-width: 0; max-width: none; margin: 0; }
+.connection-onboarding .connection-stepper li { font-size: 12px; }
+.connection-onboarding .connection-stepper li::before { height: 2px; top: 14px; background: #c3cbe5; }
+.connection-onboarding .connection-stepper li > span { width: 30px; height: 30px; font-size: 16px; background: #8798c9; color: #fff; margin-bottom: 5px; }
+.connection-onboarding .connection-stepper [aria-current] > span { background: #ff4900; }
+.connection-onboarding .connection-heading h1 { font-size: clamp(32px, 3.1vw, 48px); color: #080b86; letter-spacing: -1.4px; }
+.connection-onboarding .connection-heading > div > p { font-size: 17px; line-height: 1.25; margin-top: 3px; }
+.connection-selected { display: flex; align-items: center; gap: 18px; padding: 10px 20px; margin-bottom: 8px; border-radius: 10px; background: #fff3e9; }
+.connection-selected > span { display: grid; place-items: center; flex: 0 0 46px; height: 46px; border-radius: 9px; background: #ff4b00; color: #fff; font-size: 30px; }
+.connection-selected > div { min-width: 0; }
+.connection-selected p { color: #ff4200; font-size: 13px; font-weight: 700; }
+.connection-selected h2 { font-size: 18px; line-height: 1.25; letter-spacing: -.5px; }
+.connection-selected a { margin-left: auto; color: #e94100; font-size: 14px; }
+.connection-onboarding .connection-columns { display: block; }
+.connection-questions { display: grid; gap: 6px; }
+.connection-onboarding .connection-question { position: relative; min-width: 0; padding: 10px 12px 12px 60px; border-radius: 10px; background: #f2f8fd; }
+.connection-onboarding .connection-question legend { float: left; font-size: 16px; line-height: 1.25; margin-bottom: 0; letter-spacing: -.4px; }
+.connection-question legend > span { position: absolute; top: 7px; left: 12px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #ff4b00; color: #fff; font-size: 20px; }
+.connection-question > p { clear: both; font-size: 12px; line-height: 1.3; margin-bottom: 6px; }
+.connection-reason-options { clear: both; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px 10px; }
+.connection-reason-options label { display: flex; align-items: center; gap: 13px; min-width: 0; padding: 8px 12px; border-radius: 8px; background: #edf5ff; font-size: 13px; line-height: 1.25; cursor: pointer; }
+.connection-question input { flex: 0 0 18px; width: 18px; height: 18px; margin: 0; accent-color: #0a0fa8; }
+.connection-reason-options label:has(:checked) { background: #e1e9ff; outline: 1px solid #b2baf3; }
+.connection-radio-options { clear: both; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 7px 0 0; }
+.connection-radio-options label { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.3; cursor: pointer; }
+.connection-timelines { padding-top: 9px; }
+.connection-timelines label { flex: 1; }
+.connection-age { clear: both; max-width: 425px; padding-top: 8px; }
+.connection-onboarding .connection-account-fields { border-top: 1px solid #b5baf3; margin-top: 7px; padding-top: 5px; }
+.connection-onboarding .connection-account-fields legend { float: left; font-size: 19px; margin-bottom: 8px; }
+.connection-onboarding .connection-account-fields .connection-fields { clear: both; }
+.connection-onboarding .connection-fields { gap: 8px 28px; }
+.connection-onboarding .connection-field > label, .connection-field-label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 400; line-height: 1.2; }
+.connection-onboarding .connection-input input, .connection-onboarding .connection-input select { height: 36px; border-color: #c5ccec; color: #080b86; font-size: 13px; }
+.connection-onboarding .connection-input input::placeholder { color: #8a95cb; }
+.connection-onboarding .connection-input:has(.connection-country-code) { gap: 5px; }
+.connection-onboarding .connection-country-code { flex: 0 0 102px; width: 102px; padding-left: 5px; }
+.connection-onboarding .connection-input .password-toggle { height: 34px; color: #0a0fa8; }
+.connection-relationship { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.connection-relationship label { position: relative; cursor: pointer; }
+.connection-relationship input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.connection-relationship span { color: #080b86; display: flex; align-items: center; justify-content: center; gap: 17px; height: 36px; border: 1px solid #c5ccec; border-radius: 5px; background: white; font-size: 13px; }
+.connection-relationship i { font-size: 19px; }
+.connection-relationship input:checked + span { border-color: #ff4b00; background: #ff4b00; color: #fff; }
+.connection-relationship input:focus-visible + span { outline: 3px solid #007aca; outline-offset: 2px; }
+.connection-child-details { margin-top: 10px; border: 1px solid #d7ddf0; border-radius: 7px; padding: 9px 12px; font-size: 13px; }
+.connection-child-details summary { font-weight: 700; cursor: pointer; }
+.connection-onboarding .connection-child { border: 0 !important; margin-top: 10px !important; padding-top: 0 !important; }
+.connection-onboarding .connection-child legend { font-size: 17px; }
+.connection-onboarding .connection-submit { min-height: 40px; padding: 9px; background: #ff4b00; font-size: 15px; }
+.connection-onboarding .connection-submit:hover { background: #df4000; }
+.connection-onboarding .connection-consent { margin: 10px 0; font-size: 12px; }
+.connection-onboarding .connection-privacy { font-size: 12px; margin-bottom: 8px; }
+@media (max-width: 1200px) {
+    .connection-onboarding .connection-shell { grid-template-columns: 40% minmax(0, 1fr); }
+    .connection-onboarding .connection-story { padding-inline: 28px; }
+    .connection-onboarding .connection-story-copy { max-width: 100%; }
+    .connection-onboarding .connection-story h2 { font-size: 33px; }
+    .connection-onboarding .connection-content { padding-inline: 25px; }
+    .connection-reason-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .connection-radio-options { flex-wrap: wrap; justify-content: flex-start; gap: 14px 20px; }
+    .connection-timelines label { flex-basis: 40%; }
+    .connection-onboarding .connection-fields { gap: 10px 14px; }
+}
+@media (max-width: 950px) {
+    .connection-onboarding .connection-shell { grid-template-columns: 1fr; }
+    .connection-onboarding .connection-story { min-height: 340px; padding: 24px; }
+    .connection-onboarding .connection-story-copy { max-width: 65%; }
+    .connection-onboarding .connection-story-intro { max-width: 500px; }
+    .connection-onboarding .connection-portrait { width: 100%; height: 100%; right: 0; object-position: 70% 35%; }
+    .connection-onboarding .connection-story::after { background: linear-gradient(90deg, #001019f2, #001019b3 50%, #00101930); }
+    .connection-focus-areas, .connection-safe { display: none; }
+    .connection-onboarding .connection-brand { margin-bottom: 16px; }
+    .connection-solution-label { margin-bottom: 15px; }
+    .connection-onboarding .connection-content { padding: 22px 24px; }
+}
+@media (max-width: 650px) {
+    .connection-onboarding .connection-story { padding: 22px 18px; }
+    .connection-onboarding .connection-story-copy { max-width: 90%; }
+    .connection-onboarding .connection-story h2 { font-size: 29px; }
+    .connection-onboarding .connection-story-intro { font-size: 15px; }
+    .connection-onboarding .connection-brand img { width: 195px; height: 48px; }
+    .connection-solution-label p { font-size: 12px; }
+    .connection-onboarding .connection-content { padding: 20px 16px; }
+    .connection-onboarding .connection-stepper li { font-size: 10px; }
+    .connection-onboarding .connection-heading > div > p { font-size: 16px; }
+    .connection-selected { padding: 12px; gap: 10px; }
+    .connection-selected h2 { font-size: 14px; }
+    .connection-selected > span { flex-basis: 36px; height: 36px; font-size: 23px; }
+    .connection-selected a { font-size: 12px; }
+    .connection-onboarding .connection-question { padding: 12px 10px 14px 48px; }
+    .connection-onboarding .connection-question legend { font-size: 15px; }
+    .connection-question legend > span { left: 8px; top: 10px; width: 30px; height: 30px; font-size: 17px; }
+    .connection-reason-options { grid-template-columns: 1fr; }
+    .connection-reason-options label { font-size: 14px; padding: 10px; }
+    .connection-radio-options label { font-size: 14px; }
+    .connection-onboarding .connection-fields { grid-template-columns: 1fr; gap: 12px; }
+    .connection-onboarding .connection-input input, .connection-onboarding .connection-input select { height: 44px; font-size: 16px; }
+    .connection-onboarding .connection-input .password-toggle { height: 42px; }
+    .connection-relationship span { height: 44px; font-size: 15px; }
+    .connection-onboarding .connection-field > label, .connection-field-label { font-size: 14px; }
+    .connection-onboarding .connection-submit { min-height: 48px; }
+}

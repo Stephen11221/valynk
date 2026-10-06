@@ -1,3 +1,5 @@
+@php($focusedAssessment = $step === 1)
+@php($usesFamilyDashboard = !$focusedAssessment && in_array(auth()->user()?->account_type, ['Family', 'Partner / Other'], true))
 @php($checkoutPage = $checkoutPage ?? false)
 @php($plansPage = $plansPage ?? false)
 @php($journeyStage = $step === 5 ? 4 : ($step === 4 ? 3 : 2))
@@ -14,9 +16,20 @@
     <link rel="stylesheet" href="{{ asset('css/get-connected.css') }}?v={{ filemtime(public_path('css/get-connected.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/assessment.css') }}?v={{ filemtime(public_path('css/assessment.css')) }}">
     <script src="{{ asset('js/assessment.js') }}?v={{ filemtime(public_path('js/assessment.js')) }}" defer></script>
+@if($usesFamilyDashboard)
+<link rel="stylesheet" href="{{ asset('css/family-dashboard.css') }}?v={{ filemtime(public_path('css/family-dashboard.css')) }}">
+<script src="{{ asset('js/family-dashboard.js') }}?v={{ filemtime(public_path('js/family-dashboard.js')) }}" defer></script>
+@endif
 </head>
-<body class="assessment-page {{ $step === 2 ? 'assessment-needs-page' : ($step >= 3 ? 'assessment-support-page'.($step === 4 ? ' assessment-child-page' : ($step === 5 ? ' assessment-review-page'.($plansPage ? ' assessment-plans-page'.($checkoutPage ? ' assessment-checkout-page' : '') : '') : '')) : '') }}">
+<body class="{{ $focusedAssessment ? 'focused-assessment-page' : '' }} {{ $usesFamilyDashboard ? 'family-dashboard family-assessment-page' : '' }} assessment-page {{ $step === 2 ? 'assessment-needs-page' : ($step >= 3 ? 'assessment-support-page'.($step === 4 ? ' assessment-child-page' : ($step === 5 ? ' assessment-review-page'.($plansPage ? ' assessment-plans-page'.($checkoutPage ? ' assessment-checkout-page' : '') : '') : '')) : '') }}">
+@if($usesFamilyDashboard)
+@include('account.partials.dashboard-header')
+@include('account.partials.dashboard-sidebar')
+@endif
 <a class="connection-skip" href="#assessment-form">Skip to assessment</a>
+@if($focusedAssessment)
+@include('development.assessment-focused')
+@else
 <main class="connection-shell assessment-shell">
     <a class="connection-close" href="{{ route('development.home') }}" aria-label="Close and return to your dashboard"><i class="fa-solid fa-xmark" aria-hidden="true"></i></a>
     <aside class="connection-story assessment-story">
@@ -89,9 +102,13 @@
             @else
                 @include($checkoutPage ? 'development.checkout-details' : ($plansPage ? 'development.plan-options' : 'development.assessment-review'))
             @endif
-            <div class="assessment-actions"><a class="assessment-back" href="{{ $checkoutPage ? route('development.plans', ['assessment' => $assessment?->id, 'plan' => $plan, 'method' => $method]) : ($child && $step > 1 ? route('development.assessment', [$child, $plansPage ? 5 : $step - 1]) : route('development.home')) }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back</a><button class="connection-submit" type="submit" @if($checkoutPage) disabled aria-describedby="payment-unavailable" @endif>{{ $step === 5 ? ($checkoutPage ? 'Complete Payment — Unavailable' : ($plansPage ? 'Review Payment Options' : 'Preview Report & Choose a Plan')) : 'Next' }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button><a class="assessment-help" href="{{ route('contact') }}"><strong>Need Help?</strong><i class="fa-regular fa-comment-dots" aria-hidden="true"></i><span>Contact us</span></a></div>
+            <div class="assessment-actions"><a class="assessment-back" href="{{ $checkoutPage ? route('development.plans', ['assessment' => $assessment?->id, 'plan' => $plan, 'method' => $method]) : ($child && $step > 1 ? route('development.assessment', [$child, $plansPage ? 5 : $step - 1]) : route('dashboard')) }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ $step === 1 ? 'Dashboard' : 'Back' }}</a><button class="connection-submit" type="submit" @if($checkoutPage) disabled aria-describedby="payment-unavailable" @endif>{{ $step === 5 ? ($checkoutPage ? 'Complete Payment — Unavailable' : ($plansPage ? 'Review Payment Options' : 'Preview Report & Choose a Plan')) : 'Next' }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button><a class="assessment-help" href="{{ route('contact') }}"><strong>Need Help?</strong><i class="fa-regular fa-comment-dots" aria-hidden="true"></i><span>Contact us</span></a></div>
         </form>
     </section>
 </main>
+@endif
+@if(!empty($registeredSolutionTitle))
+    @include('development.account-ready')
+@endif
 </body>
 </html>

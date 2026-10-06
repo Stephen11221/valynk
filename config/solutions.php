@@ -3,13 +3,13 @@
 return [
     'performance-confidence' => [
         'title' => 'Performance, Confidence & Personal Development',
-        'description' => 'Build the mindset, habits and personal capabilities for consistent high performance and a fulfilling life.',
+        'description' => "This solution helps children and young people develop the right mindset, habits and inner strength to handle school, relationships and life's challenges with confidence.",
         'tone' => 'pink',
         'icon' => 'chart-line',
         'photo' => 0,
         'image_url' => null,
-        'tagline' => 'Confident. Capable. Prepared for what’s next.',
-        'age_range' => 'For ages 5–25 (Primary to Young Adulthood)',
+        'tagline' => 'Stronger Choices Brighter Futures',
+        'age_range' => 'Children and young people aged 5–18 who need support to build confidence, resilience and a positive self-image.',
         'highlights' => [
             'Stronger Mindset',
             'Better Habits',
@@ -23,7 +23,7 @@ return [
             'Stronger relationships and communication',
             'Higher performance in school, life and future opportunities',
         ],
-        'support_intro' => 'Four core areas that build a stronger, more resilient and high-performing future.',
+        'support_intro' => 'Based on VALYNK’s approved matching framework for this solution.',
         'cta_label' => 'Get Connected',
         'cta_route' => 'get-connected',
         'is_published' => true,
@@ -31,10 +31,10 @@ return [
             [
                 'title' => 'Positive Mindset & Self-Belief',
                 'points' => [
-                    'Growth mindset and resilience',
-                    'Healthy self-talk and identity',
-                    'Overcoming limiting beliefs',
-                    'Confidence in new situations',
+                    'Positive self-talk',
+                    'Strengths awareness',
+                    'Challenge orientation',
+                    'Recovery from setbacks',
                 ],
                 'image_url' => null,
                 'photo' => 0,
@@ -44,10 +44,11 @@ return [
             [
                 'title' => 'Focus, Discipline & Performance Habits',
                 'points' => [
-                    'Improved concentration',
-                    'Time management skills',
-                    'Consistent study and work habits',
-                    'Reduced distractions',
+                    'Distraction control',
+                    'Routines and consistency',
+                    'Procrastination management',
+                    'Priority management',
+                    'Follow-through',
                 ],
                 'image_url' => null,
                 'photo' => 1,
@@ -57,10 +58,11 @@ return [
             [
                 'title' => 'Motivation, Purpose & Goal Achievement',
                 'points' => [
-                    'Clarity of purpose and direction',
-                    'Setting and achieving meaningful goals',
-                    'Persistence and grit',
-                    'Turning potential into action',
+                    'Purpose clarity',
+                    'Goal setting',
+                    'Action planning',
+                    'Persistence',
+                    'Progress tracking',
                 ],
                 'image_url' => null,
                 'photo' => 2,
@@ -70,10 +72,11 @@ return [
             [
                 'title' => 'Relationships, Communication & Social Confidence',
                 'points' => [
-                    'Effective communication skills',
-                    'Positive peer and family relationships',
-                    'Leadership and teamwork',
-                    'Confidence in social and public settings',
+                    'Self-expression',
+                    'Interpersonal awareness',
+                    'Collaboration',
+                    'Peer relationships',
+                    'Managing social pressure',
                 ],
                 'image_url' => null,
                 'photo' => 3,

@@ -1,73 +1,33 @@
 @extends('layouts.account')
-
-@section('title', 'Account Dashboard')
-@section('body-class', 'account-reference')
-
+@section('title', $user->account_type === 'Family' ? 'Family Dashboard' : 'Account Dashboard')
+@section('body-class', 'family-dashboard')
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="{{ asset('css/account-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/family-dashboard.css') }}?v={{ filemtime(public_path('css/family-dashboard.css')) }}">
 @endpush
-
-@section('content')
-<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:15px;padding:20px;margin-bottom:24px;border:1px solid #e5dff4;border-radius:12px;background:#f6f0ff;color:#151447"><div><strong style="font-size:20px">Your child’s development journey</strong><p style="margin:5px 0">Assess needs, explore providers and follow your next steps.</p></div><a href="{{ route('development.home') }}" style="background:#5820a3;color:white;padding:12px 20px;border-radius:7px;font-weight:700">Open family journey →</a></div>
-@include('account.partials.status')
-<div class="account-board">
-    <section class="account-welcome" aria-labelledby="welcome-title">
-        <p class="account-eyebrow">{{ $user->account_type }} account</p>
-        <h1 id="welcome-title">Welcome to VALYNK.<br><span>Your next step starts here.</span></h1>
-        <div class="account-rule"></div>
-        <p class="account-intro">A world of trusted support and opportunities, connected around you.</p>
-        <div class="account-orbit" role="img" aria-label="VALYNK connects learning and education, child development, health and wellbeing, care and support, enrichment and talent, and organisation solutions.">
-            <div class="account-orbit-ring"></div>
-            <div class="account-orbit-center"><img src="{{ asset('logo/logo.jpeg') }}" alt="VALYNK"></div>
-            @foreach ([
-                ['learning', 'graduation-cap', 'Learning & Education'],
-                ['child', 'brain', 'Child Development'],
-                ['health', 'heart', 'Health & Wellbeing'],
-                ['care', 'briefcase', 'Care & Support'],
-                ['talent', 'star', 'Enrichment & Talent'],
-                ['organisation', 'building-columns', 'Organisation Solutions'],
-            ] as [$class, $icon, $label])
-                <div class="account-orbit-node {{ $class }}" aria-hidden="true"><i class="fa-solid fa-{{ $icon }}"></i><span>{{ $label }}</span></div>
-            @endforeach
-        </div>
-        <div class="account-trust"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><div><strong>Trusted. Verified. Matched for You.</strong><p>We take the guesswork out of finding the right support.</p></div></div>
-    </section>
-    <section class="account-panel" aria-labelledby="dashboard-title">
-        <header class="account-panel-heading">
-            <h2 id="dashboard-title">{{ $user->account_type === 'Partner / Other' ? 'Your Partner Dashboard' : 'Your Dashboard' }}</h2>
-            <p>Welcome, <strong>{{ $user->name }}</strong>. Make yourself at home.</p>
-        </header>
-        <div class="account-section-heading"><span>1</span><div><h3>Explore your opportunities</h3><p>Find the right place to take your next step.</p></div></div>
-        <div class="account-actions">
-            @foreach ([
-                ['solutions', 'user-group', 'Find support', 'Explore solutions for yourself and your community.', 'purple'],
-                ['providers', 'users', 'Providers', 'Discover services and the people behind them.', 'orange'],
-                ['institutions', 'building', 'Institutions', 'Connect your organisation with opportunities.', 'green'],
-                ['about', 'handshake', 'Partnerships', 'Learn how we can create greater impact together.', 'blue'],
-            ] as [$destination, $icon, $label, $description, $color])
-                <a class="account-action {{ $color }}" href="{{ route($destination) }}"><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i><strong>{{ $label }}</strong><p>{{ $description }}</p><span aria-hidden="true">→</span></a>
-            @endforeach
-        </div>
-        <div class="account-section-heading"><span>2</span><div><h3>Your account details</h3><p>Keep your information up to date.</p></div></div>
-        <dl class="account-info">
-            @foreach ([
-                'Full name' => $user->name,
-                'Email address' => $user->email,
-                'Phone number' => $user->phone ?: 'Not added yet',
-                'Location' => $user->location ?: 'Not added yet',
-                'Account type' => $user->account_type,
-                'Member since' => $user->created_at?->format('d M Y') ?: 'Not available',
-            ] as $label => $value)
-                <div><dt>{{ $label }}</dt><dd>{{ $value }}</dd></div>
-            @endforeach
-        </dl>
-        <a class="account-edit" href="{{ route('account.profile.edit') }}">Edit my profile <span aria-hidden="true">→</span></a>
-        <p class="account-privacy"><i class="fa-solid fa-lock" aria-hidden="true"></i> Your information is safe with us. We respect your privacy.</p>
-    </section>
-</div>
+@section('header')
+    @include('account.partials.dashboard-header')
 @endsection
-
-@section('footer')
-@include('account.partials.footer')
+@section('content')
+<div class="family-workspace">
+    @include('account.partials.status')
+    <section class="family-welcome"><div><p>{{ $user->account_type === 'Family' ? 'Your Family Dashboard' : 'Your Partner Dashboard' }}</p><h1>Welcome back, {{ $user->name }}!</h1><p>{{ $selectedChild ? 'Your child’s journey is in progress. Keep going!' : 'Your family’s next step starts here.' }} <i class="fa-regular fa-sun" aria-hidden="true"></i></p></div><img src="{{ asset('images/about/family.png') }}" alt=""><span>Small Steps.<br>Real Growth.<br>Brighter Futures!</span></section>
+    <div class="family-overview">
+        <section id="assessment" class="family-card family-programme">
+            <div class="family-programme-main"><img src="{{ $selectedSolution['display_image_url'] ?? asset('images/solutions/confidence-hero.png') }}" alt=""><div><span class="family-pill">{{ $latestAssessment?->consented_at ? 'ASSESSMENT COMPLETE' : ($selectedChild ? 'YOUR NEXT STEP' : 'GET STARTED') }}</span><h2>{{ $selectedChild ? ($selectedSolution['title'] ?? 'Your child’s support journey') : 'Start your family’s support journey' }}</h2><strong>{{ $selectedChild ? $selectedChild->name.' · Age '.$selectedChild->age : 'Personalised support for your child' }}</strong><div class="family-programme-facts"><p><i class="fa-regular fa-calendar-days" aria-hidden="true"></i><span>{{ $selectedChild ? $selectedChild->created_at->format('d M Y') : 'At your own pace' }}<small>{{ $selectedChild ? 'Profile created' : 'Create a child profile' }}</small></span></p><p><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>{{ $user->location ?: 'Location not added' }}<small>Your family’s location</small></span></p><p><i class="fa-solid fa-people-group" aria-hidden="true"></i><span>{{ $children->count() }} child {{ $children->count() === 1 ? 'profile' : 'profiles' }}<small>Support that fits your family</small></span></p></div></div></div>
+            <div id="payments" class="family-programme-status"><div><i class="fa-solid fa-circle-check" aria-hidden="true"></i><p>Account status<strong>Ready</strong><small>Your information is saved</small></p></div><div><i class="fa-solid fa-credit-card" aria-hidden="true"></i><p>Payments<strong>No payments recorded</strong><small>Review options after assessment</small></p></div><div><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i><p>Assessment status<strong>{{ $latestAssessment?->consented_at ? 'Completed' : ($latestAssessment ? 'In progress' : 'Not started') }}</strong></p></div></div>
+            <div class="family-programme-actions"><a class="family-primary" href="{{ $selectedChild ? route('development.journey', $selectedChild) : route('development.child') }}">{{ $selectedChild ? ($latestAssessment?->consented_at ? 'Review Assessment' : 'Continue Assessment') : 'Add Your Child' }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="{{ route('development.providers') }}">Explore Providers</a>@if($latestAssessment?->consented_at)<a href="{{ route('development.report', $latestAssessment) }}"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> View Report</a>@else<a href="{{ route('development.home') }}">View Child Profiles</a>@endif</div>
+        </section>
+        <section class="family-card family-progress"><header><h2>My Child’s Progress</h2>@if($latestAssessment?->consented_at)<a href="{{ route('development.report', $latestAssessment) }}">View Report →</a>@endif</header><div class="family-progress-content"><div class="family-progress-ring" style="--progress: {{ $assessmentProgress }}"><div><strong>{{ $assessmentProgress }}%</strong><span>Assessment<br>Progress</span></div></div><ol>@foreach([['Account created', true, $user->created_at->format('d M Y')], ['Child profile added', (bool) $selectedChild, $selectedChild?->name ?? 'Add your first child'], ['Full assessment', $assessmentProgress >= 100, $latestAssessment ? 'Part '.min($latestAssessment->step, 4).' of 4' : 'Not started'], ['Review & consent', (bool) $latestAssessment?->consented_at, $latestAssessment?->consented_at ? 'Completed' : 'Not completed'], ['Explore support', $connections->isNotEmpty(), $connections->isNotEmpty() ? $connections->count().' provider requests' : 'Your next step']] as [$label, $complete, $description])<li class="{{ $complete ? 'is-complete' : '' }}"><i class="fa-solid fa-{{ $complete ? 'circle-check' : 'circle' }}" aria-hidden="true"></i><div><strong>{{ $label }}</strong><p>{{ $description }}</p></div></li>@endforeach</ol></div></section>
+    </div>
+    <div class="family-tabs" role="tablist" aria-label="Family dashboard sections">@foreach(['journey' => ['chart-line', 'Progress Journey'], 'activities' => ['people-group', 'Activities'], 'resources' => ['book-open', 'Parent Resources'], 'messages' => ['comment-dots', 'Messages'], 'notes' => ['pen-to-square', 'Notes'], 'reports' => ['chart-column', 'Reports']] as $id => [$icon, $label])<button type="button" id="tab-{{ $id }}" role="tab" aria-controls="{{ $id }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}" tabindex="{{ $loop->first ? '0' : '-1' }}" data-family-tab="{{ $id }}"><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i>{{ $label }}</button>@endforeach</div>
+    <section id="journey" role="tabpanel" aria-labelledby="tab-journey" class="family-journey-grid"><section class="family-card"><h2>Progress Journey</h2><ol class="family-journey-steps">@foreach([['Account created', true], ['Child profile', (bool) $selectedChild], ['Assessment', (bool) $latestAssessment?->consented_at], ['Report', (bool) $latestAssessment?->consented_at], ['Provider connection', $connections->isNotEmpty()]] as [$label, $complete])<li class="{{ $complete ? 'is-complete' : '' }}"><span><i class="fa-solid fa-{{ $complete ? 'check' : 'ellipsis' }}" aria-hidden="true"></i></span><strong>{{ $label }}</strong><small>{{ $complete ? 'Completed' : 'Your next step' }}</small></li>@endforeach</ol></section><section class="family-card"><header><h2>Upcoming Sessions & Activities</h2><a href="{{ route('development.bookings') }}">View Bookings →</a></header><div class="family-next-activity"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i><div><strong>{{ $selectedChild ? 'Continue your child’s assessment' : 'Add your first child profile' }}</strong><p>Complete your next step when you’re ready.</p></div><a href="{{ $selectedChild ? route('development.journey', $selectedChild) : route('development.child') }}">Start Now</a></div><p class="family-muted">No scheduled programme sessions yet.</p></section></section>
+    <section id="activities" role="tabpanel" aria-labelledby="tab-activities" class="family-card" hidden><h2>Your Children’s Activities</h2>@forelse($children as $child)<div class="family-list-item"><div><strong>{{ $child->name }}</strong><p>Age {{ $child->age }} · {{ $child->grade }}</p></div><a href="{{ route('development.journey', $child) }}">Open Assessment →</a></div>@empty<p class="family-muted">Add a child to start their assessment and support journey.</p>@endforelse<a href="{{ route('development.child') }}">Add a Child →</a></section>
+    <section id="resources" role="tabpanel" aria-labelledby="tab-resources" class="family-card" hidden><h2>Parent Resources</h2><div class="family-resource-links"><a href="{{ route('families') }}">Explore Family Support →</a><a href="{{ route('how-it-works') }}">How VALYNK Works →</a><a href="{{ route('about') }}">About VALYNK →</a>@if($user->account_type === 'Family')<a href="{{ route('account.family.documents') }}">My Documents →</a>@endif</div></section>
+    <section id="messages" role="tabpanel" aria-labelledby="tab-messages" class="family-card" hidden><h2>Messages & Provider Requests</h2>@forelse($connections as $connection)<div class="family-list-item"><div><strong>{{ $connection->provider->user->name }}</strong><p>{{ $connection->provider->service }} · {{ $connection->child->name }} · {{ $connection->status }}</p></div><a href="{{ route('development.bookings') }}">View Request →</a></div>@empty<p class="family-muted">No provider requests yet. Contact our team if you need help finding support.</p>@endforelse<a href="{{ route('contact') }}">Contact Support →</a></section>
+    <section id="notes" role="tabpanel" aria-labelledby="tab-notes" class="family-card" hidden><h2>Your Child’s Notes</h2>@forelse($children as $child)<div class="family-list-item"><div><strong>{{ $child->name }}</strong><p>{{ $child->support_notes ?: 'No support notes added yet.' }}</p></div></div>@empty<p class="family-muted">Support notes will appear here once you add a child profile.</p>@endforelse</section>
+    <section id="reports" role="tabpanel" aria-labelledby="tab-reports" class="family-card" hidden><h2>Assessments & Reports</h2>@forelse($children as $child)@php($childAssessment = $child->assessments->sortByDesc('id')->first())<div class="family-list-item"><div><strong>{{ $child->name }}</strong><p>{{ $childAssessment?->consented_at ? 'Your report is ready' : 'Complete the assessment and consent to view your report.' }}</p></div><a href="{{ $childAssessment?->consented_at ? route('development.report', $childAssessment) : route('development.journey', $child) }}">{{ $childAssessment?->consented_at ? 'View Report' : 'Continue Assessment' }} →</a></div>@empty<p class="family-muted">No assessments yet. Add a child to get started.</p>@endforelse</section>
+    <div class="family-bottom-grid"><section id="recent-activity" class="family-card"><header><h2>Recent Activity</h2><a href="{{ route('development.home') }}">View All →</a></header><ul class="family-recent-list">@foreach($connections->take(2) as $connection)<li><i class="fa-solid fa-link" aria-hidden="true"></i><div><strong>Provider request: {{ $connection->status }}</strong><p>{{ $connection->provider->user->name }} · {{ $connection->created_at->format('d M Y') }}</p></div></li>@endforeach @foreach($children->take(2) as $child)<li><i class="fa-solid fa-file-lines" aria-hidden="true"></i><div><strong>{{ $child->name }}’s profile saved</strong><p>{{ $child->created_at->format('d M Y, g:i A') }}</p></div></li>@endforeach @if($children->isEmpty())<li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><div><strong>Your account is ready</strong><p>Add your child to start your journey.</p></div></li>@endif</ul></section><section class="family-card"><header><h2>Support at Home</h2><a href="{{ route('solutions') }}">View All →</a></header><div class="family-home-cards">@foreach([['families', 'Family Support', 'Explore support for your family.', 'images/about/family.png'], ['how-it-works', 'Your Next Steps', 'Understand your support journey.', 'images/about/teamwork.png'], ['solutions', 'Explore Solutions', 'Discover the right support areas.', 'images/solutions/confidence-hero.png']] as [$destination, $title, $description, $photo])<a href="{{ route($destination) }}"><img src="{{ asset($photo) }}" alt=""><strong>{{ $title }}</strong><p>{{ $description }}</p></a>@endforeach</div></section><section class="family-card"><h2>Need Help?</h2><div class="family-help-links"><a href="{{ route('contact') }}"><i class="fa-solid fa-headset" aria-hidden="true"></i>Contact Support <span>›</span></a><a href="{{ route('development.providers') }}"><i class="fa-solid fa-people-group" aria-hidden="true"></i>Find a Provider <span>›</span></a><a href="{{ route('how-it-works') }}"><i class="fa-solid fa-book-open" aria-hidden="true"></i>How It Works <span>›</span></a><a href="{{ route('account.profile.edit') }}"><i class="fa-solid fa-user" aria-hidden="true"></i>Manage Your Profile <span>›</span></a></div></section></div>
+    <details class="family-account-details"><summary>Your account details</summary>@include('account.partials.details')</details>
+</div>
 @endsection

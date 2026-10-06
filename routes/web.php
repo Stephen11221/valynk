@@ -39,6 +39,7 @@ Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')-
 Route::middleware('auth')->group(function (): void {
     Route::get('/dashboard', [AccountDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/profile', [AccountDashboardController::class, 'edit'])->name('account.profile.edit');
+    Route::get('/dashboard/{page}', [AccountDashboardController::class, 'section'])->where('page', 'assessments|payments|progress|messages|programmes|settings|help')->name('account.section');
     Route::put('/dashboard/profile', [AccountDashboardController::class, 'update'])->name('account.profile.update');
     Route::get('/dashboard/family/documents', [FamilyDocumentController::class, 'index'])->name('account.family.documents');
     Route::post('/dashboard/family/documents', [FamilyDocumentController::class, 'store'])->name('account.family.documents.store');

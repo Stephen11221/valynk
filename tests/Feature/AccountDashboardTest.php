@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\DevelopmentChild;
+use App\Models\DevelopmentConnection;
+use App\Models\SitePage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -41,6 +44,84 @@ class AccountDashboardTest extends TestCase
                 $response->assertDontSee('Approval status');
             }
         }
+    }
+
+    public function test_family_dashboard_shows_saved_progress_and_only_owned_records(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+        $otherParent = User::factory()->create(['account_type' => 'Family']);
+        $provider = User::factory()->create(['name' => 'Trusted Provider', 'account_type' => 'Provider']);
+        $profile = $provider->providerProfile()->create(['service' => 'Learning support', 'category' => 'Education']);
+        $child = DevelopmentChild::create(['user_id' => $parent->id, 'name' => 'Own Learner', 'age' => 10, 'grade' => 'Grade 5', 'solution' => 'academic-learning', 'support_notes' => 'Enjoys learning science.']);
+        $otherChild = DevelopmentChild::create(['user_id' => $otherParent->id, 'name' => 'Private Learner', 'age' => 12, 'grade' => 'Grade 7', 'support_notes' => 'Private family note.']);
+        $assessment = $child->assessments()->create(['answers' => [], 'step' => 3]);
+        DevelopmentConnection::create(['user_id' => $parent->id, 'provider_profile_id' => $profile->id, 'development_child_id' => $child->id, 'status' => 'Requested']);
+        DevelopmentConnection::create(['user_id' => $parent->id, 'provider_profile_id' => $profile->id, 'development_child_id' => $otherChild->id, 'status' => 'Private request']);
+
+        $this->actingAs($parent)->get(route('dashboard'))->assertOk()
+            ->assertViewIs('account.family-dashboard')
+            ->assertSee('Own Learner')->assertSee('Enjoys learning science.')
+            ->assertSee('Academic, Learning &amp; Excellence', false)
+            ->assertSee('Trusted Provider')->assertSee('Requested')
+            ->assertSee('50%')->assertSee(route('development.journey', $child))
+            ->assertDontSee('Private Learner')->assertDontSee('Private family note.')->assertDontSee('Private request')
+            ->assertDontSee(route('development.report', $assessment));
+
+        $assessment->update(['step' => 5, 'consented_at' => now()]);
+        $this->get(route('dashboard'))->assertOk()->assertSee('100%')
+            ->assertSee(route('development.report', $assessment));
+        foreach (['assessments', 'progress', 'messages'] as $section) {
+            $this->get(route('account.section', $section))->assertOk()
+                ->assertDontSee('Private Learner')->assertDontSee('Private family note.')->assertDontSee('Private request');
+        }
+    }
+
+    public function test_new_family_dashboard_has_actions_without_fake_bookings_or_payments(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+        $this->actingAs($parent)->get(route('dashboard'))->assertOk()
+            ->assertSee('Add Your Child')->assertSee(route('development.child'))
+            ->assertSee('0%')->assertSee('No payments recorded')
+            ->assertSee('No scheduled programme sessions yet.')
+            ->assertSee(route('development.providers'))->assertSee(route('account.family.documents'));
+    }
+
+    public function test_family_dashboard_sections_and_linked_pages_share_navigation(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+        $this->actingAs($parent);
+        foreach (['assessments', 'payments', 'progress', 'messages', 'programmes', 'settings', 'help'] as $page) {
+            $response = $this->get(route('account.section', $page))->assertOk()->assertViewIs('account.sections');
+            $response->assertSee('id="family-sidebar"', false)->assertSee(route('dashboard'))->assertSee($parent->name);
+            $this->assertSame(1, substr_count($response->getContent(), 'id="family-sidebar"'));
+        }
+        foreach (['development.home', 'development.child', 'development.providers', 'development.bookings', 'account.profile.edit', 'account.family.documents'] as $route) {
+            $this->get(route($route))->assertOk()->assertSee('id="family-sidebar"', false)
+                ->assertSee('family-dashboard.css')->assertSee(route('account.section', 'settings'));
+        }
+        $this->get('/dashboard/unknown')->assertNotFound();
+    }
+
+    public function test_dashboard_sections_require_login_and_keep_admin_and_other_roles_separate(): void
+    {
+        $this->get(route('account.section', 'payments'))->assertRedirect(route('login'));
+        $individual = User::factory()->create(['account_type' => 'Individual']);
+        $this->actingAs($individual)->get(route('account.section', 'payments'))->assertForbidden();
+        $admin = User::factory()->create(['account_type' => 'Family']);
+        $admin->forceFill(['is_admin' => true])->save();
+        $this->actingAs($admin)->get(route('account.section', 'payments'))->assertRedirect(route('admin.dashboard'));
+    }
+
+    public function test_programmes_page_omits_unpublished_solutions_and_unpublished_catalogue(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+        $draft = config('solutions.academic-learning');
+        $draft['is_published'] = false;
+        $page = SitePage::create(['slug' => 'solutions', 'title' => 'Solutions', 'is_published' => true, 'content' => ['solutions' => ['academic-learning' => $draft]]]);
+        $this->actingAs($parent)->get(route('account.section', 'programmes'))->assertOk()
+            ->assertDontSee('Academic, Learning &amp; Excellence', false)->assertSee('Performance, Confidence &amp; Personal Development', false);
+        $page->update(['is_published' => false]);
+        $this->get(route('account.section', 'programmes'))->assertOk()->assertSee('No published solutions are available yet.');
     }
 
     public function test_login_sends_regular_accounts_to_dashboard_and_admin_to_admin(): void

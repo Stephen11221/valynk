@@ -17,6 +17,12 @@ Route::middleware('auth')->prefix('development')->name('development.')->group(fu
     Route::get('/', [Dev::class, 'home'])->name('home');
     Route::get('/children/create', [Dev::class, 'child'])->name('child');
     Route::post('/children', [Dev::class, 'storeChild'])->name('child.store');
+    Route::get('/children/{child}/assessment-complete', [Dev::class, 'assessmentComplete'])->whereNumber('child')->name('assessment.complete');
+    Route::get('/children/{child}/journey', [Dev::class, 'journey'])->whereNumber('child')->name('journey');
+    Route::get('/children/{child}/details', [Dev::class, 'childDetails'])->whereNumber('child')->name('child.details');
+    Route::post('/children/{child}/details', [Dev::class, 'saveChildDetails'])->whereNumber('child')->name('child.details.save');
+    Route::get('/children/{child}/mindset/{question}', [Dev::class, 'mindset'])->whereNumber(['child', 'question'])->name('mindset');
+    Route::post('/children/{child}/mindset/{question}', [Dev::class, 'saveMindset'])->whereNumber(['child', 'question'])->name('mindset.save');
     Route::get('/children/{child}/assessment/{step}', [Dev::class, 'assessment'])->whereNumber(['child', 'step'])->name('assessment');
     Route::post('/children/{child}/assessment/{step}', [Dev::class, 'saveAssessment'])->whereNumber(['child', 'step'])->name('assessment.save');
     Route::get('/reports/{assessment}', [Dev::class, 'report'])->whereNumber('assessment')->name('report');

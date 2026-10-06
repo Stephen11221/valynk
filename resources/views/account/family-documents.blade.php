@@ -1,43 +1,15 @@
 @extends('layouts.account')
 
 @section('title', 'Family Documents')
-@section('body-class', 'account-reference family-documents-page')
+@section('body-class', 'family-documents-page')
 
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="{{ asset('css/account-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/family-documents.css') }}">
 @endpush
 
-@section('header')
-<header class="family-header">
-    <div>
-        <a class="family-brand" href="{{ route('home') }}"><img src="{{ asset('logo/logo.jpeg') }}" alt="VALYNK home"></a>
-        <nav aria-label="Website navigation">
-            @foreach (['home' => 'Home', 'about' => 'About', 'how-it-works' => 'How It Works', 'solutions' => 'Solutions', 'families' => 'For Families', 'providers' => 'For Providers', 'institutions' => 'For Institutions', 'pricing' => 'Pricing', 'contact' => 'Contact'] as $destination => $label)
-                <a href="{{ route($destination) }}">{{ $label }}</a>
-            @endforeach
-        </nav>
-        <details class="family-user-menu"><summary><span class="family-avatar">{{ mb_strtoupper(mb_substr($user->name, 0, 1)) }}</span><span>Hello, {{ $user->name }}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary><div><a href="{{ route('account.profile.edit') }}">My profile</a><form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Log out</button></form></div></details>
-    </div>
-</header>
-@endsection
-
 @section('content')
-<div class="family-workspace">
-    <aside class="family-sidebar" aria-label="Family dashboard">
-        <h2>Family dashboard</h2>
-        <nav aria-label="Family navigation">
-            <a href="{{ route('dashboard') }}"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>Overview</a>
-            @foreach (['users' => 'My Children', 'bullseye' => 'Matches', 'calendar-days' => 'Appointments', 'message' => 'Messages', 'credit-card' => 'Payments'] as $icon => $label)
-                <span class="family-nav-unavailable" aria-disabled="true" title="This section is not available yet"><i class="fa-solid fa-{{ $icon }}" aria-hidden="true"></i>{{ $label }}<small>Soon</small></span>
-            @endforeach
-            <a class="active" href="{{ route('account.family.documents') }}" aria-current="page"><i class="fa-regular fa-folder" aria-hidden="true"></i>Documents</a>
-            <a href="{{ route('account.profile.edit') }}"><i class="fa-solid fa-gear" aria-hidden="true"></i>Settings</a>
-        </nav>
-        <div class="family-help"><span><i class="fa-solid fa-headset" aria-hidden="true"></i></span><div><strong>Need help?</strong><p>We’re here to help you every step of the way.</p><a href="{{ route('contact') }}">Contact support →</a></div></div>
-    </aside>
-
+<div class="family-document-workspace">
     <section class="family-document-main" aria-labelledby="documents-title">
         <h1 id="documents-title">Documents</h1>
         <p class="family-subtitle">Store and manage your family’s important documents in one place.</p>
@@ -46,7 +18,7 @@
             <div class="family-alert" role="alert">{{ $errors->getBag('default')->first() }}</div>
         @endif
         <div class="family-toolbar">
-            <form method="GET" action="{{ route('account.family.documents') }}" class="family-search" role="search">
+            <form method="GET" action="{{ route('account.family.documents') }}" class="family-document-search" role="search">
                 <label class="sr-only" for="document-search">Search documents or child names</label>
                 <input id="document-search" name="q" placeholder="Search documents…" value="{{ $filters['q'] ?? '' }}" maxlength="100">
                 @foreach (['folder', 'type', 'sort'] as $filter)
