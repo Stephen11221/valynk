@@ -111,5 +111,6 @@
         </section>
 </main>
 @include('partials.footer')
+@include('partials.authenticated-chat')
 </body>
 </html>

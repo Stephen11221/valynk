@@ -48,5 +48,6 @@
         @yield('content')
     </main>
     @yield('footer')
+@include('partials.authenticated-chat')
 </body>
 </html>

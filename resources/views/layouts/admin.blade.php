@@ -159,6 +159,10 @@
                             <span>Communications</span>
                         </a>
 
+                        <a href="{{ route('admin.chat.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all {{ request()->routeIs('admin.chat.*') ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-400' }}">
+                            <i class="fa-solid fa-headset w-4 text-center text-sm" aria-hidden="true"></i><span>Support Chat</span>
+                        </a>
+
                         <a href="{{ route('admin.settings') }}#disputes"
                            class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all sidebar-item-hover text-slate-400">
                             <i class="fa-solid fa-circle-question w-4 text-center text-sm"></i>
@@ -297,5 +301,6 @@
             }
         });
     </script>
+@include('partials.authenticated-chat')
 </body>
 </html>

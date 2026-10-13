@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{{ asset('css/get-connected.css') }}?v={{ filemtime(public_path('css/get-connected.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/assessment.css') }}?v={{ filemtime(public_path('css/assessment.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/parent-journey.css') }}?v={{ filemtime(public_path('css/parent-journey.css')) }}">
+    <script src="{{ asset('js/parent-journey.js') }}?v={{ filemtime(public_path('js/parent-journey.js')) }}" defer></script>
 </head>
 <body class="assessment-page focused-assessment-page reference-journey-page @yield('body-class')">
 <a class="connection-skip" href="#journey-form">Skip to form</a>
 @include('development.partials.journey-header')
 <main class="focus-shell">
-    <aside class="focus-story"><img src="{{ asset('images/about/family.png') }}" alt="A parent supporting her child"><div><h2>@if($activeStage === 2)Let’s<br>Get to Know<br><em>Your Child</em>@else Let’s<br>Understand<br><em>Better</em>@endif</h2><p>{{ $activeStage === 2 ? 'Please share a few details about your child so we can personalise the assessment and recommend the right support.' : 'A few simple questions (3–5 minutes) to understand your child’s current situation so we can recommend the most relevant support.' }}</p></div></aside>
+    <aside class="focus-story"><img src="{{ asset('images/about/family.png') }}" alt="A parent supporting her child"><div><h2>@if($activeStage === 2 && !isset($journeySteps))Let’s<br>Get to Know<br><em>Your Child</em>@else Let’s<br>Understand<br><em>Better</em>@endif</h2><p>{{ $activeStage === 2 && !isset($journeySteps) ? 'Please share a few details about your child so we can personalise the assessment and recommend the right support.' : 'A few simple questions (3–5 minutes) to understand your child’s current situation so we can recommend the most relevant support.' }}</p></div></aside>
     <section class="focus-content" aria-labelledby="journey-title">
-        <ol class="focus-stepper" aria-label="Your progress">@foreach(['Sign Up & Quick Questions', 'Child’s Details', 'Full Assessment', 'Preview Report', 'Match & Programmes'] as $label)<li class="{{ $loop->iteration < $activeStage ? 'completed' : '' }}" @if($loop->iteration === $activeStage) aria-current="step" @endif><span>@if($loop->iteration < $activeStage)<i class="fa-solid fa-check" aria-hidden="true"></i>@else{{ $loop->iteration }}@endif</span><p>{{ $label }}</p></li>@endforeach</ol>
+        <ol class="focus-stepper" aria-label="Your progress">@foreach(($journeySteps ?? ['Sign Up & Quick Questions', 'Child’s Details', 'Full Assessment', 'Preview Report', 'Match & Programmes']) as $label)<li class="{{ $loop->iteration < $activeStage ? 'completed' : '' }}" @if($loop->iteration === $activeStage) aria-current="step" @endif><span>@if($loop->iteration < $activeStage)<i class="fa-solid fa-check" aria-hidden="true"></i>@else{{ $loop->iteration }}@endif</span><p>{{ $label }}</p></li>@endforeach</ol>
         @hasSection('wide-content')
             @yield('wide-content')
         @else
@@ -35,5 +37,8 @@
         @endif
     </section>
 </main>
+@if($screenPreview ?? false)<aside class="parent-preview-notice" aria-label="Preview status"><span>Sample journey · No payment or booking is made.</span><a href="{{ route('development.screens') }}">All pages <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></aside>@endif
+@yield('scripts')
+@include('partials.authenticated-chat')
 </body>
 </html>

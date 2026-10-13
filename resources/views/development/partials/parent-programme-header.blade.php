@@ -1,0 +1,6 @@
+<header class="parent-programme-header">
+    <img class="parent-programme-photo" src="{{ $programmeImage }}" alt="Children learning with support">
+    <div><p class="report-eyebrow">{{ $screenPreview ? 'Sample programme · Peak Performance International' : 'Programme catalogue · availability to be confirmed' }}</p>@if(in_array($screen ?? 'programme', ['review', 'confirmation']))<h2 class="parent-programme-title">{{ $programme['name'] }}</h2>@else<h1 id="journey-title">{{ $programme['name'] }}</h1>@endif<h2>Build a stronger foundation for a brighter future.</h2><p>{{ $programme['description'] }}</p>
+        <ul class="parent-programme-facts"><li><i class="fa-solid fa-people-group" aria-hidden="true"></i><span>Ages<br><strong>{{ $programme['ages'] }} years</strong></span></li><li><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span>{{ $programme['days'] }}<br><strong>In person</strong></span></li><li><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>{{ $screenPreview ? 'Nairobi' : 'Venue' }}<br><strong>Confirm with provider</strong></span></li><li><i class="fa-solid fa-user-group" aria-hidden="true"></i><span>Group size<br><strong>Confirm with provider</strong></span></li></ul>
+    </div>
+</header>

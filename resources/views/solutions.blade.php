@@ -103,5 +103,6 @@
     @endforeach
     <script src="{{ asset('js/solutions.js') }}?v={{ filemtime(public_path('js/solutions.js')) }}" defer></script>
     @include('partials.footer')
+@include('partials.authenticated-chat')
 </body>
 </html>

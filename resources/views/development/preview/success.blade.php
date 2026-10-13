@@ -53,5 +53,6 @@
         <footer class="success-actions"><a class="success-dashboard" href="{{ route('development.home') }}"><i class="fa-solid fa-house" aria-hidden="true"></i> Back to Dashboard</a><a class="success-primary" href="{{ route('development.providers') }}">Find and Connect with Providers <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><p>More Possibilities.<br>Brighter Futures.</p></footer>
     </section>
 </main>
+@include('partials.authenticated-chat')
 </body>
 </html>

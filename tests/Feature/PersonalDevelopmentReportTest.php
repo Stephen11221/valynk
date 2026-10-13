@@ -17,7 +17,7 @@ class PersonalDevelopmentReportTest extends TestCase
         $assessment = $this->assessmentForParent(1);
         $response = $this->get(route('development.report', $assessment))->assertOk()->assertViewIs('development.personal-report')
             ->assertSee('Learner')->assertSee('Local School')->assertSee('Grade 5')->assertSee('Download Report (PDF)')
-            ->assertSee(route('development.providers'))->assertSee(route('development.assessment.complete', $assessment->child))
+            ->assertSee(route('development.matches', $assessment))->assertSee(route('development.assessment.complete', $assessment->child))
             ->assertSee('My child is confident sometimes, but can be unsure in new situations.');
         $response->assertViewHas('report', fn (array $report): bool => count($report['strengths']) === 3 && count($report['development']) === 3 && count($report['recommendations']) === 3);
     }

@@ -16,11 +16,16 @@
     <section class="report-section"><h2><i class="fa-solid fa-chevron-up" aria-hidden="true"></i> Recommended Focus Areas</h2><ol class="report-recommendations">@foreach($report['recommendations'] as $recommendation)<li><span>{{ $loop->iteration }}</span><p>{{ $recommendation }}</p></li>@endforeach</ol></section>
     <details class="report-responses"><summary>Review the answers behind this summary</summary><dl>@foreach($report['observations'] as $item)<div><dt>{{ $item['question'] }}</dt><dd>{{ $item['answer'] }}</dd></div>@endforeach</dl></details>
     <p class="report-note">This summary reflects your observations and is not a clinical assessment.</p>
-    <div class="focus-actions"><a class="journey-back" href="{{ route('development.assessment.complete', $child) }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back</a><a class="connection-submit" href="{{ route('development.providers') }}">Continue to Match & Programmes <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+    <div class="focus-actions"><a class="journey-back" href="{{ ($completeUrl ?? route('development.assessment.complete', $child)) }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back</a><a class="connection-submit" href="{{ ($matchesUrl ?? route('development.matches', $assessment)) }}">Continue to Match & Programmes <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
 </article>
 @endsection
 @section('completion-panels')
 <section class="focus-panel focus-help"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><div><h2>Next Steps</h2><p>Use this summary to compare relevant programmes and verified providers on VALYNK.</p></div></section>
 <section class="focus-panel"><h2>What Happens Next?</h2><ol class="report-next-steps"><li><span>1</span> Review your child’s personalised recommendations</li><li><span>2</span> Explore programmes and providers</li><li><span>3</span> Confirm suitability and request a connection</li></ol></section>
 <section class="focus-panel report-download"><i class="fa-regular fa-file-lines" aria-hidden="true"></i><div><button type="button" onclick="window.print()">Download Report (PDF)</button><p>Save a copy for your records. Choose “Save as PDF” in the print dialog.</p></div></section>
+<a class="report-subscription-link" href="{{ ($plansUrl ?? route('development.plans', ['assessment' => $assessment->id])) }}">Explore subscription options <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+@endsection
+
+@section('scripts')
+<script src="{{ asset('js/personal-report.js') }}?v={{ filemtime(public_path('js/personal-report.js')) }}" defer></script>
 @endsection

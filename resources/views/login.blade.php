@@ -90,5 +90,6 @@
             passwordToggle.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
         });
     </script>
+@include('partials.authenticated-chat')
 </body>
 </html>

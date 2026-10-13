@@ -22,5 +22,6 @@
     <a href="{{ route('login') }}" class="mt-5 inline-block">Back to login</a>
 </main>
 @include('partials.footer')
+@include('partials.authenticated-chat')
 </body>
 </html>

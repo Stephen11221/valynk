@@ -1,0 +1,1 @@
+<section class="focus-panel parent-selection-panel"><h2>Your Selection</h2><div><img src="{{ $programmeImage }}" alt="" data-selection-image><div><h3 data-selection-title>{{ $programme['name'] }}</h3><p>For ages {{ $programme['ages'] }} years</p></div><i class="fa-solid fa-circle-check" aria-hidden="true"></i></div></section>

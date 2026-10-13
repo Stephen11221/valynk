@@ -49,7 +49,7 @@ class DashboardController extends Controller
             return redirect()->route('admin.dashboard');
         }
         abort_unless(in_array($user->account_type, ['Family', 'Partner / Other'], true), 403);
-        abort_unless(in_array($page, ['assessments', 'payments', 'progress', 'messages', 'programmes', 'settings', 'help'], true), 404);
+        abort_unless(in_array($page, ['assessments', 'payments', 'progress', 'settings', 'help'], true), 404);
 
         return view('account.sections', ['user' => $user, 'page' => $page] + $this->familyData($user));
     }

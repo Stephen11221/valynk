@@ -325,6 +325,40 @@ class DevelopmentController extends Controller
         return view('development.report', ['assessment' => $assessment, 'sample' => false]);
     }
 
+    public function matches(Request $request, int $assessment): View
+    {
+        $assessment = $this->ownedConsentedAssessment($request, $assessment);
+        $keywords = $assessment->child->solution === 'academic-learning'
+            ? ['learning', 'education', 'academic', 'study', 'tutor']
+            : ['mindset', 'confidence', 'focus', 'performance', 'learning', 'coaching', 'life skills'];
+        $providers = ProviderProfile::query()->where('status', 'Approved')->where('verification', 'Verified')
+            ->whereHas('user', fn ($query) => $query->where('account_type', 'Provider'))->with('user')->get()
+            ->map(function (ProviderProfile $provider) use ($keywords): array {
+                $description = mb_strtolower($provider->service.' '.$provider->category);
+                $matchedKeywords = array_values(array_filter($keywords, fn (string $keyword): bool => str_contains($description, $keyword)));
+
+                return ['provider' => $provider, 'keywords' => $matchedKeywords, 'relevance' => count($matchedKeywords)];
+            })->filter(fn (array $match): bool => $match['relevance'] > 0)->sortByDesc('relevance')->values();
+        $programmes = array_filter(config('development.programmes'), fn (array $programme): bool => $assessment->child->age >= $programme['min'] && $assessment->child->age <= $programme['max']);
+
+        return view('development.matches', ['assessment' => $assessment, 'child' => $assessment->child, 'activeStage' => 5, 'matches' => $providers, 'programmes' => $programmes]);
+    }
+
+    public function programmeDetails(Request $request, int $assessment, string $programme): View
+    {
+        $assessment = $this->ownedConsentedAssessment($request, $assessment);
+        $details = config('development.programmes')[$programme] ?? null;
+        abort_unless($details && $assessment->child->age >= $details['min'] && $assessment->child->age <= $details['max'], 404);
+
+        return view('development.programme-details', ['assessment' => $assessment, 'child' => $assessment->child, 'activeStage' => 5, 'programme' => $details, 'programmeKey' => $programme]);
+    }
+
+    private function ownedConsentedAssessment(Request $request, int $assessment): DevelopmentAssessment
+    {
+        return DevelopmentAssessment::query()->whereHas('child', fn ($query) => $query->where('user_id', $request->user()->id))
+            ->whereNotNull('consented_at')->with('child')->findOrFail($assessment);
+    }
+
     public function sample()
     {
         return view('development.report', ['sample' => true]);
@@ -364,7 +398,12 @@ class DevelopmentController extends Controller
 
     public function bookings(Request $r)
     {
-        return view('development.bookings', ['connections' => DevelopmentConnection::where('user_id', $r->user()->id)->with(['provider.user', 'child'])->latest()->get()]);
+        return view('development.bookings', [
+            'connections' => DevelopmentConnection::where('user_id', $r->user()->id)->with(['provider.user', 'child'])->latest()->get(),
+            'enquiries' => DevelopmentAssessment::query()->whereHas('child', fn ($query) => $query->where('user_id', $r->user()->id))
+                ->whereNotNull('consented_at')->with('child')->latest()->get()
+                ->filter(fn (DevelopmentAssessment $assessment): bool => filled(data_get($assessment->answers, 'programme_enquiry.programme'))),
+        ]);
     }
 
     public function plans(Request $r): View

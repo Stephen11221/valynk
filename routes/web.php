@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Account\DashboardController as AccountDashboardController;
 use App\Http\Controllers\Account\FamilyDocumentController;
+use App\Http\Controllers\Account\SupportChatController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\SitePageAdminController;
@@ -38,8 +39,10 @@ Route::post('/login', [LoginController::class, 'store'])->middleware('throttle:5
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 Route::middleware('auth')->group(function (): void {
     Route::get('/dashboard', [AccountDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/support-chat', [SupportChatController::class, 'index'])->name('account.chat.index');
+    Route::post('/dashboard/support-chat', [SupportChatController::class, 'store'])->middleware('throttle:30,1')->name('account.chat.store');
     Route::get('/dashboard/profile', [AccountDashboardController::class, 'edit'])->name('account.profile.edit');
-    Route::get('/dashboard/{page}', [AccountDashboardController::class, 'section'])->where('page', 'assessments|payments|progress|messages|programmes|settings|help')->name('account.section');
+    Route::get('/dashboard/{page}', [AccountDashboardController::class, 'section'])->where('page', 'assessments|payments|progress|settings|help')->name('account.section');
     Route::put('/dashboard/profile', [AccountDashboardController::class, 'update'])->name('account.profile.update');
     Route::get('/dashboard/family/documents', [FamilyDocumentController::class, 'index'])->name('account.family.documents');
     Route::post('/dashboard/family/documents', [FamilyDocumentController::class, 'store'])->name('account.family.documents.store');
@@ -83,6 +86,10 @@ Route::post('/register', function (Request $request) {
 
 // Admin Dashboard Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:manage-admin'])->group(function () {
+    Route::get('/support-chat', [SupportChatController::class, 'adminIndex'])->name('chat.index');
+    Route::get('/support-chat/{user}', [SupportChatController::class, 'adminShow'])->whereNumber('user')->name('chat.show');
+    Route::get('/support-chat/{user}/messages', [SupportChatController::class, 'adminMessages'])->whereNumber('user')->name('chat.messages');
+    Route::post('/support-chat/{user}/messages', [SupportChatController::class, 'adminStore'])->whereNumber('user')->middleware('throttle:30,1')->name('chat.store');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/users', [DashboardController::class, 'users'])->name('users');
     Route::get('/users/create', [DashboardController::class, 'createUser'])->name('users.create');

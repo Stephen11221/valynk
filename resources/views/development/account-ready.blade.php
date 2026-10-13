@@ -1,5 +1,5 @@
 <dialog id="account-ready" class="account-ready" aria-labelledby="account-ready-title" aria-describedby="account-ready-description">
-    <a class="account-ready-close" href="{{ route('dashboard') }}" aria-label="Go to dashboard"><i class="fa-solid fa-xmark" aria-hidden="true"></i></a>
+    <a class="account-ready-close" href="{{ ($dashboardUrl ?? route('dashboard')) }}" aria-label="Go to dashboard"><i class="fa-solid fa-xmark" aria-hidden="true"></i></a>
     <div class="account-ready-layout">
         <aside class="account-ready-story">
             <img class="account-ready-photo" src="{{ asset('images/about/family.png') }}" alt="A family learning together">
@@ -16,7 +16,7 @@
                     <li><span>{{ $loop->iteration }}</span><div><h3>{{ $title }}</h3><p>{{ $description }}</p></div></li>
                 @endforeach
             </ol></section>
-            <div class="account-ready-actions"><a href="{{ route('development.child.details', $child) }}" data-account-ready-continue autofocus>Start Assessment Now <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="{{ route('dashboard') }}"><i class="fa-solid fa-house" aria-hidden="true"></i> Go to Dashboard</a></div>
+            <div class="account-ready-actions"><a href="{{ ($continueUrl ?? route('development.child.details', $child)) }}" data-account-ready-continue autofocus>Start Assessment Now <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="{{ ($dashboardUrl ?? route('dashboard')) }}"><i class="fa-solid fa-house" aria-hidden="true"></i> Go to Dashboard</a></div>
             <p class="account-ready-later">You can continue your assessment later from your dashboard.</p>
         </section>
     </div>

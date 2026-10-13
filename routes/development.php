@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\Account\DevelopmentController as Dev;
+use App\Http\Controllers\Account\ParentJourneyController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/development/parent-journey', [ParentJourneyController::class, 'index'])->name('development.screens');
+Route::get('/development/screens/{screen}', [ParentJourneyController::class, 'show'])->name('development.screens.show');
+Route::post('/development/screens/{screen}', [ParentJourneyController::class, 'save'])->middleware('throttle:60,1')->name('development.screens.save');
 
 Route::get('/get-connected', [Dev::class, 'getConnected'])->name('get-connected');
 Route::get('/solutions/performance-confidence', [Dev::class, 'landing'])->name('development.landing');
@@ -25,6 +30,10 @@ Route::middleware('auth')->prefix('development')->name('development.')->group(fu
     Route::post('/children/{child}/mindset/{question}', [Dev::class, 'saveMindset'])->whereNumber(['child', 'question'])->name('mindset.save');
     Route::get('/children/{child}/assessment/{step}', [Dev::class, 'assessment'])->whereNumber(['child', 'step'])->name('assessment');
     Route::post('/children/{child}/assessment/{step}', [Dev::class, 'saveAssessment'])->whereNumber(['child', 'step'])->name('assessment.save');
+    Route::get('/reports/{assessment}/enquiry/{screen}', [ParentJourneyController::class, 'enquiry'])->whereNumber('assessment')->name('enquiry');
+    Route::post('/reports/{assessment}/enquiry/{screen}', [ParentJourneyController::class, 'saveEnquiry'])->whereNumber('assessment')->name('enquiry.save');
+    Route::get('/reports/{assessment}/matches', [Dev::class, 'matches'])->whereNumber('assessment')->name('matches');
+    Route::get('/reports/{assessment}/programmes/{programme}', [Dev::class, 'programmeDetails'])->whereNumber('assessment')->name('programme');
     Route::get('/reports/{assessment}', [Dev::class, 'report'])->whereNumber('assessment')->name('report');
     Route::get('/providers', [Dev::class, 'providers'])->name('providers');
     Route::get('/providers/{provider}', [Dev::class, 'provider'])->whereNumber('provider')->name('provider');

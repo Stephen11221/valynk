@@ -28,4 +28,5 @@
 @if(session('status'))<div class="notice success" role="status">{{ session('status') }}</div>@endif
 @if($errors->any())<div class="notice error" role="alert"><strong>Please check these details:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 @yield('content')
-</main><footer><span>© {{ date('Y') }} VALYNK. All rights reserved.</span><a href="{{ route('contact') }}">Help & Support</a><span class="tagline">More Possibilities. Brighter Futures.</span></footer></div></body></html>
+</main><footer><span>© {{ date('Y') }} VALYNK. All rights reserved.</span><a href="{{ route('contact') }}">Help & Support</a><span class="tagline">More Possibilities. Brighter Futures.</span></footer></div>@include('partials.authenticated-chat')
+</body></html>

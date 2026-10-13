@@ -25,13 +25,13 @@
         <div><i class="fa-regular fa-file-lines" aria-hidden="true"></i><div><dt>Personalised</dt><dd>Response summary<br>ready</dd></div></div>
     </dl>
     <div class="journey-complete-actions">
-        <a class="connection-submit" href="{{ $assessment->consented_at ? route('development.report', $assessment) : route('development.assessment', [$child, 5]) }}">View My Child’s Report <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-        <a class="journey-back" href="{{ route('development.mindset', [$child, $questionCount]) }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Previous Question</a>
+        <a class="connection-submit" href="{{ $reportUrl ?? ($assessment->consented_at ? route('development.report', $assessment) : route('development.assessment', [$child, 5])) }}">View My Child’s Report <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        <a class="journey-back" href="{{ ($previousQuestionUrl ?? route('development.mindset', [$child, $questionCount])) }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Previous Question</a>
     </div>
     @unless($assessment->consented_at)<p class="journey-complete-consent">Review your answers and confirm consent before opening your report.</p>@endunless
 </section>
 @endsection
 @section('completion-panels')
-<section class="focus-panel journey-assessed-areas"><h2>Areas Assessed</h2><p>Based on your six assessment responses.</p><ul>@foreach($assessedAreas as $area)<li><i class="fa-solid fa-{{ ['brain', 'bullseye', 'flag'][$loop->index] ?? 'circle-check' }}" aria-hidden="true"></i><span>{{ $area }}</span><i class="fa-solid fa-circle-check journey-area-check" aria-hidden="true"></i></li>@endforeach</ul></section>
+<section class="focus-panel journey-assessed-areas"><h2>Areas Assessed</h2><p>Based on your {{ $questionCount }} assessment responses.</p><ul>@foreach($assessedAreas as $area)<li><i class="fa-solid fa-{{ ['brain', 'bullseye', 'flag'][$loop->index] ?? 'circle-check' }}" aria-hidden="true"></i><span>{{ $area }}</span><i class="fa-solid fa-circle-check journey-area-check" aria-hidden="true"></i></li>@endforeach</ul></section>
 <section class="focus-panel focus-help"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><div><h2>What’s Next?</h2><p>Review your responses and consent to view your personalised summary. Then explore relevant programmes and providers on VALYNK.</p></div></section>
 @endsection

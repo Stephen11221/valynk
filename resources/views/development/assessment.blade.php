@@ -110,5 +110,6 @@
 @if(!empty($registeredSolutionTitle))
     @include('development.account-ready')
 @endif
+@include('partials.authenticated-chat')
 </body>
 </html>

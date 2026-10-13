@@ -53,4 +53,5 @@
         </section>
     </main>
 
-    @include('partials.footer')</body></html>
+    @include('partials.footer')@include('partials.authenticated-chat')
+</body></html>

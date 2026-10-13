@@ -4,14 +4,13 @@
     <nav>
         @foreach([
             ['house', 'Dashboard', route('dashboard'), true],
+            ['lightbulb', 'Available Solutions', route('dashboard').'#available-solutions', false],
             ['people-group', 'My Children', route('development.home'), false],
             ['chart-column', 'Assessments & Reports', route('account.section', 'assessments'), false],
             ['link', 'My Matches', route('development.providers'), false],
             ['calendar-days', 'My Bookings', route('development.bookings'), false],
             ['credit-card', 'Payments', route('account.section', 'payments'), false],
             ['chart-line', 'Progress Tracking', route('account.section', 'progress'), false],
-            ['comment-dots', 'Messages', route('account.section', 'messages'), false],
-            ['heart', 'Explore Programmes', route('account.section', 'programmes'), false],
             ['user', 'My Profile', route('account.profile.edit'), false],
             ['gear', 'Settings', route('account.section', 'settings'), false],
             ['headset', 'Help & Support', route('account.section', 'help'), false],

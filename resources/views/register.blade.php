@@ -69,5 +69,6 @@
             });
         });
     </script>
+@include('partials.authenticated-chat')
 </body>
 </html>

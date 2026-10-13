@@ -98,5 +98,6 @@
         </div>
     </section>
 </main>
+@include('partials.authenticated-chat')
 </body>
 </html>

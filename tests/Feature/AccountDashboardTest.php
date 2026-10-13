@@ -69,8 +69,10 @@ class AccountDashboardTest extends TestCase
 
         $assessment->update(['step' => 5, 'consented_at' => now()]);
         $this->get(route('dashboard'))->assertOk()->assertSee('100%')
-            ->assertSee(route('development.report', $assessment));
-        foreach (['assessments', 'progress', 'messages'] as $section) {
+            ->assertSee(route('development.report', $assessment))
+            ->assertSee(route('development.matches', $assessment))
+            ->assertSee(route('development.plans', ['assessment' => $assessment->id]));
+        foreach (['assessments', 'progress'] as $section) {
             $this->get(route('account.section', $section))->assertOk()
                 ->assertDontSee('Private Learner')->assertDontSee('Private family note.')->assertDontSee('Private request');
         }
@@ -90,7 +92,7 @@ class AccountDashboardTest extends TestCase
     {
         $parent = User::factory()->create(['account_type' => 'Family']);
         $this->actingAs($parent);
-        foreach (['assessments', 'payments', 'progress', 'messages', 'programmes', 'settings', 'help'] as $page) {
+        foreach (['assessments', 'payments', 'progress', 'settings', 'help'] as $page) {
             $response = $this->get(route('account.section', $page))->assertOk()->assertViewIs('account.sections');
             $response->assertSee('id="family-sidebar"', false)->assertSee(route('dashboard'))->assertSee($parent->name);
             $this->assertSame(1, substr_count($response->getContent(), 'id="family-sidebar"'));
@@ -112,16 +114,80 @@ class AccountDashboardTest extends TestCase
         $this->actingAs($admin)->get(route('account.section', 'payments'))->assertRedirect(route('admin.dashboard'));
     }
 
-    public function test_programmes_page_omits_unpublished_solutions_and_unpublished_catalogue(): void
+    public function test_dashboard_omits_unpublished_solutions_and_unpublished_catalogue(): void
     {
         $parent = User::factory()->create(['account_type' => 'Family']);
         $draft = config('solutions.academic-learning');
         $draft['is_published'] = false;
         $page = SitePage::create(['slug' => 'solutions', 'title' => 'Solutions', 'is_published' => true, 'content' => ['solutions' => ['academic-learning' => $draft]]]);
-        $this->actingAs($parent)->get(route('account.section', 'programmes'))->assertOk()
+        $this->actingAs($parent)->get(route('dashboard'))->assertOk()
             ->assertDontSee('Academic, Learning &amp; Excellence', false)->assertSee('Performance, Confidence &amp; Personal Development', false);
         $page->update(['is_published' => false]);
-        $this->get(route('account.section', 'programmes'))->assertOk()->assertSee('No published solutions are available yet.');
+        $this->get(route('dashboard'))->assertOk()->assertSee('No published solutions are available yet.');
+    }
+
+    public function test_parent_dashboard_shows_builtin_and_custom_solution_images(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+        $solution = array_replace(config('solutions.academic-learning'), [
+            'image_url' => '/images/about/family.png',
+        ]);
+        SitePage::create(['slug' => 'solutions', 'title' => 'Solutions', 'is_published' => true, 'content' => [
+            'solutions' => ['academic-learning' => $solution],
+        ]]);
+
+        $response = $this->actingAs($parent)->get(route('dashboard'));
+
+        $response->assertOk()
+            ->assertSee('class="family-solution-photo family-solution-photo-0"', false)
+            ->assertSee('src="/images/about/family.png"', false);
+    }
+
+    public function test_parent_programmes_page_is_removed(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+
+        $this->actingAs($parent)->get(route('dashboard'))->assertOk()
+            ->assertDontSee('Explore Programmes')
+            ->assertDontSee(route('account.section', 'programmes'));
+        $this->get(route('account.section', 'programmes'))->assertNotFound();
+    }
+
+    public function test_parent_can_explore_published_solutions_directly_from_dashboard_without_a_child(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+        $published = array_replace(config('solutions.performance-confidence'), [
+            'title' => 'Family Confidence Support',
+            'description' => 'Personalised confidence support for your child.',
+        ]);
+        $draft = array_replace(config('solutions.academic-learning'), [
+            'title' => 'Private Draft Solution',
+            'is_published' => false,
+        ]);
+        SitePage::create(['slug' => 'solutions', 'title' => 'Solutions', 'is_published' => true, 'content' => [
+            'solutions' => ['performance-confidence' => $published, 'academic-learning' => $draft],
+        ]]);
+
+        $response = $this->actingAs($parent)->get(route('dashboard'));
+
+        $response->assertOk()->assertSee('Available Solutions')
+            ->assertSee(route('dashboard').'#available-solutions')
+            ->assertSee('Family Confidence Support')
+            ->assertSee('Personalised confidence support for your child.')
+            ->assertSee(route('get-connected', ['solution' => 'performance-confidence']))
+            ->assertDontSee('Private Draft Solution')
+            ->assertDontSee(route('get-connected', ['solution' => 'academic-learning']));
+    }
+
+    public function test_parent_dashboard_shows_empty_state_when_solution_catalogue_is_unpublished(): void
+    {
+        $parent = User::factory()->create(['account_type' => 'Family']);
+        SitePage::create(['slug' => 'solutions', 'title' => 'Solutions', 'is_published' => false]);
+
+        $response = $this->actingAs($parent)->get(route('dashboard'));
+
+        $response->assertOk()->assertSee('No published solutions are available yet.')
+            ->assertDontSee(route('get-connected', ['solution' => 'performance-confidence']));
     }
 
     public function test_login_sends_regular_accounts_to_dashboard_and_admin_to_admin(): void

@@ -119,6 +119,17 @@ return [
             'additional' => ['Additional information that may help us support your child (optional)', 'text', []],
         ],
     ],
+    'parent_reference_programmes' => [
+        'gap' => ['name' => 'Genius Activator (GA)', 'ages' => '5–11', 'min' => 5, 'max' => 11, 'fee' => 19900, 'date' => '9–10 November 2026'],
+        'pap' => ['ages' => '12–18', 'min' => 12, 'days' => '2 days', 'date' => '9–10 November 2026'],
+    ],
+    'programme_benefits' => [
+        'brain' => ['Improved attention and concentration', 'Build focus through guided practice and achievable tasks.'],
+        'book-open' => ['Stronger learning habits', 'Explore techniques for learning, recall and preparation.'],
+        'heart' => ['Emotional awareness', 'Practise understanding feelings and responding to challenges.'],
+        'people-group' => ['Confidence and collaboration', 'Share ideas and build confidence with other learners.'],
+        'lightbulb' => ['Creativity and problem solving', 'Think independently and explore practical solutions.'],
+    ],
     'programmes' => [
         'pap' => ['name' => 'Performance Accelerator Program (PAP)', 'ages' => '11–18', 'min' => 11, 'max' => 18, 'days' => '5 days', 'date' => '9–13 Nov 2026', 'start' => '2026-11-09', 'end' => '2026-11-13', 'fee' => 29900, 'online' => 14900, 'image' => 'student', 'description' => 'Build mindset, focus, confidence and high-performance habits for academic and life success.'],
         'gap' => ['name' => 'Genius Activator Program (GAP)', 'ages' => '5–10', 'min' => 5, 'max' => 10, 'days' => '2 days', 'date' => '9–10 Nov 2026', 'start' => '2026-11-09', 'end' => '2026-11-10', 'fee' => 14900, 'online' => null, 'image' => 'family', 'description' => 'Activate creativity, focus and learning potential through fun, hands-on activities.'],
